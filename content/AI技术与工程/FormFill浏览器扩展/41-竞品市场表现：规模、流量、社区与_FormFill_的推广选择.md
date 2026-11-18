@@ -15,11 +15,9 @@ status: published
 
 # 竞品市场表现：规模、流量、社区与 FormFill 的推广选择
 
-核查日期：2026-11-17，Asia/Singapore。接续用户追加的下载、流量、排名与关注度要求。本报告综合两个 `nopcoding/gpt-6.1-sol / high` 子任务及父会话复核；只读公开数据，没有投放、注册、付款、联系或发帖。
+2026 年 11 月 17 日的市场观察，从两个不同的入口读：[商店分发、GitHub 与论坛](42-插件分发、开源与社区量化：市场表现补充.md)回答“哪里能找到产品，平台显示多少关注”；[网站访问研究](43-竞品营销：网站访问量、排名、获客结构与公开关注.md)回答“这个域名可能有多少次访问”。两者都没有本项目的安装、付费或留存数据。
 
 **结论：这批样本里，通用 AI/文件填表产品的公开分发多在几十到几千 users；模板、密码管理、求职和自动化替代品已有几十万 users。** 这支持进一步验证“重复录入有价值”，却不能证明本项目的通用填表定位已具备大规模需求，或说明小产品已经失败。最值得借鉴的是可用入口、明确任务、持续教程和使用支持；公开发过一次产品帖不足以证明获客成功。
-
-完整数据：[插件分发、GitHub 与论坛](42-插件分发、开源与社区量化：市场表现补充.md)、[网站流量与社交](43-竞品营销：网站访问量、排名、获客结构与公开关注.md)。所有指标保留平台、对象、时间和来源，不合成一个缺乏依据的“综合热度分”。
 
 ## 1. 插件规模：13 个已核实商店条目
 
@@ -41,7 +39,7 @@ status: published
 | [Magical](https://chromewebstore.google.com/detail/magical-text-expander-aut/iibninhmiggehlcdolcilmhacighjamp?hl=en) | 200,000 | 3.1 / 3.5K | 短语/autofill；当前官网偏医疗代理 |
 | [Bardeen](https://chromewebstore.google.com/detail/bardeen-automate-browser/ihhkmalpkhkoedlmcnilbbhhbhnicjga?hl=en) | 200,000 | 4.1 / 452 | 跨应用自动化、抓取与获客 |
 
-父会话用原始正文逐条验证 13 行的 users、评分数标签和版本；Text Blaze 另通过网页工具复核。formfill.cc 搜索缓存曾显示 17 users，而直接页面为 13；本表统一用直接快照，不能用差值报增长/流失。评分是自选样本，1 个 5 星不能证明优于数千评分的产品。Classic/Formly/Automation 用户可能重叠，不相加；同名产品数值也不能算作本项目指标。
+同名 `formfill.cc` 直接页显示 13 users，搜索缓存出现过 17；不能用两者之差算流失。Classic、Automation 和 Formly 是不同条目，同一人可以装多款，不相加。RoboForm 等规模大的产品也不是只做填表。
 
 ## 2. 网站流量与网络排行
 
@@ -58,7 +56,7 @@ Simplify 的流量包含找工作、岗位目录、简历和账号功能；RoboF
 
 fillapp.ai、formfill.cc、exceltoform.com、fastfiller.aeigs.com、xl2web.com、blaze.today、filliny.io **没有取得可同口径使用的 2026-10 月量或排名**。本轮有 Semrush 404、Similarweb 202 空正文、动态报告未返回数据等不同情况，逐项记录在网站报告中；它们不是网站本身没有访问量的证据。FastFiller 只查其子域，未用整个 aeigs.com 替代；ExcelToForm 域流量无法分摊到同域三款产品。
 
-父会话另读到 [Mindspent 的 Text Blaze 页面](https://mindspent.com/c/text-blaze)给出 2026-09 的 850K visits，并注明 traffic.cv panel estimate；其 #166 是所跟踪 2,210 家 YC 公司的指数位置，**不是全球网站排名**。由于未核验该面板数据方法和原始数据，不纳入上表或商业测算，也不把页面不同口径的品牌词月量填入本站关键词表。
+作者另读到 [Mindspent 的 Text Blaze 页面](https://mindspent.com/c/text-blaze)给出 2026-09 的 850K visits，并注明 traffic.cv panel estimate；其 #166 是所跟踪 2,210 家 YC 公司的指数位置，**不是全球网站排名**。由于未核验该面板数据方法和原始数据，不纳入上表或商业测算，也不把页面不同口径的品牌词月量填入本站关键词表。
 
 ### 来源渠道能看出多少
 
@@ -72,10 +70,10 @@ fillapp.ai、formfill.cc、exceltoform.com、fastfiller.aeigs.com、xl2web.com�
 |---|---|---|
 | [FastFiller GitHub](https://github.com/mauryaankur99/FastFiller) | 官方 API：5 stars、1 fork；v1.0.0 ZIP 资产 download_count 39 | 39 是该资产下载事件，不是独立安装。源码 ZIP、其他渠道和活跃未知 |
 | [Filly GitHub](https://github.com/gulan28/filly) | 0 stars、0 forks；releases 为 `[]` | 无 Release 不等于无人下载源码；不与 Filler/Filliny 混同 |
-| [Simplify LinkedIn](https://www.linkedin.com/company/simplifyjobs/) | 约 4.4 万 followers | worker 缓存 44,080，父会话后续页面为 44,135；不同缓存，不能把差值当本次增长。公司页有官方转发的用户推荐，但时间节省自述未独立验证 |
+| [Simplify LinkedIn](https://www.linkedin.com/company/simplifyjobs/) | 约 4.4 万 followers | 一份缓存 44,080，另一份页面为 44,135；不同缓存，不能把差值当本次增长。公司页有官方转发的用户推荐，但时间节省自述未独立验证 |
 | [Bardeen LinkedIn](https://www.linkedin.com/company/bardeen/) | 15,327 followers | 公司级关注，可能涵盖多个产品与招聘；不是插件活跃 |
-| [Bardeen Product Hunt](https://www.producthunt.com/products/bardeen) | 2.2K followers；4 次 launches | followers 不是某次 launch 的 votes；父会话复核产品页数值及官网回链 |
-| [Text Blaze 官方论坛](https://community.blaze.today/about.json) | 26,231 账户；近 30 日 2,148 posts；active_users_30_days 447 | 父会话重新 GET 核对；均是论坛字段，不是插件 MAU；未审计员工/机器人占比与统计细则 |
+| [Bardeen Product Hunt](https://www.producthunt.com/products/bardeen) | 2.2K followers；4 次 launches | followers 不是某次 launch 的 votes；当时核过产品页数值及官网回链 |
+| [Text Blaze 官方论坛](https://community.blaze.today/about.json) | 26,231 账户；近 30 日 2,148 posts；active_users_30_days 447 | 当日读取；均是论坛字段，不是插件 MAU；未审计员工/机器人占比与统计细则 |
 
 Text Blaze 的一个具体[需求讨论](https://community.blaze.today/t/insert-without-closing/69488)在抓取时为 17 views、6 posts，用户希望模板插入后保持可用，支持人员追问场景。其价值是能看到持续使用遇到的问题，不能因为浏览数少就判定支持渠道无价值，也不能把账户总数当自然口碑总量。
 
@@ -91,30 +89,10 @@ Reddit 取同日官方只读 API 快照；score 可能模糊化，不等于曝�
 | [FillApp 提示词库 / HN](https://news.ycombinator.com/item?id=45746739) | 2025-10-29 | 2 / 0 | 作者发布免费资源；有发帖不等于有可见讨论或有效获客 |
 | [FillApp 行业文章 / HN](https://news.ycombinator.com/item?id=45147615) | 2025-09-06 | 1 / 1 | 评论为发帖者自己的内容介绍，不能当独立读者反馈 |
 
-FillApp 的隐私评论是 **2025 年发布时的历史反馈**，不能据此宣布其当前政策仍有同样问题。对 FormFill 的启示是先把模型服务商、数据发送、可选历史和有效源码入口解释清楚；本项目当前还确有已复现的学习采集问题，要先修实现。
+把论坛需求问题和 HN 发布分数放在一起，前者能解释使用摩擦，后者连评论是否由读者所写都要先查。这是读案例而不做热度榜的理由。2025 年对 FillApp 的评论同样只对应当时的版本，不能当成现在的隐私审计。
 
-新增 HN 核验过程：先按出站 URL 域名通过 Algolia 发现条目，再逐条请求官方 Firebase API核对分数、日期和评论。保存 域名检索样本与官方根帖/评论快照。域名检索未命中不表示品牌没有讨论，因为 text-only、别的域名和评论可能不在该检索范围。
+## 市场观察怎样影响了旧计划
 
-另查到 Text Blaze 两篇 HN 内容分别为 2023 年工程文章 7 分/0 评论与 2021 年招聘经验 1 分/1 评论；它们是公司内容传播，非本轮填表产品发布，不纳入当前品牌热度排序。全量原发布案例仍见 [社区研究](47-FormFill_社区发布案例研究与英文草稿.md)和[量化补充](42-插件分发、开源与社区量化：市场表现补充.md)。
+直接竞品数量小，说明不能靠相邻平台的量级来决定押注；免费规则工具又已经覆盖一部分固定任务。团队因此想先验证真实获取、合成演示、配置和复核，再问谁会在下一次任务里继续用。见[产品策略](38-FormFill_产品差异化、定价与推广决策.md)、[执行计划](46-FormFill_网站、功能、宣传与_SEO_执行计划.md)和[社区案例研究](47-FormFill_社区发布案例研究与英文草稿.md)。
 
-## 4. 这些数据如何改变决策
-
-| 观察 | 对 FormFill 的实际决定 |
-|---|---|
-| 大规模相邻工具都服务明确的重复任务；直接通用 AI 填表的可见规模较小 | 首先验证一个具体业务任务及复用，不以“整个自动填表市场很大”替代客群选择 |
-| 免费/低价工具、免费开源 BYOK 都存在 | 现有能力保持免费更有竞争逻辑；¥699 适配实验检验的是有限交付价值，不能靠竞品 users 推导有人愿买订阅 |
-| FillApp/ExcelToForm 有安装、任务指南；Text Blaze 有模板和持续论坛支持 | 首批投入真实安装、可下载例子、任务教程、有效支持与兼容性说明。先让使用者完成任务，再扩大内容 |
-| 精选 Reddit/HN 帖大多只有个位数分数和少量评论 | 把社区当定向反馈与初始试用入口，预期设为拿到失败样例、找到复用者；不预算“一发帖就几千安装” |
-| 成熟品牌社交关注多，但全域产品范围更宽 | 借鉴具体叙事和支持组织方式；不照抄其完整功能、渠道比例、预算或发文数量 |
-| 直接竞品月量多不可公开核实 | 保留市场假设，不用估算数字决定重投入；优先从自己的试用任务、安装配置和真实付款获得证据 |
-
-因此优先采用 [产品策略](38-FormFill_产品差异化、定价与推广决策.md)中的记录主体明确、人工可复核和可靠获取路径；再按实际阻力选择映射复用或来源检查。完整来源追溯不作为结构化复用的前置。两类任务的频率、成本与付费仍待验证，市场快照不能决定客群或价格，来源定位和业务场景也不能说“唯一”。具体待办见 [执行计划](46-FormFill_网站、功能、宣传与_SEO_执行计划.md)。
-
-## 5. 后续如何持续跟踪
-
-- **每月一次**保存商店 users/评分/版本快照及各流量来源最新完整月；保持同商店 ID、同域范围、同提供者和设备口径。商店舍入与缓存可能掩盖小变化，不能据快照差值算精确月新增。
-- **每周少量关注**新出现的使用问题、真实兼容失败和发布内容；记录原帖日期、抓取时间、作者关系、互动对象和明确反馈。不要用模糊品牌搜索结果数充当全网声量。
-- **本站每 28 天复盘**真实相关搜索 → 安装入口 → 配置成功 → 首个正确任务 → 实际复用 → 适配询问/实付。早期用自愿测试者、商店聚合指标和透明网站统计补足，不悄悄增加扩展遥测。
-- **需要购买数据时**再以“能否取得直接竞品、同月、同口径报告”评估一个研究工具周期；不是看到 NA 就盲目同时订多家。付款前先确认覆盖，不能假设付费一定能估算小站。
-
-本轮没有验证竞品真实填表效果、收费收入、广告效果、本站线上域名及真实搜索量；所有未知都保留为未知，没有拿 0 替代。工作完成的是公开市场快照与决策支持，不是对任何竞品经营结果的审计。
+曾建议每月对照同一条目的商店快照、同提供者同设备范围的完整月访问；每周少量记录问题；若有本站流量，每 28 天追到首次任务和真实复用。**这套跟踪未执行**，更没有适配交易、投放或可计算的 CAC。[冻结交接](22-FormFill_产品收尾与交接报告.md)是这些设想的终点。文中数字附提供者和数据期；第三方网页、数据库及评论底稿不随本文许可授权。
