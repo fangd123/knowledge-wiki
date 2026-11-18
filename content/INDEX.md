@@ -1,6 +1,6 @@
 # 目录
 
-共 304 篇。内容许可：CC BY-NC-SA 4.0（代码 MIT）。
+共 324 篇。内容许可：CC BY-NC-SA 4.0（代码 MIT）。
 系列文章按目录整体收录；独立文章放在各分类根目录。
 
 ## 工程实践
@@ -343,7 +343,7 @@
 - [EP2 "好玩"这件事，能交给 AI 自己管吗？— 逐镜执行蓝图](项目复盘/AI Game三集迷你系列分镜/03-EP2__好玩_这件事，能交给_AI_自己管吗？—_逐镜执行蓝图.md)
 - [EP3 如果玩家真能把世界玩坏 — 逐镜执行蓝图](项目复盘/AI Game三集迷你系列分镜/04-EP3_如果玩家真能把世界玩坏_—_逐镜执行蓝图.md)
 
-### 系列：FormFill浏览器扩展（34 篇）
+### 系列：FormFill浏览器扩展（54 篇）
 
 - [FormFill 执行记录：2026-11-17](项目复盘/FormFill浏览器扩展/01-FormFill_执行记录：2026-11-17.md)
 - [FormFill 收尾执行记录：2026-11-18](项目复盘/FormFill浏览器扩展/02-FormFill_收尾执行记录：2026-11-18.md)
@@ -379,6 +379,26 @@
 - [W05 映射复用浏览器补验 第三轮确认（Qwen）](项目复盘/FormFill浏览器扩展/32-W05_映射复用浏览器补验_第三轮确认（Qwen）.md)
 - [W05 真实模型 E2E + reasoning_effort 独立审查（Qwen）](项目复盘/FormFill浏览器扩展/33-W05_真实模型_E2E_+_reasoning_effort_独立审查（Qwen）.md)
 - [用户提示功能改进说明](项目复盘/FormFill浏览器扩展/34-用户提示功能改进说明.md)
+- [FormFill 全面评估：网站、竞品、市场表现、产品策略与 SEO](项目复盘/FormFill浏览器扩展/35-FormFill_全面评估：网站、竞品、市场表现、产品策略与_SEO.md)
+- [FormFill 竞品与同名品牌核查](项目复盘/FormFill浏览器扩展/36-FormFill_竞品与同名品牌核查.md)
+- [FormFill 功能差异、首发任务与取舍建议](项目复盘/FormFill浏览器扩展/37-FormFill_功能差异、首发任务与取舍建议.md)
+- [FormFill 产品差异化、定价与推广决策](项目复盘/FormFill浏览器扩展/38-FormFill_产品差异化、定价与推广决策.md)
+- [差异化反证：父会话补查的相邻产品](项目复盘/FormFill浏览器扩展/39-差异化反证：父会话补查的相邻产品.md)
+- [FormFill：定位、收费边界与宣传实验](项目复盘/FormFill浏览器扩展/40-FormFill：定位、收费边界与宣传实验.md)
+- [竞品市场表现：规模、流量、社区与 FormFill 的推广选择](项目复盘/FormFill浏览器扩展/41-竞品市场表现：规模、流量、社区与_FormFill_的推广选择.md)
+- [插件分发、开源与社区量化：市场表现补充](项目复盘/FormFill浏览器扩展/42-插件分发、开源与社区量化：市场表现补充.md)
+- [竞品营销：网站访问量、排名、获客结构与公开关注](项目复盘/FormFill浏览器扩展/43-竞品营销：网站访问量、排名、获客结构与公开关注.md)
+- [FormFill SEO、关键词与获客研究](项目复盘/FormFill浏览器扩展/44-FormFill_SEO、关键词与获客研究.md)
+- [FormFill 网站与产品发布审计](项目复盘/FormFill浏览器扩展/45-FormFill_网站与产品发布审计.md)
+- [FormFill 网站、功能、宣传与 SEO 执行计划](项目复盘/FormFill浏览器扩展/46-FormFill_网站、功能、宣传与_SEO_执行计划.md)
+- [FormFill 社区发布案例研究与英文草稿](项目复盘/FormFill浏览器扩展/47-FormFill_社区发布案例研究与英文草稿.md)
+- [FormFill 研究包独立评审（qwen4-max-preview）](项目复盘/FormFill浏览器扩展/48-FormFill_研究包独立评审（qwen4-max-preview）.md)
+- [执行计划定向一致性复核（qwen4-max-preview）](项目复盘/FormFill浏览器扩展/49-执行计划定向一致性复核（qwen4-max-preview）.md)
+- [Qwen 独立复核：处理结果与统一决策](项目复盘/FormFill浏览器扩展/50-Qwen_独立复核：处理结果与统一决策.md)
+- [研究-17-社区worker收尾](项目复盘/FormFill浏览器扩展/51-研究-17-社区worker收尾.md)
+- [研究-18-竞品worker收尾](项目复盘/FormFill浏览器扩展/52-研究-18-竞品worker收尾.md)
+- [研究-19-SEO-worker收尾](项目复盘/FormFill浏览器扩展/53-研究-19-SEO-worker收尾.md)
+- [FormFill 产品原点与场景方向重估](项目复盘/FormFill浏览器扩展/54-FormFill_产品原点与场景方向重估.md)
 
 ### 独立文章
 
