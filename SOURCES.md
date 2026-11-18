@@ -31,9 +31,9 @@
 
 | 素材 | 作者/机构 | 来源链接 | 许可 | 用在哪 | 改动 | 备注 |
 |---|---|---|---|---|---|---|
-| Active Badge 系统设备照片 | Roy Want（Xerox PARC） | [Wikimedia Commons: File:Active_Badge.png](https://commons.wikimedia.org/wiki/File:Active_Badge.png) | CC BY-SA 4.0 | AI交互设计2026版/02 | 未修改 | Weiser 普适计算一节的史料配图 |
-| Sutherland 操作 Sketchpad 照片 | Ivan Sutherland，Kerry Rodden 扫描 | [Wikimedia Commons: File:SketchpadDissertation-Fig1-2.tif](https://commons.wikimedia.org/wiki/File:SketchpadDissertation-Fig1-2.tif) | CC BY-SA 3.0 | AI交互设计2026版/03 | Commons 提供缩放版 | 直接操控史料配图 |
-| 《Generative Interfaces for Language Models》图 1 | Jiaqi Chen, Yanzhe Zhang, Yutong Zhang, Yijia Shao, Diyi Yang | [ACL Findings 2026](https://aclanthology.org/2026.findings-acl.74/) | CC BY 4.0 | AI交互设计2026版/04 | 从发表版 PDF 裁取图幅 | 论文图表适当引用 |
+| Active Badge 系统设备照片 | Roy Want（Xerox PARC） | [Wikimedia Commons: File:Active_Badge.png](https://commons.wikimedia.org/wiki/File:Active_Badge.png) | CC BY-SA 4.0 | AI交互设计2026版/03（`03-02-active-badge.png`） | 未修改 | Weiser 普适计算一节的史料配图 |
+| Sutherland 操作 Sketchpad 照片 | Ivan Sutherland，Kerry Rodden 扫描 | [Wikimedia Commons: File:SketchpadDissertation-Fig1-2.tif](https://commons.wikimedia.org/wiki/File:SketchpadDissertation-Fig1-2.tif) | CC BY-SA 3.0 | AI交互设计2026版/04（`04-03-sketchpad-sutherland.jpg`） | Commons 提供缩放版 | 直接操控史料配图 |
+| 《Generative Interfaces for Language Models》图 1 | Jiaqi Chen, Yanzhe Zhang, Yutong Zhang, Yijia Shao, Diyi Yang | [ACL Findings 2026](https://aclanthology.org/2026.findings-acl.74/) | CC BY 4.0 | AI交互设计2026版/05（`05-04-generative-interfaces-fig1.png`） | 从发表版 PDF 裁取图幅 | 论文图表适当引用 |
 
 ## 已在私有库中确认、但未进入首批的素材类型
 
