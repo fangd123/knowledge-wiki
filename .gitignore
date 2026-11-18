@@ -1,0 +1,26 @@
+.obsidian/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+*.log
+*.tmp
+*.bak
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.m4a
+*.pdf
+*.pptx
+*.docx
+*.zip
+node_modules/
+.venv/
+
+# 本地工作区，不进入公开仓库与提交历史：
+# scripts/ 含红线禁词名单（真实姓名、雇主名），manifest/ 含私有库源路径，
+# staging/ 是可再生成的中间产物。
+scripts/
+manifest/
+staging/
