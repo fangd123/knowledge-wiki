@@ -32,7 +32,7 @@ status: published
 | 站外评测：Z-Image | [zimage.run：6 个必备 LoRA 深度评测](https://zimage.run/blog/zi-100-community-lora-review-en-20260615) · [smartart.live：写实 LoRA 压力测试](https://smartart.live/articles/253-top-10-stress-tests-for-realistic-loras-finding-the-best-z-image-turbo-setup.html) | zimage.run 推荐 Lenovo UltraReal、After Dark、Photo Factory（它给的 CFG 7 和 Turbo 的 CFG 1 有冲突，别照抄）；smartart 认为 ULTRA-R 技术指标最好，KODAK 观感更受欢迎 |
 | 站外评测：Wan | [imagera：Wan 2.2 电影感 LoRA](https://imagera.ai/learn/best-cinematic-lora-wan-2-2-ai-video-2026) · [note.com：批量收集 475 个 Wan 2.2 LoRA 并对比](https://note.com/cute_agapan9087/n/nd2a0bc6fe4af?hl=en) | — |
 
-## 二、搜索中出现的具体 LoRA（补充 [02-生图LoRA与工作流](03-任务_B：开源生图模型的热门_LoRA_与_ComfyUI_Workflow（按场景）.md)）
+## 二、搜索中出现的具体 LoRA（补充 02-生图LoRA与工作流）
 
 ### Qwen-Image 2.1（GPU 服务器上装的就是这个版本）
 | LoRA | 用途 | 参数 |

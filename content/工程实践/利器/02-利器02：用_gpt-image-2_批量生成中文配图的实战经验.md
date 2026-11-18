@@ -290,7 +290,7 @@ FILES = [
 ]
 
 # 在 md 文件里找  这种块
-PROMPT_RE = re.compile(r"!\[配图提示词(\d+)[：:](.+?)\]", re.DOTALL)
+PROMPT_RE = re.compile(r"!\配图提示词(\d+)[：:\]", re.DOTALL)
 
 NO_ENGLISH_INSTR = (
     "\n\nCRITICAL: Render ALL text, labels, captions, signs, headings and any "
@@ -440,7 +440,7 @@ FILES = [
 
 # 注意：用 [^\]\\]|\\. 来允许 prompt 内部出现转义/引号但不吃掉外层的 ]
 PROMPT_BLOCK_RE = re.compile(
-    r"(!\[配图提示词(\d+)[：:](?:[^\]\\]|\\.)*?\])",
+    r"(!\配图提示词(\d+)[：:*?\])",
     re.DOTALL,
 )
 
@@ -513,4 +513,4 @@ if __name__ == "__main__":
 
 ---
 
-*本文是"利器"系列的第二篇，记录的是 `gpt-image-2` 在国内中转服务上的批量任务实战。第一篇见 [Windows Terminal 与 Bash 改造记录](./096-利器01：Windows%20Terminal%20与%20Bash%20改造记录.md)。*
+*本文是"利器"系列的第二篇，记录的是 `gpt-image-2` 在国内中转服务上的批量任务实战。第一篇见 Windows Terminal 与 Bash 改造记录。*

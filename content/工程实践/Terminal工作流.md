@@ -72,4 +72,4 @@ Terminal工作流和Shell工作流关注不同的层次：Shell工作流关注�
 
 ## 来源
 
-- [096-利器01：Windows Terminal 与 Bash 改造记录](利器/01-利器01：Windows_Terminal_与_Bash_改造记录.md)
+- 096-利器01：Windows Terminal 与 Bash 改造记录

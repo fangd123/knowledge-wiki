@@ -16,7 +16,7 @@ status: published
 # 开源生图/生视频：LoRA 与 ComfyUI 工作流生态总结
 
 > 调研日期 2026-11-08。分三路交给 CodeBuddy（glm-5.3-flash）联网调研，Claude 抽查关键事实后汇总。
-> 详细版（含全部来源链接、事实/推断/未核实标注）：[01-分享平台调研](02-开源生图_生视频模型的_LoRA_与_ComfyUI_Workflow_分享平台调研报告.md) · [02-生图LoRA与工作流](03-任务_B：开源生图模型的热门_LoRA_与_ComfyUI_Workflow（按场景）.md) · [03-生视频LoRA与工作流](04-开源视频生成模型的热门_LoRA_与_ComfyUI_Workflow_调研报告.md) · [04-Civitai推荐文章索引](05-Civitai_推荐_LoRA：文章与清单索引.md) · [05-LiblibAI热门LoRA与工作流](06-任务_D：LiblibAI（哩布哩布）上流行的_LoRA_与_ComfyUI_工作流调研.md)
+> 详细版（含全部来源链接、事实/推断/未核实标注）：01-分享平台调研 · 02-生图LoRA与工作流 · 03-生视频LoRA与工作流 · 04-Civitai推荐文章索引 · 05-LiblibAI热门LoRA与工作流
 > 下载量、点赞数都是检索当天的快照，以站内实时数据为准。
 
 ---
