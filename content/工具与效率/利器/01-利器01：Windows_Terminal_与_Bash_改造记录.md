@@ -1,5 +1,5 @@
 ---
-title: "利器01：Windows Terminal 与 Bash 改造记录"
+title: "利器01：Windows Terminal 与 Zsh 改造记录"
 date: 2026-04-07
 author: fangd123
 license: CC BY-NC-SA 4.0
@@ -13,186 +13,54 @@ ai_assisted: true
 status: published
 ---
 
-> 由于微信公众号无法直接跳转外链，大家可以点击**阅读原文**进入我的博客浏览
+# 利器01：Windows Terminal 与 Zsh 改造记录
 
-*“利器”系列说明：“工欲善其事必先利其器”，有了称手好用的工具，才能最大程度发挥出自己的能力，提高生产力和效率，避免无效加班。因此，“利器”系列将会记录我对于各种工具的改造，以及我是如何组合应用它们发挥价值。*
+我一般在 Windows 上开终端，通过 SSH 连到 Ubuntu 工作。新环境里我想先办妥三件小事：字看得清，常用命令不用从头敲，合上电脑以后还能接着做。它们看起来都发生在一个黑窗口里，要改的却是三个不同地方。
 
----
+## 窗口：字体装在看屏幕的这台电脑上
 
-这篇文章主要记录我 Terminal & Bash 改造，Terminal & Bash 是所有程序员在新的开发环境下第一个接触也是最常接触的地方，因此，这里的作为“利器”系列的第一篇，分享给大家。
+我用 Windows Terminal。它可以从微软应用商店安装。打开设置，选中**实际用来连 SSH 的配置文件**，在“外观”里换字体；不用为了改字号就从头抄一份 `settings.json`。
 
-**注：以下内容中，涉及到下载的链接，均已经过国内网络优化地址，方便大家快速下载**
+我主要修改了字体和字号：大屏幕上用 14，字体喜欢 Fira Code。如果提示符带图标，就从 [Nerd Fonts 官方发布页](https://github.com/ryanoasis/nerd-fonts/releases) 找 FiraCode 的补字形版本，装在 Windows 上，再到 Terminal 里选它。远端换多少次字体，也救不了本地窗口里那个空心方框。
 
-## Terminal ：Windows Terminal
+## 输入：在远端配置 Zsh
 
-Windows环境下，我选择 Windows Terminal
+SSH 连上 Ubuntu 以后，再在**远端**安装工具：
 
-**选择原因**：其他的 Terminal 存在一个不好解决的问题，就是在使用远程Tmux的情况下，无法使用鼠标选择复制粘贴，同时Windows Terminal 也拥有不输其他 Terminal 个性化配置功能
-
-**安装方法**：直接在微软应用商店搜索“Windows Terminal”安装即可。
-
-### 配置
-
-有两种配置方式，一种是交互式，另一种是编辑配置文件setttings.json，建议初次配置使用交互式的配置方式即可。配置完成后，可以将配置文件导出备份到云盘上，方便以后直接使用。
-
-我主要修改了字体和字号，字号设置为14，方便大屏幕阅读，字体用的是“FiraCode”，这是一种针对于编程的字体，详细的介绍可以看这里：[FiraCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode)
-
-字体的官方下载链接：[FiraCode.zip](https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip)
-
-阿里云下载链接：
-
-> 「firacode」，点击链接保存，或者复制本段内容，打开「阿里云盘」APP ，无需下载极速在线查看，视频原画倍速播放。 链接：https://www.aliyundrive.com/s/Wx5ZFrUhquY
-> 
-
----
-
-## Shell 配置
-
-因为我一般都是在本地通过SSH远程连接到服务器Ubuntu系统上，因此，这里只讨论Ubuntu环境下的Shell配置。
-
-### 安装 ZSH
-
-在Ubuntu系统下，执行
-
-```bash
-sudo apt install -y zsh curl wget git tmux
+```sh
+sudo apt install zsh git tmux
+zsh
 ```
 
-### 安装 Oh My Zsh
+第二行是进入 Zsh，不是把所有用户的默认 Shell 换掉。我习惯用 [Oh My Zsh](https://ohmyz.sh/) 管插件；如果要跟着装，从项目首页查看安装说明。已有 `~/.zshrc` 的话先备份，安装器的改动看清再接受。直接用 Zsh 也可以，不装框架不会影响后面的 tmux。
 
-Oh My Zsh 是 Zsh 的配置管理器，包括插件，主题等的配置，并且已经默认了许多实用功能，集成了相当多的插件（大部分默认不启用）有兴趣的朋友可以进入它的官网获取更多信息：
+我常用两个插件：[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) 会参考历史命令给出灰色建议；[fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting) 在输入时着色。前者帮我少打几个字，后者让我在按回车以前多看一眼，但颜色正常不保证命令正确。
 
-[Oh My Zsh - a delightful & open source framework for Zsh](https://ohmyz.sh/)
+用 Oh My Zsh 时，按各自项目的安装说明把插件放进自定义插件目录，再在 `~/.zshrc` **已有的** `plugins=(...)` 里加名字。例如：
 
-想快速了解的朋友，可以看看它的Cheatsheet：
-
-[https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet](https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet)
-
-安装过程
-
-```bash
-cd ~
-wget https://pd.zwc365.com/https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-# 设置远端地址为github镜像地址
-Export REMOTE=https://hub.fastgit.org/ohmyzsh/ohmyzsh.git
-sh install.sh
+```zsh
+plugins=(git zsh-autosuggestions fast-syntax-highlighting)
 ```
 
-### 安装 starship
+如果还想在提示符上看 Git 分支，可以按 [Starship 官方指南](https://starship.rs/guide/) 安装，再在 `~/.zshrc` 末尾加一行 `eval "$(starship init zsh)"`。改完在 Zsh 里运行 `source ~/.zshrc`。不要往 `.bashrc` 里加这一行，也不必把同一行反复追加。
 
-```bash
-sh -c "$(curl -fsSL https://pd.zwc365.com/https://starship.rs/install.sh)" -- -B https://hub.fastgit.org/starship/starship/releases
-echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+## 会话：断开 SSH 以后怎么接回来
+
+这是我折腾终端最值的一步。先在服务器上开一个有名字的会话：
+
+```sh
+tmux new -s work
 ```
 
-### 安装 Shell 语法高亮插件
+在里面照常干活。要离开时，按默认前缀 `Ctrl-b`，松开，再按 `d`。下次 SSH 连回来，先用 `tmux ls` 看看，再用 `tmux attach -t work` 回到刚才的窗口。留下来的是**服务器上仍在运行的会话**；服务器重启、任务自己退出，都不是重新连接能挽回的。
 
-插件地址：
+我后来用了 [Oh My Tmux](https://github.com/gpakosz/.tmux)。已有 tmux 配置不必覆盖；先比对项目说明和自己的键表。下面四个是我当时这套配置里用得最多的，不是原版 tmux 的通用键位：
 
-[Fast Syntax Highlighting (F-Sy-H)](https://github.com/zdharma-continuum/fast-syntax-highlighting)
+| 按什么 | 我用它做什么 |
+|---|---|
+| `Ctrl-a` | 当作 `Ctrl-b` 之外的第二个前缀，手更顺。 |
+| 前缀，再按 `m` | 切换鼠标模式。要把文字复制到 Windows 时，还要区分选区归终端还是归 tmux。 |
+| 前缀，再按 `-` | 把窗格分成上下两块，下面一块看日志。 |
+| 前缀，再按 `_` | 把窗格分成左右两块，并排看命令和结果。 |
 
-效果预览：
-
-> 图注：https://pic1.zhimg.com/v2-f5e23c855f18f66809237e5bf31ec798_b.png
-
-安装步骤：
-
-1. 执行命令：
-
-```bash
-git clone https://hub.fastgit.org/zdharma-continuum/fast-syntax-highlighting.git \
-  ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
-```
-
-2. 打开`~/.zshrc` 文件，找到 `plugins`，添加`fast-syntax-highlighting`插件
-
-```bash
- plugins=(git fast-syntax-highlighting)
-```
-
-3. 激活ZSH配置，执行命令
-
-```
-source ~/.zshr
-```
-
-### 安装 Shell 自动完成插件
-
-效果预览：
-
-[https://asciinema.org/a/37390](https://asciinema.org/a/37390)
-
-1. 下载插件
-
-```bash
-git clone https://hub.fastgit.org/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-```
-
-2. 添加插件
-
-打开`~/.zshrc` 文件，找到 `plugins`
-
-```bash
- plugins=(git fast-syntax-highlighting zsh-autosuggestions)
-```
-
-3. 激活插件
-
-```bash
-source ~/.zshrc
-```
-
----
-
-## Tmux
-
-Tmux 是一款强大的终端复用器（这个翻译有点废），通俗一点的说，就是在关闭SSH远程连接的情况下，终端里运行的程序依然不会断开。
-
-Tmux 的基本介绍和使用，可以参考阮一峰的博客，链接在这里：
-
-[Tmux 使用教程 - 阮一峰的网络日志](https://www.ruanyifeng.com/blog/2019/10/tmux.html)
-
-### Tmux 配置文件 Oh My Tmux
-
-效果预览：
-
-> 图注：https://pic3.zhimg.com/v2-a373906b98b5ed7cfadb506017c27eea_b.png
-
-安装命令如下：
-
-```bash
-cd
-git clone https://hub.fastgit.org/gpakosz/.tmux.git
-ln -s -f .tmux/.tmux.conf
-cp .tmux/.tmux.conf.local .
-```
-
-安装完成后，进入Tmux便可以看到新的界面了
-
-我用的比较多的快捷键：
-
-1. 添加了`C-a`作为C-b的第二选择（从键位的角度来说，`C-a` 更方便一些）
-2. `<prefix> m` 绑定鼠标模式
-3. `<prefix> -` 纵向分割当前面板
-4. `<prefix> _` 横向分割当前面板
-
-更加详细的介绍，可以进入作者的github页面了解，链接如下：
-
-[https://github.com/gpakosz/.tmux](https://github.com/gpakosz/.tmux)
-
----
-
-以上便是Terminal和Shell的改造全过程，希望这篇文章能够帮助你在终端界面中提高效率。
-
-当然，这并不是改造的结束，相关的工具和插件其实是非常庞杂的，也有许多值得进一步探索的地方，我也只是用了这些工具的冰山一角而已。
-
-我会在今后的文章中，逐渐加入一些针对性的环境配置和工具使用教程。
-
-如果大家想推荐自己使用的工具，欢迎再评论区留言，我会即使将推荐内容更新至文章当中。
-
----
-
-题图 Photo by [Andrew Svk](https://unsplash.com/@andrew_svk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/t/travel?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
-
-参考文章：[HowTo: My Terminal & Shell setup - Hyper.js + ZSH + starship ☄️🔥](https://tjay.dev/howto-my-terminal-shell-setup-hyper-js-zsh-starship/)
-
+不确定自己的配置绑定了什么，运行 `tmux list-keys` 比多按几次可靠。刚接触 tmux 可以先读[阮一峰的入门教程](https://www.ruanyifeng.com/blog/2019/10/tmux.html)。已经装完、只剩下某个地方不对劲，可以直接看[终端环境改造：按症状排查](../终端环境改造.md)。

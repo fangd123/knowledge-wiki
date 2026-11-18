@@ -535,7 +535,7 @@
 
 ### 系列：利器（2 篇）
 
-- [利器01：Windows Terminal 与 Bash 改造记录](工具与效率/利器/01-利器01：Windows_Terminal_与_Bash_改造记录.md)
+- [利器01：Windows Terminal 与 Zsh 改造记录](工具与效率/利器/01-利器01：Windows_Terminal_与_Bash_改造记录.md)
 - [利器02：用 gpt-image-2 批量生成中文配图的实战经验](工具与效率/利器/02-利器02：用_gpt-image-2_批量生成中文配图的实战经验.md)
 
 ### 独立文章

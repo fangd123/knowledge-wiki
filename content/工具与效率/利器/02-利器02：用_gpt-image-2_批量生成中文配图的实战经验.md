@@ -13,13 +13,13 @@ ai_assisted: true
 status: published
 ---
 
-> 由于微信公众号无法直接跳转外链，大家可以点击**阅读原文**进入我的博客浏览
+# 利器02：用 gpt-image-2 批量生成中文配图的实战经验
 
 *"利器"系列说明："工欲善其事必先利其器"，有了称手好用的工具，才能最大程度发挥出自己的能力，提高生产力和效率，避免无效加班。因此，"利器"系列将会记录我对于各种工具的改造，以及我是如何组合应用它们发挥价值。*
 
 ---
 
-最近为一个长篇系列文章批量生成 51 张配图，用的是 OpenAI 在 2026 年 4 月发布的 `gpt-image-2`，走的是国内中转服务（New API 协议）。中间踩了几个坑，也总结出一套对**长尾批量任务**比较稳定的脚本范式，在这里完整记录一下，下次再遇到类似的"几十张图打底、要求图中文字必须中文、不能让单点失败拖死全局"的活，可以照搬。
+最近为一个长篇系列文章批量生成 51 张配图，用的是服务商当时提供的 `gpt-image-2` 接口，走的是国内中转服务（New API 协议）。中间踩了几个坑，也总结出一套对**长尾批量任务**比较稳定的脚本范式，在这里完整记录一下，下次再遇到类似的"几十张图打底、要求图中文字必须中文、不能让单点失败拖死全局"的活，可以照搬。
 
 如果你的场景是：
 
@@ -27,9 +27,9 @@ status: published
 - 跑的是国内中转服务而不是直连 OpenAI
 - 需要稳定、可断点续跑、可控并发的批量脚本
 
-这篇可以直接抄。
+先看一次失败的账单，再决定哪些步骤值得抄。
 
-## 一、第一个坑：OpenAI SDK 在大响应上的假阳性失败
+## 一、第一个坑：客户端报错，平台却已经扣费
 
 最直观的踩坑——同一个 API、同一个 key、同一个模型，**用 curl 能成功，用 OpenAI Python SDK 反而稳定失败**。
 
@@ -42,7 +42,7 @@ status: published
 [7/51 | 509s] FAIL 06-2  attempt 3/3: APIConnectionError: Connection error.
 ```
 
-每张失败的图都是 `APIConnectionError: Connection error.`，但去看中转服务后台的日志，**这些"失败"的请求实际都已经成功生成图片并扣费了**。也就是说服务端 200 OK 给了正确的 PNG，但客户端在响应到达后异常中断、SDK 抛出连接错误。
+客户端没有保存到图片；到服务后台核对，同一批请求却已有生成和扣费记录。**没拿到文件，不等于没生成。** 日志能证明这两头的结果不一致，不能证明失败的那次响应完整到达了客户端。
 
 ### 怎么定位的
 
@@ -51,21 +51,21 @@ status: published
 **第一层：直接 curl，绕过 SDK。**
 
 ```bash
-curl -sS -X POST "https://nowcoding.ai/v1/images/generations" \
+curl -sS -X POST "${BASE_URL}/images/generations" \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model":"gpt-image-2","prompt":"...","size":"auto","quality":"low","n":1}'
 ```
 
-curl 返回 `{"created":..., "data":[{"b64_json":"iVBORw0K..."}]}`，2.2MB 的响应体，base64 解出来是合法 PNG。**接口本身没问题。**
+curl 返回 `{"created":..., "data":[{"b64_json":"iVBORw0K..."}]}`，2.2MB 的响应体，base64 解出来是合法 PNG。这一次请求和解码都成功了。
 
 **第二层：单独 Python `requests` 调一次。**
 
-写个 5 行的小脚本，用 `requests.post(...)` 直接打同一个 URL，返回正常。**HTTP 层、URL、key、模型名、请求体格式都没问题。**
+写个 5 行的小脚本，用 `requests.post(...)` 直接打同一个 URL，返回正常。这至少排除了“同一组参数根本不能工作”。
 
-**第三层：那就是 SDK 的问题。**
+**第三层：换客户端，而不是急着给故障定性。**
 
-OpenAI SDK 底层是 httpx，httpx 在响应体很大（这里是 2-3MB 的 base64 PNG）+ 网络中转链路较长的情况下，连接保持/读取超时阈值容易触发。具体根因没继续深挖（不是这次任务的目标），但**结论很清楚：换掉 SDK，用 `requests` 直接打 RESTful 接口**。
+同一条链路用 `requests` 能拿到图片，我就先用它完成余下的批次。没抓到失败时的完整响应，也没隔离连接复用、超时设置和中转环节；这是一个绕开问题的办法，不是已经查明了 SDK 的缺陷。
 
 ### 解决方案
 
@@ -75,7 +75,7 @@ def call_api(prompt: str, *, read_timeout: float = 600.0) -> bytes:
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
-        "Connection": "close",   # 不复用连接，避免 keep-alive 池里的脏连接
+        "Connection": "close",   # 本次对照关闭连接复用
         "Accept": "application/json",
     }
     body = {
@@ -99,13 +99,13 @@ def call_api(prompt: str, *, read_timeout: float = 600.0) -> bytes:
 
 几个关键点：
 
-- **`Connection: close`**：每次请求都开新连接，关掉就关掉。`requests` 的连接池在长跑批量任务中容易复用到已经被中转服务关闭的连接。
+- **`Connection: close`**：这是当时对照使用的配置，并非已证实故障由连接池引起。
 - **超时分两段写**：`timeout=(connect, read)`。连接超时 30 秒就够了；读超时给到 **600 秒**，因为 gpt-image-2 在繁忙时单图生成 + 传输 base64 经常耗时 3-5 分钟。
 - **优先用 `b64_json`**：返回内联的 base64 而不是 URL。少一次 HTTP 跳转，少一类失败模式。
 
 ### 经验法则
 
-> **当 SDK 报错而 curl 不报错时，问题大概率在 SDK 而不是接口。立刻降级到 `requests` 重新跑一遍验证，这是最快的诊断路径。**
+> 用一张图对照两种客户端的结果和账单。后台已有产物时，先尝试取回它，不要再花一次钱证明上一次收费。
 
 ## 二、第二个坑：超时时间和并发度的取舍
 
@@ -113,17 +113,17 @@ def call_api(prompt: str, *, read_timeout: float = 600.0) -> bytes:
 
 ```
 [4/30 | 415s] start 08-3
-  [08-3] attempt 1/3: ReadTimeout: HTTPSConnectionPool(host='nowcoding.ai', port=443):
+  [08-3] attempt 1/3: ReadTimeout: HTTPSConnectionPool:
                       Read timed out. (read timeout=300.0)
 ```
 
-300 秒（5 分钟）不够。`gpt-image-2` 在中转服务排队时，单图等 8-10 分钟是正常的。**把读超时从 300 秒拉到 600 秒之后，超时基本消失。**
+这次排队，300 秒（5 分钟）不够。**把读超时从 300 秒拉到 600 秒之后，超时基本消失。**
 
 ### 串行 vs 并发
 
 最初担心打太多并发会被中转服务限流，所以选了串行。结果串行的速度感人——平均 150 秒/张，30 张要 75 分钟。
 
-后来发现 New API 这类中转服务通常是按账户配额限速、不是按连接数硬限，所以**改成 5 路并发**：
+核过预算后，我在剩余任务上试着**改成 5 路并发**：
 
 ```python
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -135,11 +135,11 @@ with ThreadPoolExecutor(max_workers=5) as pool:
         # 进度打印 ...
 ```
 
-剩余 20 张图，**串行预计 50 分钟，5 路并发实际跑了 7 分 20 秒，0 失败**。提速近 7 倍，没遇到任何限流。
+剩余 20 张图，**串行预计 50 分钟，5 路并发实际跑了 7 分 20 秒，0 失败**。前者是估算，后者是另一批的实测，不能相除就当性能基准。
 
 ### 经验法则
 
-> **国内中转服务上的 image API，默认 5 路并发是个比较稳的起点。如果发现 429 再降到 3。读超时给 600 秒打底，不要省。**
+> **先用小批量测等待时间，再按配额和可接受的扣费上限增加并发。遇到 429 先读服务方的限流说明。**
 
 ## 三、第三个坑：让图中的英文真的变成中文
 
@@ -160,13 +160,13 @@ full_prompt = original_english_prompt + NO_ENGLISH_INSTR
 
 实测效果不错——大部分图的标签、标题、坐标轴文字都正确渲染成中文。注意几点：
 
-1. **要用大写 CRITICAL** 这种强调词。`gpt-image-2` 对指令优先级敏感，这种"关键约束"放在末尾 + 全大写关键词，比放在中间散文式的描述更容易被遵守。
+1. **交付约束单独写。** 我把中文要求放在末尾；没有做大小写对照，不能说全大写一定更有效。
 2. **明确说"replace"**，给模型可执行的动作，比单纯说"don't include English"更有效。
 3. **`gpt-image-2` 对手写中文长文本的字形仍不完美**——长段落级别的中文容易出错字、缺笔画。短标签（2-6 字）质量很高，长句尽量拆成多个短标签。
 
 ### `size=auto` 和 `quality=low` 的取舍
 
-- `size=auto`：让模型根据 prompt 描述自动选 1024×1024 / 1024×1536 / 1536×1024。我的提示词里大多写了 `16:9` 横向构图，模型基本都正确选了 1536×1024。
+- `size=auto`：让模型根据 prompt 描述自动选 1024×1024 / 1024×1536 / 1536×1024。我的提示词里大多写了 `16:9` 横向构图，模型基本都选了 1536×1024 的横幅；它是 3:2，不是严格的 16:9。
 - `quality=low`：单张约 1-3MB，1024 等效像素已经够用于公众号/PDF 配图。`high` 一档生成时间长 2-3 倍、文件体积翻 3-4 倍，对配图场景不值。
 
 ## 四、批量任务的工程实践
@@ -184,31 +184,11 @@ def generate(job: Job) -> str | None:
     # ... 生成逻辑
 ```
 
-这意味着：
-- 中途中断 / 网络抖动 / Claude 崩溃 都能直接重跑，不浪费已生成的图
-- 失败重试可以**只重跑失败的几张**而不是全量
+这让重启后的脚本跳过已落盘的大文件。`> 1024` 只是粗筛，不是完整性校验；正式交付前仍要解码、逐张看字。**本地跳过成功文件，并不能让服务端的生成请求幂等。**
 
-`> 1024` 的阈值是为了过滤掉那种"文件创建了但内容为空/极小"的异常情况。
+### 2. 重试之前先看账单
 
-### 2. 重试 + 退避
-
-每张图最多 3 次尝试，第 N 次失败后等 `3*N` 秒再试：
-
-```python
-for attempt in range(1, max_attempts + 1):
-    try:
-        png_bytes = call_api(full_prompt)
-        job.out_path.write_bytes(png_bytes)
-        return None
-    except Exception as e:
-        last_err = f"attempt {attempt}/{max_attempts}: {type(e).__name__}: {str(e)[:160]}"
-        print(f"  [{job.article}-{job.index}] {last_err}", flush=True)
-        if attempt < max_attempts:
-            time.sleep(3 * attempt)  # 3s, 6s
-return last_err
-```
-
-3 次试不出来就放弃，最后统一汇报失败列表，让人决定要不要单独再跑。**别让单图在原地无限重试卡死整个批次。**
+有两种看似相同的失败。文件已生成、下载不完整，优先续取同一产物；发出请求后超时，不知道对方有没有接单，就留在清单里核对，不要自动再下单。如果服务有明确的幂等键或可查询的任务号，再考虑有上限的退避重试。**别让单图在原地无限重试卡死整个批次。**
 
 ### 3. 进度日志要带"全局编号 + 已耗时"
 
@@ -252,7 +232,7 @@ Failures:
 
 ## 五、完整的可复用脚本
 
-下面是这次跑通的完整脚本，**把 `BASE_URL` / `API_KEY` / `FILES` / 提示词正则换一下，就能跑别的任务**。
+下面是按这次教训整理的两个示例。请求会产生费用；先用一条假标记试本地发现和插图逻辑。需要生成时，再把服务地址、凭据放在环境变量 `BASE_URL`、`API_KEY`，并填写两份 `FILES`。示例从单并发起步，结果未知时只记失败，不重新下单。
 
 ### `_gen_batch.py` — 批量生成
 
@@ -260,12 +240,12 @@ Failures:
 """Batch-generate images via OpenAI-compatible /v1/images/generations endpoint.
 
 Idempotent: skips files that already exist with size > 1KB.
-Concurrent: 5 workers by default.
+Concurrent: start with one worker.
 """
 from __future__ import annotations
 
 import base64
-import json
+import os
 import re
 import sys
 import time
@@ -275,8 +255,8 @@ from pathlib import Path
 
 import requests
 
-BASE_URL = "https://nowcoding.ai/v1"   # 改成你的中转 base_url
-API_KEY = "sk-xxx"                      # 改成你的 key
+BASE_URL = os.environ["BASE_URL"].rstrip("/")  # 可信服务的 HTTPS 地址，含 /v1
+API_KEY = os.environ["API_KEY"]
 MODEL = "gpt-image-2"
 
 ROOT = Path(__file__).parent
@@ -289,8 +269,8 @@ FILES = [
     # ...
 ]
 
-# 在 md 文件里找  这种块
-PROMPT_RE = re.compile(r"!\配图提示词(\d+)[：:\]", re.DOTALL)
+# 标记独占一行，例如 ![配图提示词1：书桌上的灯]；两段脚本使用同一语法。
+PROMPT_RE = re.compile(r"^!\[配图提示词(\d+)[：:]((?:[^\]\\\n]|\\.)+)\][ \t]*$", re.MULTILINE)
 
 NO_ENGLISH_INSTR = (
     "\n\nCRITICAL: Render ALL text, labels, captions, signs, headings and any "
@@ -317,7 +297,7 @@ def discover_jobs() -> list[Job]:
             jobs.append(Job(
                 article=art,
                 index=n,
-                prompt=m.group(2).strip(),
+                prompt=m.group(2).replace(r"\]", "]").strip(),
                 out_path=PIC_ROOT / art / f"{n}.png",
             ))
     return jobs
@@ -337,7 +317,7 @@ def call_api(prompt: str, *, read_timeout: float = 600.0) -> bytes:
     }
     resp = requests.post(url, headers=headers, json=body, timeout=(30.0, read_timeout))
     if resp.status_code != 200:
-        raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:200]}")
+        raise RuntimeError(f"HTTP {resp.status_code}")
     payload = resp.json()
     item = payload["data"][0]
     if item.get("b64_json"):
@@ -346,30 +326,23 @@ def call_api(prompt: str, *, read_timeout: float = 600.0) -> bytes:
         img = requests.get(item["url"], timeout=(30.0, read_timeout))
         img.raise_for_status()
         return img.content
-    raise RuntimeError(f"no b64_json/url in item: {json.dumps(item)[:200]}")
+    raise RuntimeError("response contains no image")
 
 
-def generate(job: Job, max_attempts: int = 3) -> str | None:
+def generate(job: Job) -> str | None:
     if job.out_path.exists() and job.out_path.stat().st_size > 1024:
-        return None  # already done
-
+        return None
     job.out_path.parent.mkdir(parents=True, exist_ok=True)
-    full_prompt = job.prompt + NO_ENGLISH_INSTR
-
-    last_err: str | None = None
-    for attempt in range(1, max_attempts + 1):
-        try:
-            png_bytes = call_api(full_prompt)
-            if len(png_bytes) <= 1024:
-                raise RuntimeError(f"output too small: {len(png_bytes)} bytes")
-            job.out_path.write_bytes(png_bytes)
-            return None
-        except Exception as e:
-            last_err = f"attempt {attempt}/{max_attempts}: {type(e).__name__}: {str(e)[:160]}"
-            print(f"  [{job.article}-{job.index}] {last_err}", flush=True)
-            if attempt < max_attempts:
-                time.sleep(3 * attempt)
-    return last_err
+    try:
+        data = call_api(job.prompt + NO_ENGLISH_INSTR)
+        if len(data) <= 1024:
+            raise ValueError("short image response")
+        tmp = job.out_path.with_suffix(".part")
+        tmp.write_bytes(data)
+        tmp.replace(job.out_path)
+    except Exception as exc:
+        return f"{type(exc).__name__}：先核对服务端状态，不自动重发"
+    return None
 
 
 def main() -> int:
@@ -388,7 +361,7 @@ def main() -> int:
     def work(job: Job) -> tuple[Job, str | None]:
         return job, generate(job)
 
-    with ThreadPoolExecutor(max_workers=5) as pool:
+    with ThreadPoolExecutor(max_workers=1) as pool:
         futures = {pool.submit(work, j): j for j in pending}
         done_n = 0
         total = len(pending)
@@ -421,10 +394,10 @@ if __name__ == "__main__":
 
 ### `_insert_refs.py` — 把图片引用插回 markdown
 
-生成完图之后，要在每个 `` 块后面插入 ``。这个脚本是幂等的，跑多次只插一次。
+生成完图之后，要在每个独占一行的 `![配图提示词1：书桌上的灯]` 后面插入 `![](pic/06/1.png)`。同篇编号必须唯一；这是给自己整理过的稿件用的小工具，不是通用 Markdown 解析器。这个脚本是幂等的，跑多次只插一次。
 
 ```python
-"""Insert image references after each `` prompt block."""
+"""Insert image references after each standalone prompt marker."""
 from __future__ import annotations
 
 import re
@@ -438,11 +411,7 @@ FILES = [
     # ...
 ]
 
-# 注意：用 [^\]\\]|\\. 来允许 prompt 内部出现转义/引号但不吃掉外层的 ]
-PROMPT_BLOCK_RE = re.compile(
-    r"(!\配图提示词(\d+)[：:*?\])",
-    re.DOTALL,
-)
+PROMPT_BLOCK_RE = re.compile(r"^!\[配图提示词(\d+)[：:]((?:[^\]\\\n]|\\.)+)\][ \t]*$", re.MULTILINE)
 
 
 def process(article: str, fname: str) -> tuple[int, int]:
@@ -453,16 +422,16 @@ def process(article: str, fname: str) -> tuple[int, int]:
     pos = 0
 
     for m in PROMPT_BLOCK_RE.finditer(text):
-        n = m.group(2)
+        n = m.group(1)
         pieces.append(text[pos: m.end()])
         # 看一下后面第一个非空行有没有已经引用了对应图片
         tail = text[m.end():]
         first_nonempty = next((ln for ln in tail.splitlines() if ln.strip()), "")
         marker = f"pic/{article}/{n}.png"
-        if marker in first_nonempty:
+        if first_nonempty.strip() == f"![]({marker})":
             skipped += 1
         else:
-            pieces.append(f"\n\n")
+            pieces.append(f"\n\n![]({marker})")
             inserted += 1
         pos = m.end()
 
@@ -491,14 +460,13 @@ if __name__ == "__main__":
 
 最后总结一下针对中转服务做这种长尾批量任务，按下面的顺序走：
 
-1. **先用 curl 单图打通**——确认 `base_url` / `api_key` / 模型名 / 请求体格式。这一步只要 5 分钟。
-2. **再写一个 5 行 Python 脚本单图打通**——确认你的语言层 HTTP 客户端没问题。如果 curl 通而 SDK 不通，立刻换 `requests`，**不要花时间调 SDK**。
-3. **写完整的批量脚本**——必须有：幂等跳过、重试退避、并发、进度日志、失败汇总。
-4. **跑前先 dry-run**——比如先把 prompt 提取出来打印一遍，确认数量和正则没问题。
-5. **真正跑批量**——并发 5、读超时 600 秒。
-6. **失败的图最后再单独跑一次**——脚本是幂等的，再跑一次只重试失败的。
+1. **先离线数标记**：每篇编号是否唯一？给副本插一次，再跑一次，第二次文件应一字不变。
+2. **再花一张图的钱**：保留产物，核对后台计费，把图中文字看一遍。
+3. **定并发和读超时**：在预算内小批量增加。
+4. **打印失败清单**：一次超时后，先查服务端的生成记录，再决定是否为缺图重新付费。
+5. **本地图片齐全后再插图**：核对缺图清单，再向稿件写入引用。
 
-按这个顺序，**这次 51 张图的全流程包括 debug 也只用了大约 1.5 小时**，纯生成时间约 50 分钟（最后并发版本只用了 7 分钟）。
+按当时的工作记录，**那次 51 张图的全流程包括 debug 也只用了大约 1.5 小时**，纯生成时间约 50 分钟（最后并发版本只用了 7 分钟）。
 
 ## 七、扩展：还可以怎么用这套范式
 
@@ -509,8 +477,8 @@ if __name__ == "__main__":
 - **批量 OCR**：把图片传进去让模型识别文字
 - **数据集清洗**：把每条原始数据丢进去让模型按 schema 输出 JSON
 
-所有这些场景下，**幂等跳过 + 并发 + 重试退避 + 失败汇总** 这四个特性都是必须的。把这套骨架抄过去，只改业务逻辑那一段就行。
+所有这些场景下，**跳过已有产物、限制并发、区分可重试和结果未知、最后汇总** 这四个特性都是必须的。把这套骨架抄过去，只改业务逻辑那一段就行。
 
 ---
 
-*本文是"利器"系列的第二篇，记录的是 `gpt-image-2` 在国内中转服务上的批量任务实战。第一篇见 Windows Terminal 与 Bash 改造记录。*
+*本文是"利器"系列的第二篇，记录的是 `gpt-image-2` 在国内中转服务上的批量任务实战。第一篇见 [Windows Terminal 与 Zsh 改造记录](01-利器01：Windows_Terminal_与_Bash_改造记录.md)。*
