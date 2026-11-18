@@ -27,7 +27,7 @@
 
 ## 当前状态
 
-从[文章目录](content/INDEX.md)可以读到 **424 篇文章**：27 个系列共 348 篇，另有独立文章 76 篇。随文配图 484 张；3 张外部配图的作者、出处与许可见[素材台账](SOURCES.md)。FormFill 的配套代码见 [fangd123/formfill](https://github.com/fangd123/formfill)。
+从[文章目录](content/INDEX.md)可以读到 **424 篇文章**：27 个系列共 348 篇，另有独立文章 76 篇。随文配图 466 张；3 张外部配图的作者、出处与许可见[素材台账](SOURCES.md)。FormFill 的配套代码见 [fangd123/formfill](https://github.com/fangd123/formfill)。
 
 **按问题找入口：**
 
