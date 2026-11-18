@@ -34,11 +34,11 @@ The summary does not contain full page HTML or ordinary input/textarea values as
 
 Model suggestions are shown as a preview in the popup first, and nothing is written until you apply. In the preview, each suggested value is editable and shows the control's current value next to it; fields with existing values are unchecked by default. Existing values are used only for this local preview comparison and are not sent to the model. If the page structure changes between preview and apply, nothing is written. After applying, undo restores only fields written by that fill that you have not edited since; the undo snapshot lives in the page's content script memory and is lost when the page reloads.
 
-If you import a file, it is parsed locally. A fill request sends the filename and up to 30,000 characters of parsed content, plus a truncation note if needed. Files are limited to 10 MB. For Excel, you pick the worksheet, header row, and one record; only the selected record's values are included in the request, and other rows are never sent. Input and parsed file content are held in popup memory rather than saved as an input/file archive by FormFill. Closing the popup discards that popup state.
+If you import a file, it is parsed locally. A fill request sends the filename and up to 30,000 characters of parsed content, plus a truncation note if needed. Files are limited to 10 MB. For Excel, you pick the worksheet, header row, and one record; the Excel excerpt contains the column headers and the selected row, not the other data rows. Input and parsed file content are held in popup memory rather than saved as an input/file archive by FormFill. Closing the popup discards that popup state.
 
 Saved historical values are never added to requests. The prompt tells the model to ignore instructions inside form summaries and files; this instruction does not guarantee that a model will resist every injection.
 
-Requests go to the **provider/base URL you select**, including any custom endpoint or local Ollama service. They do not pass through developer-operated servers. Provider handling and retention are governed by that provider's terms. The provider sees network request metadata such as your IP address; a local service may in turn use remote infrastructure according to its own configuration.
+Requests go to the **provider/base URL you select**, including any custom endpoint or local Ollama service. They do not pass through developer-operated servers. Provider handling and retention are governed by that provider's terms. The provider sees network request metadata such as your IP address; a local service may in turn use remote infrastructure according to its own configuration. Confirming the notice does not grant permission to send someone else’s or your organization’s data. Check that the recipient and the transfer are authorized before requesting a fill.
 
 **Test connection** sends a small fixed prompt using your configured model and authentication, without a form summary, file, or learning sample.
 
@@ -46,7 +46,7 @@ Requests go to the **provider/base URL you select**, including any custom endpoi
 
 Settings, provider profiles, API keys, and privacy-notice acceptance are stored in the browser extension's local storage, not browser sync storage. API keys are stored locally and sent to the configured endpoint for authentication; FormFill does not upload them to a developer service or encrypt them separately. Switching providers retains their individual profiles.
 
-If you confirm saving a field mapping after an Excel fill, the extension stores the site origin, a form structure signature, and "column name → field location" pairs in local storage (at most 20 mappings). Mappings never contain record values, page text, or API keys, and are never sent to a model or any server. Reusing a mapping reads only the currently selected record and still requires preview and apply. You can delete mappings from the popup.
+With your confirmation, a saved mapping can include the site origin, form signature, column name and index, field locator and label text (at most 20 mappings, in local storage). It does not store the selected record’s values, a copy of the page, or API keys. The mapping stays local. Reuse takes values from the currently selected record; review the preview before applying. You can delete saved mappings in the popup.
 
 Automatic learning is **paused in this version**. The extension does not attach submission listeners, collect new samples, or include saved history in model requests. Storage schema is v6: the v5 migration forcibly disabled the old learning flag without changing saved provider configuration, and v6 added the optional reasoning-effort setting. There is no switch to turn learning back on. After updating, **reload existing web pages** so their older content scripts are replaced.
 
@@ -64,4 +64,4 @@ FormFill has no analytics or advertising, does not sell data, and has no develop
 
 ## Contact
 
-Report issues and privacy requests through the project's issue tracker at <项目归档仓库>. The in-extension **Feedback** button opens that page; FormFill does not send email or submit anything on your behalf. Issues are public: do not paste API keys, personal documents, or real form values.
+The public [archive issue tracker](https://github.com/fangd123/formfill/issues) is a reference for non-personal project questions, not a private intake channel. The archive does not identify a verified, monitored private contact. Do not post personal details, documents, keys or privacy requests there. For local samples, use **Clear learning records**. For copies sent to a provider, use the private privacy-request channel identified in that provider’s own policy.

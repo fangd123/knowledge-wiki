@@ -15,8 +15,7 @@ status: published
 
 # F06 独立审查（Qwen）
 
-- 日期：2026-11-17；审查人：Qwen（/root/qwen_report_review，只读审查）
-- 范围：基线 `07e103c` 之上全部未提交改动（16 修改 + utils/mappings.ts、tests/mappings.test.ts 新增）。
+2026-11-17，Qwen 审查 F06 保存与复用映射的变更。
 - 结论：**同意提交**。我此前三条保留条件（用户确认、主体隔离、结构变更停用）全部满足，无隐式历史采集回退；发现 2 项低危备注与 1 项文档精化建议，均不阻塞。11 文件 123 tests/compile/lint/build/网站 typecheck+build 我全量复跑通过。
 
 ## 一、三条保留条件核验（重点 A）——全部满足
@@ -25,11 +24,11 @@ status: published
 2. **主体隔离**：存储经 sanitizeMapping 白名单清洗，只留 origin/formSignature/column/columnIndex/locator/label，拒绝 value/apiKey 等任何额外字段（测试注入 PRIVATE_VALUE/PRIVATE_KEY 后存储不含，断言到位）；replayMapping 值**只来自当前 recordValues**，测试断言复用不含 Alice。popup 端到端测试断言存储无 Alice/111、复用预览 Bob/222 无 Alice、无新 propose-fill。无任何路径把旧记录值带进新请求或存储。
 3. **结构变更停用**：双层——useEffect 列表按当前表单签名集合过滤展示；handleUseMapping 先 get-form-context 校验签名含 mapping.formSignature（不含→mappingNone），replayMapping 再逐项要求 item.formSignature === mapping.formSignature 且 status ok 且 locator 匹配。签名变化→无项→停用。测试覆盖签名变化拒绝。
 
-**与 F01 口径一致（E）**：rg 确认 content/background 无 submit 监听、无 learned-samples 写入、无历史外发分支；映射复用走 build-preview（本地 content）而非模型，不调 callModelWithRetry。架构文档明确"不是 F01 暂停的隐式历史采集"，属实。
+以上三项是在模拟存储和模拟页面上核对的。[后来的换记录补验](32-W05_映射复用浏览器补验_第三轮确认（Qwen）.md)观察到 Bob 预览未沿用 Alice 的值，但没有观察真实工具栏下的站点来源，不能据此断言跨站隔离已经验证。
 
-## 二、信任边界（C）——成立
+## 二、复用时仍检查当前页面
 
-伪造存储映射不能绕过保护：replayMapping 只保留 fresh build-preview 中 status ok 的项（protected/not-found/unsupported 被过滤），且最终 apply 仍走 content applyPreview 的逐项重定位+保护复查+签名复查+scanToken 校验（F03 已验证）。映射只决定"哪列填哪个 locator"，不决定写入合法性。sanitizeMapping 在读取时也清洗（readAll→sanitize），存量脏数据被过滤。信任边界完整。
+存储的是映射关系，不是再次写入的授权。复用要重新生成预览；不支持、找不到或受保护的目标不能靠旧映射取得写入资格，真正写入前仍须核对。
 
 ## 三、发现（severity / 位置 / 建议）
 
@@ -40,7 +39,7 @@ status: published
 
 ### G2（低，备注）sameLocator 用 some 而非全等
 - replayMapping 的 sameLocator 只要 id/name/css/labelText 任一相等即匹配。若 mapping locator 含多键而 fresh item 仅共享其一（如共享 name 但 id 不同），仍匹配。
-- 评估：匹配后用的是 **fresh item 的 locator**（`{...target, value}`），写入定位以 fresh 为准，且 applyPreview 再复查，故无安全后果；最坏是"映射意图与 fresh 定位略有偏差"，但 fresh 来自当前页面真实控件，方向安全。可接受，注明即可。
+- 使用当前预览给出的定位并再次检查，降低了错配风险；若对应的并非用户原意字段，仍可能填错，因此预览不应省略。
 
 ### G3（低，文档精化）useEffect 依赖与签名时效（对应 D）
 - useEffect 依赖 [excel?.filename, excel?.sheetIndex]，cancelled 守卫正确，tab 切换/签名变化时列表可能短暂过期，但 handleUseMapping 使用时重新 get-form-context 校验签名，过期列表项点击会被 mappingNone 拦截——双重保护成立，无竞态写入风险。
@@ -65,6 +64,4 @@ status: published
 
 ## 六、结论
 
-**同意提交**。三条保留条件满足，信任边界完整，无 F01 回退。G1 建议补文档注明（同值列首匹配局限），G2/G3 备注，测试缺口列后续。无阻塞项。
-
-——交父会话汇总；未改仓库源码与既有报告，未执行 Plane，未提交。
+**同意提交**指这一轮模拟条件下的实现。建议把同值列首匹配写入指南；真实站点来源和表单变化另需独立证据。

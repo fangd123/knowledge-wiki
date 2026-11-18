@@ -15,28 +15,23 @@ status: published
 
 # F02 独立审查（Qwen）
 
-- 日期：2026-11-17；审查人：Qwen（/root/qwen_report_review，只读审查）
-- 范围：基线 `95ab7e8` 之上全部未提交改动（15 文件，llm-retry/background/popup/InputPanel/类型/locales/测试/文档）。
+2026-11-17，Qwen 对 F02 的首次只读审查。
 - 结论：**需小改后提交**。取消与排障的主体设计正确、测试先红后绿扎实，但父会话点名的 ModelOutputError→hintNetwork 误导属实（D1，中），另有一个成功路径取消竞态窗口（D2，低中）。两处修复合计约 10 行 + 2 个测试，建议本批修完再提交；其余为非阻塞备注。
 
 ## 一、值得保留的设计
 
-注册表清理用闭包捕获 generation 并比对 controller 身份，正确避免旧请求 finally 误删新请求条目；新旧 propose 交替时旧 signal 被 abort、旧请求不进 build-preview（有测试，mock 在 abort 事件 reject 模拟 SDK，合理）。sleepOrAbort 可打断退避、已中止不重试不发请求、signal 传入 SDK 第二参，均有测试。URL 双层校验（popup 前置 + background/llm-retry 兜底）口径一致，http localhost 合法。错误提示保留 llmCallFailed 状态码+原因再附 hint，不吞细节。文档（架构 F02 节/CHANGELOG/AGENTS 消息清单）与实现一致，locales 7 key 双语对等由 i18n 测试保证。
+同一页开始新请求后，旧请求的收尾不应清除新请求。测试连接与实际填写也分别报告错误；取消不是服务商故障。
 
 ## 二、发现（severity / 位置 / 建议）
 
 ### D1（中，需修改）ModelOutputError 最终附 hintNetwork，误导排障方向
-- 位置：`utils/llm-retry.ts` `errorHint`。ModelOutputError（llmInvalidJson/llmEmptyContent/llmInvalidFormat）无 status，重试耗尽后落入 `status === undefined → hintNetwork`。
-- 问题：请求**已成功到达服务商并返回**，只是内容非法；提示"无法连接端点，检查网络/地址/本地服务"与事实相反，会把用户引向错误方向。父会话判断正确，这不是"可能不贴切"而是方向性错误。现有测试（llm-retry.test.ts:160）只断言 llmCallFailed 前缀，未覆盖此误导。
-- 建议：errorHint 开头 `if (error instanceof ModelOutputError) return browser.i18n.getMessage('hintModelOutput')`（新 key，双语，如"模型已响应但返回内容不是有效填写指令；请重试、更换模型或简化描述"）。补 1 个测试断言三类 ModelOutputError 耗尽后附 hintModelOutput 而非 hintNetwork。若不想加 key，最低限度对 ModelOutputError 返回 ''（不附提示），但我推荐加针对性提示。
+请求**已成功到达服务商并返回**，只是结果为空、格式不对或无法解析。提示“无法连接端点”会让用户反复检查网络，而应该提示检查模型输出或简化输入。首轮缺少相应的提示断言。
 
 ### D2（低中，建议本批修）成功路径的取消竞态窗口：cancel 后仍可能弹出预览
-- 位置：`entrypoints/background.ts` propose-fill 的 `if (controller.signal.aborted)` 检查仅在 build-preview **之前**；`popup/App.tsx` 成功分支无条件 setPreview。
-- 机理：模型已返回、aborted 检查通过后，build-preview 往返期间用户点取消（cancel-fill 中止 controller 并删注册表），propose 仍返回 preview；popup 成功分支不看 cancelRequestedRef，预览照常展示。用户看到"已取消"预期却出现可应用预览，违背"取消不写页/不出结果"的直觉（虽然 apply 仍需再确认，无数据风险）。
-- 建议（二选一，推荐前者）：popup 成功分支加 `if (cancelRequestedRef.current) { setStatus(t('llmCancelled')); setStatusType('error'); return; }`；或 background 在 build-preview 返回后再查一次 `controller.signal.aborted`。补 1 个测试：propose 成功返回前触发 cancel，断言不展示预览。
+用户取消后，迟到的成功结果不应再打开预览。首轮认为仅中止请求不够，显示结果前也需要尊重取消状态。
 
 ### D3（低，备注）cancelRequestedRef 在"取消后立即新填写"时可能误标
-- 位置：popup handleCancelGeneration 置 true → handleFill 开头置 false。若用户在 cancel-fill 消息在途时立刻点填写（loading 已 false 可点），新请求启动把 ref 置 false，随后旧 propose 的 cancelled 错误到达时 ref 已是 false，会显示原始 error 而非 llmCancelled——但旧请求的 setStatus 会覆盖新请求的 statusAnalyzing，短暂文案错乱。窗口极窄（需 loading 结束与新点击之间精确插入），且无功能损害。可在 handleFill 用递增 requestId 守卫旧响应（类似网站 Demo runId），列后续打磨，不阻塞。
+取消与下一次填写的状态反馈可能混淆，作为另一项低优先级备注，并非 D2 已修的那一项。
 
 ### D4（低，备注）超时正则与重试分类的边界
 - `isTimeoutError` 正则 `/timed?\s?out|ETIMEDOUT/i` 可能匹配服务商返回的含 "timeout" 字样的非超时错误消息（如 400 描述里提到 timeout），但 errorHint 先判 401/403/404 状态码，超时分支只在无这些状态码时生效，误伤面小；且 isRetryable 对无状态码错误本就按 timeout/network 关键词重试，口径自洽。可接受，注明即可。
@@ -45,10 +40,9 @@ status: published
 ### D5（低，备注）testModelConnection 的提示拼接与 propose 路径不完全同构
 - testModelConnection 无 hint 时 `throw error`（原始 SDK 错误，popup catch 显示 message），有 hint 时自行拼 `status: message hint`；propose 路径统一走 llmCallFailed 前缀。两者用户可见文案结构略不同（测试连接无 "llmCallFailed:" 前缀），属可接受差异，但建议后续统一 describeError 复用，减少分叉。不阻塞。
 
-### D6（备注，非问题澄清）
-- validateBaseUrl 用 `new URL` + protocol 白名单，拒绝 ftp/裸域名/空串，接受 http(s) 完整地址；`new URL('http://')` 会 throw 被拒，正确。popup settingsRef 与已保存设置一致性：updateSettings 同步写 settingsRef 再异步落盘，handleFill/handleTestConnection 校验的是 settingsRef.current（最新编辑值），background 校验的是 getSettings()（已落盘值）；handleTestConnection 先 await settingsSaveRef 再校验，handleFill 的 propose 由 background 读已落盘设置——若用户在落盘完成前点填写，popup 校验新值通过但 background 可能读到旧值。实际 handleFill 在 consent 分支 await persistSettings，非首次填写时 settingsSaveRef 队列通常已完成；极端竞态下 background 用旧 baseUrl 发请求，但旧值若合法只是打到旧地址（用户刚改的地址未生效），无安全后果，且双层校验保证不会用非法值发请求。可接受，注明。
-- cancel-fill 用 `tab!.id!` 非空断言：前置 `tab?.id !== undefined` 已守卫，安全。
-- 空 Key 路径 bgNoApiKey 在 URL 校验之前，顺序合理（先解决缺 Key 再谈地址）。
+### D6 地址校验的边界
+
+格式校验可以排除无效地址，却不能判定一个仍然合法的旧地址是否仍是用户打算发送资料的端点。填写前应确认当前服务商和地址；本次审读没有证明已经误发，也没有证明不存在隐私后果。
 
 ## 三、测试覆盖评估（问题 D）
 
@@ -65,7 +59,6 @@ status: published
 
 **需小改**：D1 必须修（方向性误导，父会话已点名）；D2 强烈建议同批修（取消语义完整性）。两者修完补 2 个测试、重跑全量，交我增量复核即可。D3–D5 非阻塞，可列后续。
 
-——交父会话汇总；未改仓库源码与既有报告，未执行 Plane，未提交。
 
 ---
 
@@ -83,5 +76,3 @@ status: published
 ## 复跑验证
 
 9 文件 104 tests 全过、compile 过、lint 0 errors/7 warnings（基线一致）、build 过（1.2 MB）。仍为 vitest+mock，非真实模型/浏览器 E2E，真实连接/取消时序与可用 Key 仍是外部依赖，口径不变。
-
-——第二轮复核完成，同意按当前 diff 提交；未改仓库源码，未执行 Plane，未提交。
