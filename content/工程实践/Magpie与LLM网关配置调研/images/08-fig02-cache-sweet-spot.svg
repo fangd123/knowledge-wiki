@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" font-family="'Noto Sans SC','Source Han Sans SC','Microsoft YaHei',sans-serif">
+  <!-- Background -->
+  <rect width="1200" height="520" fill="#F5EFE3" rx="12"/>
+
+  <!-- Header -->
+  <text x="48" y="52" font-size="28" font-weight="800" fill="#2A2A2E">「最佳缓存大小与保温时长」是怎么算出来的？</text>
+  <text x="48" y="82" font-size="16" fill="#5F5A52">示意图解：Magpie 用你过去 7 天真实对话做「时光机重放」，同时寻找窗口甜点区与保温回本点</text>
+  <line x1="48" y1="100" x2="1152" y2="100" stroke="#D9D2C5" stroke-width="2"/>
+
+  <!-- Left Panel: U-Curve of Context Compaction Window -->
+  <rect x="44" y="122" width="600" height="366" rx="8" fill="#FFFDF7" stroke="#D9D2C5" stroke-width="2"/>
+  <text x="68" y="158" font-size="20" font-weight="800" fill="#2A2A2E">账本一：桌面留多大才清理？（最佳压缩窗口）</text>
+  <text x="68" y="182" font-size="14" fill="#5F5A52">清太勤会「失忆重读文件」，不清则会「背着大山走路」</text>
+
+  <!-- Axes -->
+  <line x1="105" y1="415" x2="605" y2="415" stroke="#2A2A2E" stroke-width="2.5"/>
+  <line x1="105" y1="210" x2="105" y2="415" stroke="#2A2A2E" stroke-width="2.5"/>
+  <text x="92" y="222" font-size="13" font-weight="700" fill="#5F5A52" text-anchor="end">高</text>
+  <text x="92" y="415" font-size="13" font-weight="700" fill="#5F5A52" text-anchor="end">低</text>
+  <text x="72" y="320" font-size="14" font-weight="700" fill="#2A2A2E" transform="rotate(-90 72,320)" text-anchor="middle">总真实花费 + 等待折算</text>
+
+  <text x="135" y="440" font-size="13" fill="#5F5A52" text-anchor="middle">80K (太小)</text>
+  <text x="345" y="440" font-size="13" font-weight="800" fill="#1E7A50" text-anchor="middle">200K~320K (甜点区)</text>
+  <text x="565" y="440" font-size="13" fill="#5F5A52" text-anchor="middle">900K (太大)</text>
+  <text x="355" y="468" font-size="14" font-weight="700" fill="#2A2A2E" text-anchor="middle">自动压缩触发窗口上限（即缓存工作集大小）→</text>
+
+  <!-- Sweet spot band -->
+  <rect x="275" y="212" width="140" height="203" fill="#2F9E6B" opacity="0.12"/>
+  <line x1="275" y1="212" x2="275" y2="415" stroke="#2F9E6B" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="415" y1="212" x2="415" y2="415" stroke="#2F9E6B" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+  <!-- U Curve -->
+  <path d="M 125 235 Q 225 395 345 375 Q 465 358 585 248" fill="none" stroke="#2A2A2E" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Left Bad Zone Callout -->
+  <circle cx="150" cy="268" r="7" fill="#E8684A"/>
+  <rect x="118" y="205" width="146" height="48" rx="6" fill="#EDE6D8" stroke="#E8684A" stroke-width="2"/>
+  <text x="191" y="226" font-size="13" font-weight="800" fill="#B83E25" text-anchor="middle">清台太频繁：失忆税</text>
+  <text x="191" y="244" font-size="12" fill="#5F5A52" text-anchor="middle">写摘要贵 + 重读旧文件</text>
+
+  <!-- Sweet Spot Callout -->
+  <circle cx="355" cy="374" r="8" fill="#2F9E6B" stroke="#FFFDF7" stroke-width="2"/>
+  <rect x="282" y="302" width="148" height="52" rx="6" fill="#FFE08A" stroke="#2F9E6B" stroke-width="2"/>
+  <text x="356" y="324" font-size="14" font-weight="800" fill="#1E7A50" text-anchor="middle">★ 最佳推荐窗口</text>
+  <text x="356" y="344" font-size="12" fill="#2A2A2E" text-anchor="middle">3%容差内选最大不卡顿</text>
+
+  <!-- Right Bad Zone Callout -->
+  <circle cx="562" cy="265" r="7" fill="#E8684A"/>
+  <rect x="436" y="205" width="156" height="48" rx="6" fill="#EDE6D8" stroke="#E8684A" stroke-width="2"/>
+  <text x="514" y="226" font-size="13" font-weight="800" fill="#B83E25" text-anchor="middle">窗口太臃肿：过期税</text>
+  <text x="514" y="244" font-size="12" fill="#5F5A52" text-anchor="middle">每轮拖巨量背景易超时重写</text>
+
+  <!-- Right Panel: 5m vs 1h Prompt Cache TTL Break-Even -->
+  <rect x="668" y="122" width="488" height="366" rx="8" fill="#FFFDF7" stroke="#D9D2C5" stroke-width="2"/>
+  <text x="692" y="158" font-size="20" font-weight="800" fill="#2A2A2E">账本二：保温壶选 5 分钟还是 1 小时？</text>
+  <text x="692" y="182" font-size="14" fill="#5F5A52">写入缓存要交「建档溢价」，命中读取只需 0.1 倍地板价</text>
+
+  <!-- Comparison Bars for 2 Requests -->
+  <text x="692" y="220" font-size="15" font-weight="800" fill="#2A2A2E">情景 A：总共只聊 2 次（建档 1 次 + 复用 1 次）</text>
+  
+  <text x="692" y="248" font-size="14" fill="#5F5A52">不缓存</text>
+  <rect x="770" y="233" width="220" height="20" rx="4" fill="#B9B2A5"/>
+  <text x="1000" y="248" font-size="14" font-weight="700" fill="#5F5A52">2.00 份钱</text>
+
+  <text x="692" y="276" font-size="14" font-weight="700" fill="#1E7A50">5分钟档</text>
+  <rect x="770" y="261" width="149" height="20" rx="4" fill="#2F9E6B"/>
+  <text x="930" y="276" font-size="14" font-weight="800" fill="#1E7A50">1.35 份（立省 32.5%！）</text>
+
+  <text x="692" y="304" font-size="14" font-weight="700" fill="#B83E25">1小时档</text>
+  <rect x="770" y="289" width="231" height="20" rx="4" fill="#E8684A"/>
+  <text x="1010" y="304" font-size="14" font-weight="800" fill="#B83E25">2.10 份（反亏 5%！）</text>
+
+  <line x1="692" y1="324" x2="1132" y2="324" stroke="#EDE6D8" stroke-width="2"/>
+
+  <!-- Comparison Bars for 3+ Requests with pauses -->
+  <text x="692" y="352" font-size="15" font-weight="800" fill="#2A2A2E">情景 B：每次隔 15 分钟想好再问（聊 3 次）</text>
+
+  <text x="692" y="382" font-size="14" font-weight="700" fill="#B83E25">5分钟档</text>
+  <rect x="770" y="367" width="275" height="20" rx="4" fill="#E8684A"/>
+  <text x="1053" y="382" font-size="13" font-weight="800" fill="#B83E25">3.75 份（次次过期重写）</text>
+
+  <text x="692" y="412" font-size="14" font-weight="700" fill="#1E7A50">1小时档</text>
+  <rect x="770" y="397" width="161" height="20" rx="4" fill="#2F9E6B"/>
+  <text x="942" y="412" font-size="14" font-weight="800" fill="#1E7A50">2.20 份（稳稳命中！）</text>
+
+  <!-- Takeaway Box -->
+  <rect x="692" y="432" width="440" height="42" rx="6" fill="#EDE6D8" stroke="#3B8FD9" stroke-width="2"/>
+  <text x="912" y="458" font-size="14" font-weight="700" fill="#1F68B0" text-anchor="middle">Magpie 妙招：主对话慢思考可推 1h，子代理快跑腿独立推 5m</text>
+</svg>

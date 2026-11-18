@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="840" viewBox="0 0 1600 840" role="img" aria-labelledby="title desc">
+  <title id="title">当聊天是唯一界面：三个摩擦</title>
+  <desc id="desc">三个界面片段依次展示：需要回头检查较早的条件是否仍然有效；空白输入框没有提示文件、修改和权限等能力；布局选项在消息中纵向排列，使并排比较和指出局部更加费力。</desc>
+  <style>
+    text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#273c3c}
+    .title{font-size:46px;font-weight:700;letter-spacing:1px}
+    .subtitle{font-size:27px;fill:#506361}
+    .label{font-size:32px;font-weight:700}
+    .ui{font-size:25px;font-weight:600}
+    .small{font-size:23px;fill:#506361}
+    .ink{stroke:#273c3c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .light{stroke:#aabbb5;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+    .dash{stroke:#aabbb5;stroke-width:2.5;stroke-dasharray:6 7;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <rect width="1600" height="840" fill="#f8f5ed"/>
+  <text x="70" y="86" class="title">当聊天是唯一界面</text>
+  <text x="72" y="132" class="subtitle">三个摩擦，出现在不同的任务里</text>
+  <path d="M70 159H1530M550 223V745M1050 223V745" fill="none" stroke="#d4ddd5" stroke-width="2"/>
+
+  <!-- Fragment one: the earlier constraint is out of sight. -->
+  <text x="72" y="239" class="label">记住前情</text>
+  <path d="M74 257h105" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+  <rect x="111" y="302" width="346" height="346" rx="17" fill="#e5eae1"/>
+  <rect x="103" y="294" width="346" height="346" rx="17" fill="#fffdf8" class="ink"/>
+  <path d="M104 346h344" fill="none" class="light"/>
+  <text x="127" y="330" class="small">对话</text>
+  <path d="M145 371h245a12 12 0 0 1 12 12v38a12 12 0 0 1-12 12H145a12 12 0 0 1-12-12v-38a12 12 0 0 1 12-12Z" fill="#dbecef"/>
+  <text x="151" y="410" class="ui">只带随身行李</text>
+  <path d="M161 460h13m12 0h13m12 0h13" fill="none" stroke="#aabbb5" stroke-width="3" stroke-linecap="round"/>
+  <path d="M145 487h245a12 12 0 0 1 12 12v38a12 12 0 0 1-12 12H145a12 12 0 0 1-12-12v-38a12 12 0 0 1 12-12Z" fill="#f2eee5" stroke="#c9d2c9" stroke-width="2"/>
+  <text x="151" y="526" class="ui">改成下午出发</text>
+  <rect x="133" y="578" width="250" height="34" rx="8" fill="#fffdf8" stroke="#b2c0b8" stroke-width="2"/>
+  <path d="M154 595h56" fill="none" class="light"/>
+  <path d="M421 374v103M413 384l8-10 8 10M413 467l8 10 8-10" fill="none" stroke="#c35937" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="427" cy="445" r="20" fill="#f8f5ed" stroke="#c35937" stroke-width="2.5"/>
+  <text x="419" y="453" font-size="25" font-weight="700" style="fill:#c35937">?</text>
+  <text x="105" y="700" class="subtitle">条件还在吗？</text>
+
+  <!-- Fragment two: the only visible affordance is an empty text field. -->
+  <text x="592" y="239" class="label">发现能力</text>
+  <path d="M594 257h105" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M630 457q-16-84 51-113m116 96q-4-91 0-118m50 118q48-88 118-96" fill="none" class="dash"/>
+  <rect x="640" y="324" width="58" height="70" rx="5" fill="#fffdf8" class="dash"/>
+  <path d="M655 344h28M655 357h28M655 370h19" fill="none" class="light"/>
+  <text x="621" y="428" class="small">读文件？</text>
+  <path d="M782 329l-1 55 14-12 9 20 10-5-9-19 19-2Z" fill="#fffdf8" class="dash"/>
+  <text x="760" y="428" class="small">能修改？</text>
+  <path d="M920 338v-8a16 16 0 0 1 32 0v8m-38 0h44v48h-44Z" fill="#fffdf8" class="dash"/>
+  <circle cx="936" cy="360" r="3" fill="#aabbb5"/>
+  <text x="897" y="428" class="small">有权限？</text>
+  <rect x="622" y="487" width="374" height="78" rx="14" fill="#fffdf8" class="ink"/>
+  <path d="M646 507v37" fill="none" stroke="#007d9a" stroke-width="3"/>
+  <text x="664" y="536" class="small">输入…</text>
+  <path d="M955 511l17 15-17 15" fill="none" stroke="#aabbb5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M682 605q124 31 248 0" fill="none" stroke="#cbd8cf" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="621" y="700" class="subtitle">空白框没有告诉你</text>
+
+  <!-- Fragment three: the options are interleaved in a narrow message stream. -->
+  <text x="1093" y="239" class="label">并排与局部</text>
+  <path d="M1095 257h105" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+  <rect x="1102" y="303" width="200" height="341" rx="15" fill="#fffdf8" class="ink"/>
+  <path d="M1103 354h198" fill="none" class="light"/>
+  <text x="1125" y="339" class="small">消息流</text>
+  <rect x="1125" y="378" width="143" height="59" rx="9" fill="#dbecef"/>
+  <text x="1137" y="415" font-size="23" font-weight="600">布局甲</text>
+  <rect x="1221" y="390" width="34" height="30" rx="3" fill="#fffdf8" stroke="#8fa8a2" stroke-width="2"/>
+  <path d="M1227 397h22M1227 403h22M1227 409h12" fill="none" stroke="#8fa8a2" stroke-width="1.7" stroke-linecap="round"/>
+  <rect x="1125" y="457" width="143" height="59" rx="9" fill="#f2eee5"/>
+  <text x="1137" y="494" font-size="23" font-weight="600">布局乙</text>
+  <rect x="1221" y="469" width="34" height="30" rx="3" fill="#fffdf8" stroke="#8fa8a2" stroke-width="2"/>
+  <rect x="1226" y="474" width="10" height="18" rx="1" fill="#dbecef"/>
+  <path d="M1240 475h10M1240 481h10M1240 487h8" fill="none" stroke="#8fa8a2" stroke-width="1.7" stroke-linecap="round"/>
+  <rect x="1125" y="536" width="143" height="59" rx="9" fill="#dbecef"/>
+  <text x="1137" y="573" font-size="23" font-weight="600">布局丙</text>
+  <rect x="1221" y="548" width="34" height="30" rx="3" fill="#fffdf8" stroke="#8fa8a2" stroke-width="2"/>
+  <path d="M1226 554h24M1226 560h24M1226 567h11M1241 567h9" fill="none" stroke="#8fa8a2" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M1284 374v228" fill="none" stroke="#d4ddd5" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1284 451v57" fill="none" stroke="#819b96" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1324 461h39m-12-11 12 11-12 11" fill="none" stroke="#c35937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1380" y="389" width="157" height="144" rx="8" fill="none" class="dash"/>
+  <path d="M1432 389v144m53-144v144M1380 438h157M1380 486h157" fill="none" class="dash"/>
+  <text x="1404" y="466" font-size="35" font-weight="700" style="fill:#c35937">?</text>
+  <path d="M1467 516l21 46-13-5-6 13-8-4 6-13-14-4Z" fill="#273c3c" stroke="#f8f5ed" stroke-width="3" stroke-linejoin="round"/>
+  <text x="1381" y="571" class="small">并排看？</text>
+  <text x="1093" y="700" class="subtitle">滚动比较，局部难指明</text>
+  <path d="M1408 755h121" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+</svg>

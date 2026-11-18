@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500" font-family="'Noto Sans SC','Source Han Sans SC','Microsoft YaHei',sans-serif">
+  <!-- Background -->
+  <rect width="1200" height="500" fill="#F5EFE3" rx="12"/>
+
+  <!-- Header -->
+  <text x="48" y="52" font-size="28" font-weight="800" fill="#2A2A2E">为什么感觉模型慢？把黑盒拆成「四棒接力赛」抓真凶</text>
+  <text x="48" y="82" font-size="16" fill="#5F5A52">magpie-speed-lab 与主流测速调优器的核心思路：分段掐表 + 场景定制权重 + 95/5 边跑边试</text>
+  <line x1="48" y1="100" x2="1152" y2="100" stroke="#D9D2C5" stroke-width="2"/>
+
+  <!-- Top Timeline Bar: 4 Phases -->
+  <rect x="44" y="120" width="1112" height="162" rx="8" fill="#FFFDF7" stroke="#D9D2C5" stroke-width="2"/>
+  <text x="68" y="152" font-size="18" font-weight="800" fill="#2A2A2E">单次回答耗时解剖尺（总时间 = 第一棒 + 第二棒 + 第三棒 + 第四棒）</text>
+
+  <!-- Segment 1 -->
+  <rect x="68" y="172" width="170" height="56" rx="6" fill="#EDE6D8" stroke="#2A2A2E" stroke-width="2"/>
+  <text x="153" y="196" font-size="15" font-weight="800" fill="#2A2A2E" text-anchor="middle">① 网关与排队</text>
+  <text x="153" y="216" font-size="12" fill="#5F5A52" text-anchor="middle">本地脱敏 / 撞限流重试</text>
+
+  <!-- Segment 2 -->
+  <rect x="246" y="172" width="260" height="56" rx="6" fill="#3B8FD9"/>
+  <text x="376" y="196" font-size="15" font-weight="800" fill="#FFFDF7" text-anchor="middle">② 读背景热身 (Prefill)</text>
+  <text x="376" y="216" font-size="12" fill="#FFFDF7" text-anchor="middle">缓存没命中时最慢！</text>
+
+  <!-- Segment 3 -->
+  <rect x="514" y="172" width="320" height="56" rx="6" fill="#F2A93B"/>
+  <text x="674" y="196" font-size="15" font-weight="800" fill="#2A2A2E" text-anchor="middle">③ 闭眼暗想 (Thinking)</text>
+  <text x="674" y="216" font-size="12" fill="#2A2A2E" text-anchor="middle">无脑开 xhigh 会暴涨数倍！</text>
+
+  <!-- Segment 4 -->
+  <rect x="842" y="172" width="290" height="56" rx="6" fill="#2F9E6B"/>
+  <text x="987" y="196" font-size="15" font-weight="800" fill="#FFFDF7" text-anchor="middle">④ 张嘴吐字 / 调工具 (Decode)</text>
+  <text x="987" y="216" font-size="12" fill="#FFFDF7" text-anchor="middle">用中间80%字节流还原工具真实流速</text>
+
+  <!-- TTFT Bracket -->
+  <line x1="68" y1="246" x2="506" y2="246" stroke="#1F68B0" stroke-width="2.5"/>
+  <line x1="68" y1="238" x2="68" y2="254" stroke="#1F68B0" stroke-width="2.5"/>
+  <line x1="506" y1="238" x2="506" y2="254" stroke="#1F68B0" stroke-width="2.5"/>
+  <text x="287" y="268" font-size="13" font-weight="800" fill="#1F68B0" text-anchor="middle">首字响应等待 (TTFT)：多轮 Agent 循环最怕这里慢（连乘 N 轮）</text>
+
+  <line x1="514" y1="246" x2="1132" y2="246" stroke="#1E7A50" stroke-width="2.5"/>
+  <line x1="514" y1="238" x2="514" y2="254" stroke="#1E7A50" stroke-width="2.5"/>
+  <line x1="1132" y1="238" x2="1132" y2="254" stroke="#1E7A50" stroke-width="2.5"/>
+  <text x="823" y="268" font-size="13" font-weight="800" fill="#1E7A50" text-anchor="middle">思考克制度 + 吐字吞吐率 (TPS)：写长代码/长文最看重这里</text>
+
+  <!-- Bottom Two Cards -->
+  <!-- Card Left: Workload Weighting -->
+  <rect x="44" y="302" width="542" height="172" rx="8" fill="#FFFDF7" stroke="#D9D2C5" stroke-width="2"/>
+  <text x="68" y="334" font-size="18" font-weight="800" fill="#2A2A2E">不同活儿，裁判打分秤砣完全不同</text>
+  <rect x="68" y="352" width="238" height="102" rx="6" fill="#EDE6D8"/>
+  <text x="84" y="376" font-size="15" font-weight="800" fill="#1F68B0">🤖 自动编程循环 (Agent)</text>
+  <text x="84" y="400" font-size="13" fill="#2A2A2E">• 首响敏捷度占 45%（大头）</text>
+  <text x="84" y="421" font-size="13" fill="#2A2A2E">• 长尾不抽风占 25%</text>
+  <text x="84" y="442" font-size="12" fill="#5F5A52">原因：每步只吐几行工具指令但连跑30步</text>
+
+  <rect x="322" y="352" width="240" height="102" rx="6" fill="#EDE6D8"/>
+  <text x="338" y="376" font-size="15" font-weight="800" fill="#9A5B00">🧠 疑难架构攻坚 (Deep)</text>
+  <text x="338" y="400" font-size="13" fill="#2A2A2E">• 推理效能比占 40%（大头）</text>
+  <text x="338" y="421" font-size="13" fill="#2A2A2E">• high 先验分(96) &gt; xhigh(94)</text>
+  <text x="338" y="442" font-size="12" fill="#5F5A52">原因：防 xhigh 耗时翻倍却不多抓 Bug</text>
+
+  <!-- Card Right: Online Explore/Exploit -->
+  <rect x="610" y="302" width="546" height="172" rx="8" fill="#FFFDF7" stroke="#D9D2C5" stroke-width="2"/>
+  <text x="634" y="334" font-size="18" font-weight="800" fill="#2A2A2E">从「看体检表」进化到「自动驾驶调优」</text>
+  
+  <rect x="634" y="354" width="235" height="98" rx="6" fill="#EDE6D8" stroke="#B9B2A5" stroke-width="1.5"/>
+  <text x="751" y="380" font-size="15" font-weight="800" fill="#2A2A2E" text-anchor="middle">第一阶段：离线体检榜</text>
+  <text x="751" y="404" font-size="13" fill="#5F5A52" text-anchor="middle">如 magpie-speed-lab</text>
+  <text x="751" y="426" font-size="13" fill="#5F5A52" text-anchor="middle">算好 S/A/B/C 榜，人手动改配置</text>
+
+  <line x1="875" y1="403" x2="903" y2="403" stroke="#2F9E6B" stroke-width="2.5"/>
+  <polygon points="903,397 915,403 903,409" fill="#2F9E6B"/>
+
+  <rect x="918" y="354" width="214" height="98" rx="6" fill="#FFE08A" stroke="#2F9E6B" stroke-width="2"/>
+  <text x="1025" y="380" font-size="15" font-weight="800" fill="#1E7A50" text-anchor="middle">第二阶段：边跑边试闭环</text>
+  <text x="1025" y="404" font-size="13" fill="#2A2A2E" text-anchor="middle">Thompson 采样 / 探测机制</text>
+  <text x="1025" y="426" font-size="12" font-weight="700" fill="#1E7A50" text-anchor="middle">主力走冠军 + 小流量自动探路</text>
+</svg>

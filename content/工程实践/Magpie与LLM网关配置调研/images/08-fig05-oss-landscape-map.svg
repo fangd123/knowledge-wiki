@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 580" width="1200" height="580" font-family="'Noto Sans SC','Source Han Sans SC','Microsoft YaHei',sans-serif">
+  <!-- Background -->
+  <rect width="1200" height="580" fill="#F5EFE3" rx="12"/>
+
+  <!-- Header -->
+  <text x="48" y="50" font-size="28" font-weight="800" fill="#2A2A2E">一张象限图记住全行业：50+ 开源方案分别在解决哪块问题？</text>
+  <text x="48" y="80" font-size="16" fill="#5F5A52">横轴看「用云端 API 还是自建显卡机房」，纵轴看「事前体检给建议 还是 盘中实时派单」</text>
+  <line x1="48" y1="98" x2="1152" y2="98" stroke="#D9D2C5" stroke-width="2"/>
+
+  <!-- Quadrant Backgrounds -->
+  <!-- Top-Left: Cloud API + Offline/Replay Advisor -->
+  <rect x="90" y="132" width="495" height="190" rx="8" fill="#FFFDF7" stroke="#2F9E6B" stroke-width="2"/>
+  <rect x="90" y="132" width="240" height="32" rx="6" fill="#2F9E6B"/>
+  <text x="210" y="153" font-size="14" font-weight="800" fill="#FFFDF7" text-anchor="middle">左上：API 账单精算师 &amp; 测速体检</text>
+
+  <!-- Top-Right: Self-Hosted GPU + Offline/Sim Advisor -->
+  <rect x="615" y="132" width="495" height="190" rx="8" fill="#FFFDF7" stroke="#F2A93B" stroke-width="2"/>
+  <rect x="615" y="132" width="250" height="32" rx="6" fill="#F2A93B"/>
+  <text x="740" y="153" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">右上：机房建厂规划师 &amp; 货架测算</text>
+
+  <!-- Bottom-Left: Cloud API + Online Real-Time Router -->
+  <rect x="90" y="348" width="495" height="186" rx="8" fill="#FFFDF7" stroke="#3B8FD9" stroke-width="2"/>
+  <rect x="90" y="348" width="240" height="32" rx="6" fill="#3B8FD9"/>
+  <text x="210" y="369" font-size="14" font-weight="800" fill="#FFFDF7" text-anchor="middle">左下：Agent 分诊台 &amp; 保缓存管家</text>
+
+  <!-- Bottom-Right: Self-Hosted GPU + Online Cluster Scheduler -->
+  <rect x="615" y="348" width="495" height="186" rx="8" fill="#FFFDF7" stroke="#E8684A" stroke-width="2"/>
+  <rect x="615" y="348" width="250" height="32" rx="6" fill="#E8684A"/>
+  <text x="740" y="369" font-size="14" font-weight="800" fill="#FFFDF7" text-anchor="middle">右下：多显卡车间主任 &amp; 破粘调度</text>
+
+  <!-- Center Axes -->
+  <line x1="600" y1="118" x2="600" y2="548" stroke="#2A2A2E" stroke-width="2.5" stroke-dasharray="6,4"/>
+  <line x1="74" y1="335" x2="1126" y2="335" stroke="#2A2A2E" stroke-width="2.5" stroke-dasharray="6,4"/>
+
+  <!-- Axis Labels -->
+  <rect x="492" y="110" width="216" height="24" rx="12" fill="#2A2A2E"/>
+  <text x="600" y="127" font-size="13" font-weight="700" fill="#FFFDF7" text-anchor="middle">▲ 事前算账 / 压测推荐配置</text>
+
+  <rect x="492" y="538" width="216" height="24" rx="12" fill="#2A2A2E"/>
+  <text x="600" y="555" font-size="13" font-weight="700" fill="#FFFDF7" text-anchor="middle">▼ 盘中实时分流 / 动态护缓存</text>
+
+  <text x="58" y="335" font-size="14" font-weight="800" fill="#2A2A2E" transform="rotate(-90 58,335)" text-anchor="middle">◀ 租用云端大模型 API</text>
+  <text x="1146" y="335" font-size="14" font-weight="800" fill="#2A2A2E" transform="rotate(90 1146,335)" text-anchor="middle">自建 GPU 推理机房 ▶</text>
+
+  <!-- Items in Top-Left -->
+  <rect x="112" y="178" width="220" height="58" rx="6" fill="#FFE08A" stroke="#2F9E6B" stroke-width="2"/>
+  <text x="222" y="201" font-size="14" font-weight="800" fill="#1E7A50" text-anchor="middle">Magpie「为你调优」(Tune)</text>
+  <text x="222" y="222" font-size="12" fill="#2A2A2E" text-anchor="middle">回放日志算最佳压缩窗口 &amp; 5m/1h</text>
+
+  <rect x="348" y="178" width="218" height="58" rx="6" fill="#EDE6D8"/>
+  <text x="457" y="201" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">magpie-speed-lab</text>
+  <text x="457" y="222" font-size="12" fill="#5F5A52" text-anchor="middle">四段耗时体检 + 场景S/A/B/C榜</text>
+
+  <rect x="112" y="248" width="220" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="222" y="271" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">RouteLLM / CARROT</text>
+  <text x="222" y="291" font-size="12" fill="#5F5A52" text-anchor="middle">按预算比例自动反推强弱分数线</text>
+
+  <rect x="348" y="248" width="218" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="457" y="271" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">claude-cache-analyzer</text>
+  <text x="457" y="291" font-size="12" fill="#5F5A52" text-anchor="middle">事后审计缓存省了还是亏了</text>
+
+  <!-- Items in Top-Right -->
+  <rect x="636" y="178" width="222" height="58" rx="6" fill="#FFE08A" stroke="#F2A93B" stroke-width="2"/>
+  <text x="747" y="201" font-size="14" font-weight="800" fill="#9A5B00" text-anchor="middle">LMCache Simulator</text>
+  <text x="747" y="222" font-size="12" fill="#2A2A2E" text-anchor="middle">唯一画出 KV 缓存容量命中拐点</text>
+
+  <rect x="872" y="178" width="218" height="58" rx="6" fill="#EDE6D8"/>
+  <text x="981" y="201" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">NVIDIA AIConfigurator</text>
+  <text x="981" y="222" font-size="12" fill="#5F5A52" text-anchor="middle">算子库+Rust核推演最优卡数配比</text>
+
+  <rect x="636" y="248" width="222" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="747" y="271" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">Vidur / LLM-Optimizer</text>
+  <text x="747" y="291" font-size="12" fill="#5F5A52" text-anchor="middle">仿真排队 &amp; 三瓶颈秒算启动参数</text>
+
+  <rect x="872" y="248" width="218" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="981" y="271" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">GuideLLM / CacheLib</text>
+  <text x="981" y="291" font-size="12" fill="#5F5A52" text-anchor="middle">实测寻找吞吐拐点 &amp; 边际内存平衡</text>
+
+  <!-- Items in Bottom-Left -->
+  <rect x="112" y="394" width="220" height="58" rx="6" fill="#FFE08A" stroke="#3B8FD9" stroke-width="2"/>
+  <text x="222" y="417" font-size="14" font-weight="800" fill="#1F68B0" text-anchor="middle">Magpie 实时路由引擎</text>
+  <text x="222" y="438" font-size="12" fill="#2A2A2E" text-anchor="middle">分诊+单向棘轮+内联降档+11池策略</text>
+
+  <rect x="348" y="394" width="218" height="58" rx="6" fill="#EDE6D8"/>
+  <text x="457" y="417" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">Plano / CCR v2</text>
+  <text x="457" y="438" font-size="12" fill="#5F5A52" text-anchor="middle">切模净亏损门控 &amp; 主模型派小弟</text>
+
+  <rect x="112" y="462" width="220" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="222" y="485" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">LiteLLM / Bifrost</text>
+  <text x="222" y="505" font-size="12" fill="#5F5A52" text-anchor="middle">只升不降护缓存 + 工具续跑直通</text>
+
+  <rect x="348" y="462" width="218" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="457" y="485" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">PicadoLabs / ClawRouter</text>
+  <text x="457" y="505" font-size="12" fill="#5F5A52" text-anchor="middle">Thompson 边跑边试 &amp; 1ms 规则路由</text>
+
+  <!-- Items in Bottom-Right -->
+  <rect x="636" y="394" width="222" height="58" rx="6" fill="#EDE6D8"/>
+  <text x="747" y="417" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">vLLM Semantic-Router</text>
+  <text x="747" y="438" font-size="12" fill="#5F5A52" text-anchor="middle">20种信号联控模型选择与思考开关</text>
+
+  <rect x="872" y="394" width="218" height="58" rx="6" fill="#EDE6D8"/>
+  <text x="981" y="417" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">llm-d / AIBrix</text>
+  <text x="981" y="438" font-size="12" fill="#5F5A52" text-anchor="middle">命中缓存与排队拥堵的动态天平</text>
+
+  <rect x="636" y="462" width="454" height="56" rx="6" fill="#EDE6D8"/>
+  <text x="863" y="485" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">SGLang Gateway / Mooncake Conductor / Production-Stack</text>
+  <text x="863" y="505" font-size="12" fill="#5F5A52" text-anchor="middle">维护全局前缀地图，把带相同背景的请求精准送到存有热显存的那台机器</text>
+</svg>

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540" font-family="'Noto Sans SC','Source Han Sans SC','Microsoft YaHei',sans-serif">
+  <!-- Background -->
+  <rect width="1200" height="540" fill="#F5EFE3" rx="12"/>
+  
+  <!-- Header -->
+  <text x="48" y="54" font-size="28" font-weight="800" fill="#2A2A2E">智能大模型网关在干什么：一条请求闯过「四道精算关卡」</text>
+  <text x="48" y="84" font-size="16" fill="#5F5A52">图解核心逻辑：先剔除杂活，再按难度派人，切换前算清缓存搬家费，最后挑最快最省的通道发车</text>
+  <line x1="48" y1="102" x2="1152" y2="102" stroke="#D9D2C5" stroke-width="2"/>
+
+  <!-- Input Box -->
+  <rect x="36" y="195" width="150" height="160" rx="8" fill="#FFFDF7" stroke="#2A2A2E" stroke-width="2.5"/>
+  <rect x="36" y="195" width="150" height="38" rx="8" fill="#EDE6D8"/>
+  <text x="111" y="220" font-size="16" font-weight="800" fill="#2A2A2E" text-anchor="middle">你的提问 / Agent</text>
+  <text x="111" y="258" font-size="14" fill="#5F5A52" text-anchor="middle">• 简单改名/打招呼</text>
+  <text x="111" y="284" font-size="14" fill="#5F5A52" text-anchor="middle">• 复杂死锁排查</text>
+  <text x="111" y="310" font-size="14" fill="#5F5A52" text-anchor="middle">• 10万字历史背景</text>
+  <text x="111" y="336" font-size="14" fill="#5F5A52" text-anchor="middle">• 自动总结/子任务</text>
+
+  <!-- Arrow 0->1 -->
+  <line x1="186" y1="275" x2="226" y2="275" stroke="#2A2A2E" stroke-width="2.5"/>
+  <polygon points="226,269 238,275 226,281" fill="#2A2A2E"/>
+
+  <!-- Stage 1 -->
+  <rect x="240" y="135" width="200" height="280" rx="8" fill="#FFFDF7" stroke="#3B8FD9" stroke-width="2.5"/>
+  <rect x="240" y="135" width="200" height="44" rx="8" fill="#3B8FD9"/>
+  <text x="340" y="163" font-size="17" font-weight="800" fill="#FFFDF7" text-anchor="middle">① 零耗时杂活分流</text>
+  <text x="340" y="206" font-size="15" font-weight="700" fill="#1F68B0" text-anchor="middle">看一眼信封直接派单</text>
+  <line x1="260" y1="220" x2="420" y2="220" stroke="#EDE6D8" stroke-width="2"/>
+  <text x="258" y="248" font-size="14" fill="#2A2A2E">• 上下文总结请求</text>
+  <text x="270" y="268" font-size="13" fill="#5F5A52">→ 甩给便宜高吞吐模型</text>
+  <text x="258" y="298" font-size="14" fill="#2A2A2E">• 后台起标题/小跑腿</text>
+  <text x="270" y="318" font-size="13" fill="#5F5A52">→ 留给轻量级小模型</text>
+  <text x="258" y="348" font-size="14" fill="#2A2A2E">• 字数达上限 95%</text>
+  <text x="270" y="368" font-size="13" fill="#5F5A52">→ 自动换超大窗口模型</text>
+  <rect x="258" y="382" width="164" height="22" rx="4" fill="#EDE6D8"/>
+  <text x="340" y="398" font-size="12" font-weight="700" fill="#5F5A52" text-anchor="middle">耗时：0 毫秒（纯规则）</text>
+
+  <!-- Arrow 1->2 -->
+  <line x1="440" y1="275" x2="476" y2="275" stroke="#2A2A2E" stroke-width="2.5"/>
+  <polygon points="476,269 488,275 476,281" fill="#2A2A2E"/>
+
+  <!-- Stage 2 -->
+  <rect x="490" y="135" width="210" height="280" rx="8" fill="#FFFDF7" stroke="#F2A93B" stroke-width="2.5"/>
+  <rect x="490" y="135" width="210" height="44" rx="8" fill="#F2A93B"/>
+  <text x="595" y="163" font-size="17" font-weight="800" fill="#2A2A2E" text-anchor="middle">② 难度分诊 &amp; 脑力刻度</text>
+  <text x="595" y="206" font-size="15" font-weight="700" fill="#9A5B00" text-anchor="middle">既选大夫，也定想多深</text>
+  <line x1="510" y1="220" x2="680" y2="220" stroke="#EDE6D8" stroke-width="2"/>
+  <text x="508" y="248" font-size="14" fill="#2A2A2E">• 极速小模型快筛打分</text>
+  <text x="520" y="268" font-size="13" fill="#5F5A52">禁掉分诊员自身长思考</text>
+  <text x="508" y="298" font-size="14" fill="#2A2A2E">• 调「用脑刻度」Effort</text>
+  <text x="520" y="318" font-size="13" fill="#5F5A52">low / medium / high</text>
+  <text x="508" y="348" font-size="14" fill="#2A2A2E">• 连续卡壳 3 次熔断</text>
+  <text x="520" y="368" font-size="13" fill="#5F5A52">原地打转立刻升档请专家</text>
+  <rect x="508" y="382" width="174" height="22" rx="4" fill="#FFE08A"/>
+  <text x="595" y="398" font-size="12" font-weight="700" fill="#9A5B00" text-anchor="middle">把握度 &lt;0.4 时拒绝乱换人</text>
+
+  <!-- Arrow 2->3 -->
+  <line x1="700" y1="275" x2="736" y2="275" stroke="#2A2A2E" stroke-width="2.5"/>
+  <polygon points="736,269 748,275 736,281" fill="#2A2A2E"/>
+
+  <!-- Stage 3 -->
+  <rect x="750" y="135" width="205" height="280" rx="8" fill="#FFFDF7" stroke="#2F9E6B" stroke-width="2.5"/>
+  <rect x="750" y="135" width="205" height="44" rx="8" fill="#2F9E6B"/>
+  <text x="852" y="163" font-size="17" font-weight="800" fill="#FFFDF7" text-anchor="middle">③ 缓存防撕裂守门员</text>
+  <text x="852" y="206" font-size="15" font-weight="700" fill="#1E7A50" text-anchor="middle">算清「换人重读亏损账」</text>
+  <line x1="770" y1="220" x2="935" y2="220" stroke="#EDE6D8" stroke-width="2"/>
+  <text x="768" y="248" font-size="14" fill="#2A2A2E">• 缓存还热着？锁住原号</text>
+  <text x="780" y="268" font-size="13" fill="#5F5A52">享 1 折读取，免全价重算</text>
+  <text x="768" y="298" font-size="14" fill="#2A2A2E">• 只升不降「单向棘轮」</text>
+  <text x="780" y="318" font-size="13" fill="#5F5A52">防降档改参数废掉旧缓存</text>
+  <text x="768" y="348" font-size="14" fill="#2A2A2E">• 桌面窗口 &amp; 保温期寻优</text>
+  <text x="780" y="368" font-size="13" fill="#5F5A52">回放历史算最佳压缩时机</text>
+  <rect x="768" y="382" width="169" height="22" rx="4" fill="#EDE6D8"/>
+  <text x="852" y="398" font-size="12" font-weight="700" fill="#1E7A50" text-anchor="middle">省下的钱 &gt; 搬家费才放行</text>
+
+  <!-- Arrow 3->4 -->
+  <line x1="955" y1="275" x2="988" y2="275" stroke="#2A2A2E" stroke-width="2.5"/>
+  <polygon points="988,269 1000,275 988,281" fill="#2A2A2E"/>
+
+  <!-- Stage 4: Output Pool -->
+  <rect x="1002" y="135" width="164" height="280" rx="8" fill="#FFFDF7" stroke="#2A2A2E" stroke-width="2.5"/>
+  <rect x="1002" y="135" width="164" height="44" rx="8" fill="#2A2A2E"/>
+  <text x="1084" y="163" font-size="17" font-weight="800" fill="#FFFDF7" text-anchor="middle">④ 多池赛马发车</text>
+  
+  <rect x="1016" y="196" width="136" height="58" rx="6" fill="#EDE6D8" stroke="#2F9E6B" stroke-width="2"/>
+  <text x="1084" y="220" font-size="14" font-weight="800" fill="#1E7A50" text-anchor="middle">旗舰推理模型池</text>
+  <text x="1084" y="241" font-size="12" fill="#5F5A52" text-anchor="middle">攻坚难题 · 热缓存粘滞</text>
+
+  <rect x="1016" y="268" width="136" height="58" rx="6" fill="#EDE6D8" stroke="#3B8FD9" stroke-width="2"/>
+  <text x="1084" y="292" font-size="14" font-weight="800" fill="#1F68B0" text-anchor="middle">主力高性价比池</text>
+  <text x="1084" y="313" font-size="12" fill="#5F5A52" text-anchor="middle">日常编码 · 测速择优</text>
+
+  <rect x="1016" y="340" width="136" height="58" rx="6" fill="#EDE6D8" stroke="#B9B2A5" stroke-width="2"/>
+  <text x="1084" y="364" font-size="14" font-weight="800" fill="#2A2A2E" text-anchor="middle">轻量快跑模型池</text>
+  <text x="1084" y="385" font-size="12" fill="#5F5A52" text-anchor="middle">压缩总结 · 后台杂活</text>
+
+  <!-- Bottom Feedback Loop -->
+  <path d="M 1084 415 L 1084 482 L 340 482 L 340 415" fill="none" stroke="#5F5A52" stroke-width="2" stroke-dasharray="7,5"/>
+  <polygon points="334,421 340,409 346,421" fill="#5F5A52"/>
+  <rect x="455" y="464" width="510" height="34" rx="17" fill="#FFFDF7" stroke="#D9D2C5" stroke-width="2"/>
+  <text x="710" y="486" font-size="14" font-weight="700" fill="#2A2A2E" text-anchor="middle">离线回放日志 &amp; 测速反馈（Magpie Tune / Speed Lab / Thompson 采样）</text>
+</svg>
