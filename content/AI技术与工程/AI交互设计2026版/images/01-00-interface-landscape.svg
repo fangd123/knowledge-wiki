@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="840" viewBox="0 0 1600 840" role="img" aria-labelledby="title desc">
+  <title id="title">一块界面，容得下多种交互</title>
+  <desc id="desc">示意界面把自然语言对话、可见且可编辑的工作对象与控件放在一起；旁边以房间草图表示仍在探索中的情境交互。它们可以共存，不表示固定的演进顺序。</desc>
+  <style>
+    text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#273c3c}
+    .title{font-size:46px;font-weight:700;letter-spacing:1px}
+    .subtitle{font-size:27px;fill:#506361}
+    .label{font-size:30px;font-weight:700}
+    .ui{font-size:26px;font-weight:600}
+    .small{font-size:23px;fill:#506361}
+    .tiny{font-size:21px;fill:#506361}
+    .ink{stroke:#273c3c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .light{stroke:#aabbb5;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+    .accent{stroke:#007d9a;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <rect width="1600" height="840" fill="#f8f5ed"/>
+  <path d="M70 159H1530" fill="none" stroke="#d4ddd5" stroke-width="2"/>
+  <text x="70" y="86" class="title">一块界面，容得下多种交互</text>
+  <text x="72" y="132" class="subtitle">用语言说意图，也让对象、状态与选择看得见</text>
+  <text x="146" y="219" class="label">自然语言</text>
+  <text x="500" y="219" class="label">可见对象与控件</text>
+  <text x="1187" y="219" class="label">情境交互</text>
+  <text x="1188" y="254" class="small">远期探索</text>
+
+  <!-- One interface contains a conversational entry and a persistent workspace. -->
+  <rect x="128" y="261" width="1000" height="430" rx="22" fill="#e4e9e0"/>
+  <rect x="120" y="251" width="1000" height="430" rx="22" fill="#fffdf8" class="ink"/>
+  <path d="M121 313H1119" fill="none" class="light"/>
+  <circle cx="153" cy="282" r="6" fill="#c35937"/>
+  <circle cx="177" cy="282" r="6" fill="#c4d2cc"/>
+  <circle cx="201" cy="282" r="6" fill="#c4d2cc"/>
+  <text x="233" y="291" class="small">任务与工作台</text>
+  <path d="M469 314V680" fill="none" class="light"/>
+  <text x="151" y="357" class="ui">对话</text>
+  <path d="M151 381h243a16 16 0 0 1 16 16v39a16 16 0 0 1-16 16H219l-19 14v-14h-49a16 16 0 0 1-16-16v-39a16 16 0 0 1 16-16Z" fill="#dbecef"/>
+  <text x="155" y="425" class="ui">整理这份草稿</text>
+  <path d="M184 481h234a16 16 0 0 1 16 16v39a16 16 0 0 1-16 16h-34v14l-19-14H184a16 16 0 0 1-16-16v-39a16 16 0 0 1 16-16Z" fill="#f2eee5" stroke="#c9d2c9" stroke-width="2"/>
+  <text x="189" y="524" class="ui">先列出要点</text>
+  <rect x="144" y="600" width="298" height="51" rx="12" fill="#fffdf8" stroke="#93a9a4" stroke-width="2.5"/>
+  <text x="163" y="634" class="small">说出目标…</text>
+  <path d="M406 613l16 12-16 12" fill="none" class="accent"/>
+
+  <text x="499" y="356" class="ui">提案草稿</text>
+  <rect x="501" y="382" width="258" height="223" rx="8" fill="#f8f5ed" stroke="#c4d0c8" stroke-width="2"/>
+  <path d="M525 423h112M525 447h191" fill="none" class="light"/>
+  <rect x="522" y="469" width="209" height="66" rx="8" fill="#dbecef" stroke="#007d9a" stroke-width="2.5"/>
+  <text x="540" y="510" class="ui">需要修改的段落</text>
+  <path d="M525 563h178M525 580h130" fill="none" class="light"/>
+  <path d="M723 516l22 48-13-5-6 14-8-4 6-14-14-5Z" fill="#273c3c" stroke="#fffdf8" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="790" y="382" width="282" height="223" rx="8" fill="#fffdf8" stroke="#c4d0c8" stroke-width="2"/>
+  <text x="813" y="424" class="ui">内容与状态</text>
+  <circle cx="821" cy="457" r="5" fill="#007d9a"/>
+  <text x="840" y="465" class="small">目标清楚</text>
+  <circle cx="821" cy="496" r="5" fill="#c35937"/>
+  <text x="840" y="504" class="small">细节可编辑</text>
+  <path d="M811 526h235" fill="none" class="light"/>
+  <rect x="811" y="548" width="98" height="39" rx="8" fill="#fffdf8" stroke="#93a9a4" stroke-width="2"/>
+  <text x="835" y="576" class="tiny">预览</text>
+  <rect x="925" y="548" width="119" height="39" rx="8" fill="#007d9a"/>
+  <text x="960" y="576" font-size="21" font-weight="700" fill="#fffdf8" style="fill:#fffdf8">编辑</text>
+
+  <!-- The environment is a lightly sketched possible context, not a later stage. -->
+  <path d="M1165 365q2-39 37-62 32-21 70-11 36-45 91-29 43 12 56 47 53-1 78 37 28 42 4 84" fill="none" stroke="#cbd8cf" stroke-width="2.5" stroke-dasharray="8 9" stroke-linecap="round"/>
+  <path d="M1191 606H1511" fill="none" class="ink"/>
+  <path d="M1225 606v-78h245v78" fill="#efece1" class="ink"/>
+  <path d="M1249 529v-47h54v47M1259 482v-16h34v16" fill="none" class="ink"/>
+  <path d="M1277 465v-48m0 22-28-21m28 8 31-24" fill="none" stroke="#007d9a" stroke-width="3" stroke-linecap="round"/>
+  <path d="M1358 528l-6-91 33-35m-33 35-29-14m61-20-13-12 27-19 12 13Z" fill="none" class="ink"/>
+  <path d="M1397 383q31 1 42 24" fill="none" stroke="#c35937" stroke-width="3" stroke-linecap="round"/>
+  <path d="M1404 368q45 4 61 38" fill="none" stroke="#c35937" stroke-width="2" stroke-linecap="round"/>
+  <rect x="1310" y="477" width="135" height="37" rx="8" fill="#fffdf8" stroke="#aabbb5" stroke-width="2"/>
+  <path d="M1324 495h8m-4-5v10" fill="none" class="accent"/>
+  <text x="1341" y="502" font-size="20" fill="#506361">按需提示</text>
+  <path d="M1187 667q162 12 324-2" fill="none" stroke="#cbd8cf" stroke-width="2"/>
+
+  <text x="73" y="766" class="subtitle">对话提供入口，工作对象与操作留在眼前。</text>
+  <path d="M1408 755h121" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+</svg>

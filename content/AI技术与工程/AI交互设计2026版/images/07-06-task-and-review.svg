@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">交办之后，看进度、审草稿、再决定</title>
+  <desc id="desc">一个人交办整理活动清单并要求先出草稿。中间的界面显示收集和整理的进度，以及暂停按钮；右边展示待审草稿和是否共享的选择。底部回路线表示人可以依据审阅结果修改目标并重新交办。这是设计示例，不代表所有产品都提供这些控件。</desc>
+  <style>
+    text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#273c3c}
+    .title{font-size:46px;font-weight:700;letter-spacing:1px}
+    .subtitle{font-size:27px;fill:#506361}
+    .label{font-size:30px;font-weight:700}
+    .ui{font-size:26px;font-weight:600}
+    .small{font-size:23px;fill:#506361}
+    .ink{stroke:#273c3c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .light{stroke:#afc0b8;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M1 1l9 5-9 5" fill="none" stroke="#007d9a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="#f8f5ed"/>
+  <text x="70" y="86" class="title">交办之后，看进度、审草稿、再决定</text>
+  <text x="72" y="132" class="subtitle">人交代目标，也能在过程中介入和核验</text>
+  <path d="M70 159H1530" fill="none" stroke="#d4ddd5" stroke-width="2"/>
+  <text x="218" y="226" class="label">交办</text>
+  <text x="615" y="226" class="label">观察与介入</text>
+  <text x="1041" y="226" class="label">审阅与决定</text>
+  <path d="M220 242h67M617 242h129M1043 242h129" fill="none" stroke="#c35937" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- A person hands over a concrete task slip. -->
+  <circle cx="126" cy="380" r="34" fill="#f4ded0" class="ink"/>
+  <path d="M94 371q5-39 39-39 28 0 32 34-19-12-39-9-16 1-32 14Z" fill="#273c3c"/>
+  <path d="M68 558q3-89 58-98 54 6 65 99" fill="#dbecef" class="ink"/>
+  <path d="M159 476q39 6 60 38l26-4m-76-5q20 24 44 28l31-8" fill="none" class="ink"/>
+  <path d="M55 580h144" fill="none" class="light"/>
+
+  <path d="M236 279h308l20 20v329H236Z" fill="#e5eae1"/>
+  <path d="M226 269h308l20 20v329H226Z" fill="#fffdf8" class="ink"/>
+  <path d="M534 269v20h20" fill="none" class="ink"/>
+  <text x="254" y="315" class="small">任务单</text>
+  <path d="M254 331h263" fill="none" class="light"/>
+  <text x="254" y="380" class="ui">整理活动清单</text>
+  <text x="254" y="422" class="ui">先生成草稿</text>
+  <rect x="254" y="457" width="22" height="22" rx="3" fill="#fffdf8" stroke="#aabbb5" stroke-width="2.5"/>
+  <path d="M259 468l5 5 9-11" fill="none" stroke="#007d9a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="289" y="477" class="small">按用途分类</text>
+  <path d="M254 517h201M254 539h157" fill="none" class="light"/>
+  <path d="M472 562l29-29 12 12-29 29-17 5Z" fill="#f4ded0" stroke="#c35937" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <path d="M567 447h36" fill="none" stroke="#007d9a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- A progress view combines named states and a pause control. -->
+  <rect x="622" y="279" width="366" height="349" rx="17" fill="#e5eae1"/>
+  <rect x="612" y="269" width="366" height="349" rx="17" fill="#fffdf8" class="ink"/>
+  <path d="M613 333h364" fill="none" class="light"/>
+  <text x="639" y="310" class="ui">任务进度</text>
+  <rect x="851" y="285" width="99" height="32" rx="8" fill="#dbecef"/>
+  <text x="866" y="309" font-size="21" font-weight="600">进行中</text>
+  <circle cx="657" cy="389" r="17" fill="#dbecef" stroke="#007d9a" stroke-width="2.5"/>
+  <path d="M649 389l6 6 11-13" fill="none" stroke="#007d9a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="690" y="398" class="ui">收集条目</text>
+  <path d="M657 408v36" fill="none" class="light"/>
+  <circle cx="657" cy="466" r="17" fill="#fffdf8" stroke="#c35937" stroke-width="2.5"/>
+  <path d="M653 459l11 7-11 7Z" fill="#c35937"/>
+  <text x="690" y="475" class="ui">整理草稿</text>
+  <path d="M640 516h306" fill="none" class="light"/>
+  <rect x="639" y="542" width="128" height="48" rx="9" fill="#fffdf8" stroke="#273c3c" stroke-width="2.5"/>
+  <path d="M659 556v19m8-19v19" fill="none" stroke="#273c3c" stroke-width="3" stroke-linecap="round"/>
+  <text x="686" y="576" class="small">暂停</text>
+
+  <path d="M992 447h36" fill="none" stroke="#007d9a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Review names the proposed change and the separate decision to share. -->
+  <rect x="1049" y="279" width="469" height="349" rx="17" fill="#e5eae1"/>
+  <rect x="1039" y="269" width="469" height="349" rx="17" fill="#fffdf8" class="ink"/>
+  <path d="M1040 333h467" fill="none" class="light"/>
+  <text x="1066" y="310" class="ui">待审草稿</text>
+  <path d="M1442 287l18 18m0-18-18 18" fill="none" stroke="#aabbb5" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="1066" y="358" width="415" height="55" rx="8" fill="#f2eee5"/>
+  <text x="1084" y="394" class="small">原：零散条目</text>
+  <rect x="1066" y="424" width="415" height="59" rx="8" fill="#dbecef"/>
+  <path d="M1085 442v24m-10-12h20" fill="none" stroke="#007d9a" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="1110" y="462" class="ui">建议：按用途分组</text>
+  <text x="1066" y="529" class="ui">共享草稿？</text>
+  <rect x="1245" y="545" width="88" height="48" rx="9" fill="#fffdf8" stroke="#8fa8a2" stroke-width="2"/>
+  <text x="1267" y="577" class="small">暂不</text>
+  <rect x="1345" y="545" width="136" height="48" rx="9" fill="#007d9a"/>
+  <text x="1364" y="577" font-size="23" font-weight="700" style="fill:#fffdf8">确认共享</text>
+
+  <!-- The explicit return path shows review feeding the next instruction. -->
+  <path d="M1331 639v39q0 62-74 62H404q-54 0-54-53v-41" fill="none" stroke="#007d9a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+  <rect x="612" y="715" width="378" height="51" rx="25" fill="#f8f5ed"/>
+  <text x="801" y="750" text-anchor="middle" class="subtitle">核验后修改目标，再交办</text>
+  <text x="73" y="835" class="subtitle">看得见状态，也留得下人的判断。</text>
+  <path d="M1408 824h121" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+</svg>

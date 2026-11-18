@@ -21,11 +21,19 @@
 2. **网页截图、论文图表** → 按《著作权法》第 24 条"适当引用"（注明来源与作者、数量适度、限于评论/说明语境）发布，并在本台账逐项登记；
 3. **新闻通讯社图片** → 引用不能替代授权，仍按"版权保留"排除。
 
+## 配图（第五批，2026-11-18）
+
+分类重整补入的新文章（费尔巴哈提纲、AI交互设计2026版、公众号政经随笔等 26 篇）带进 **86 张新配图**，公开库配图共 372 张。抽检确认：公众号随笔插图与第四批同族（自产 AI 插画，无第三方素材）；**AI交互设计2026版 的 3 张外部参考图**首次启用三档规则的第二档（开放许可图片逐张登记，见下表）。压缩规则同第四批，总量 155.8MB → 51.5MB。
+
+三张外部图均为**未修改或仅缩放**的转载（不构成改编，ShareAlike 义务不触发）；其许可与本库文字的 CC BY-NC-SA 相互独立，转载时请按各图原许可保留署名。
+
 ## 台账
 
 | 素材 | 作者/机构 | 来源链接 | 许可 | 用在哪 | 改动 | 备注 |
 |---|---|---|---|---|---|---|
-| （待登记） | | | | | | |
+| Active Badge 系统设备照片 | Roy Want（Xerox PARC） | [Wikimedia Commons: File:Active_Badge.png](https://commons.wikimedia.org/wiki/File:Active_Badge.png) | CC BY-SA 4.0 | AI交互设计2026版/02 | 未修改 | Weiser 普适计算一节的史料配图 |
+| Sutherland 操作 Sketchpad 照片 | Ivan Sutherland，Kerry Rodden 扫描 | [Wikimedia Commons: File:SketchpadDissertation-Fig1-2.tif](https://commons.wikimedia.org/wiki/File:SketchpadDissertation-Fig1-2.tif) | CC BY-SA 3.0 | AI交互设计2026版/03 | Commons 提供缩放版 | 直接操控史料配图 |
+| 《Generative Interfaces for Language Models》图 1 | Jiaqi Chen, Yanzhe Zhang, Yutong Zhang, Yijia Shao, Diyi Yang | [ACL Findings 2026](https://aclanthology.org/2026.findings-acl.74/) | CC BY 4.0 | AI交互设计2026版/04 | 从发表版 PDF 裁取图幅 | 论文图表适当引用 |
 
 ## 已在私有库中确认、但未进入首批的素材类型
 

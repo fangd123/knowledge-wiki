@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="880" viewBox="0 0 1600 880" role="img" aria-labelledby="title desc">
+  <title id="title">按情境选择交互方式</title>
+  <desc id="desc">环绕中央的四幅手绘场景分别展示说话、圈选屏幕局部、键盘输入，以及可开启的情境提示。它们是可以共存和接力的方式，不代表高低排名或固定阶段。</desc>
+  <style>
+    text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#273c3c}
+    .title{font-size:46px;font-weight:700;letter-spacing:1px}
+    .subtitle{font-size:27px;fill:#506361}
+    .label{font-size:31px;font-weight:700}
+    .ui{font-size:25px;font-weight:600}
+    .small{font-size:23px;fill:#506361}
+    .ink{stroke:#273c3c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .light{stroke:#aabbb5;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <rect width="1600" height="880" fill="#f8f5ed"/>
+  <text x="70" y="86" class="title">按情境选择，方式可以接力</text>
+  <text x="72" y="132" class="subtitle">说、指、写，或让提示出现在合适的位置</text>
+  <path d="M70 159H1530" fill="none" stroke="#d4ddd5" stroke-width="2"/>
+
+  <!-- A hub connects the scenes without arrows or an order. -->
+  <path d="M696 419L590 367M904 419l106-52M696 531l-106 52M904 531l106 52" fill="none" stroke="#b6c9c3" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 10"/>
+  <circle cx="800" cy="475" r="113" fill="#e5f0ed" stroke="#8eaaa3" stroke-width="2.5"/>
+  <circle cx="800" cy="475" r="96" fill="none" stroke="#b6cbc4" stroke-width="2" stroke-dasharray="5 9"/>
+  <text x="800" y="468" text-anchor="middle" font-size="33" font-weight="700">按情境</text>
+  <text x="800" y="512" text-anchor="middle" font-size="33" font-weight="700">选择</text>
+
+  <!-- Voice: a drawn microphone and an actual utterance. -->
+  <text x="100" y="235" class="label">语音</text>
+  <path d="M102 252h67" fill="none" stroke="#c35937" stroke-width="4" stroke-linecap="round"/>
+  <path d="M118 352q-7-75 45-103 47-25 84 8 44-16 80 12" fill="none" stroke="#d4ddd5" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 8"/>
+  <rect x="155" y="292" width="58" height="92" rx="29" fill="#dbecef" class="ink"/>
+  <path d="M136 348v12a48 48 0 0 0 96 0v-12M184 409v28m-28 0h56" fill="none" class="ink"/>
+  <path d="M245 312q20 20 0 40m14-52q32 31 0 64" fill="none" stroke="#c35937" stroke-width="3" stroke-linecap="round"/>
+  <path d="M312 285h239a17 17 0 0 1 17 17v58a17 17 0 0 1-17 17H384l-24 20v-20h-48a17 17 0 0 1-17-17v-58a17 17 0 0 1 17-17Z" fill="#fffdf8" class="ink"/>
+  <text x="322" y="340" class="ui">换个角度</text>
+  <text x="302" y="425" class="small">边做边说</text>
+
+  <!-- Pointing: a visible selection on a real miniature canvas. -->
+  <text x="1010" y="235" class="label">圈选</text>
+  <path d="M1012 252h67" fill="none" stroke="#c35937" stroke-width="4" stroke-linecap="round"/>
+  <rect x="1020" y="282" width="418" height="157" rx="12" fill="#e5eae1"/>
+  <rect x="1012" y="274" width="418" height="157" rx="12" fill="#fffdf8" class="ink"/>
+  <path d="M1013 309h416" fill="none" class="light"/>
+  <circle cx="1035" cy="292" r="4" fill="#c35937"/>
+  <circle cx="1051" cy="292" r="4" fill="#c4d2cc"/>
+  <path d="M1044 338h80M1044 358h109M1044 378h80" fill="none" class="light"/>
+  <rect x="1183" y="327" width="158" height="74" rx="7" fill="#f4ded0"/>
+  <path d="M1200 377l34-29 31 21 20-14 36 29" fill="none" stroke="#c35937" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1170 321q85-26 181 2 20 43-3 91-97 20-181-6-16-47 3-87Z" fill="none" stroke="#007d9a" stroke-width="3" stroke-dasharray="8 7" stroke-linecap="round"/>
+  <path d="M1348 387l21 46-13-5-6 14-8-4 6-14-14-4Z" fill="#273c3c" stroke="#fffdf8" stroke-width="3" stroke-linejoin="round"/>
+  <text x="1234" y="473" class="small">选中局部，再说明</text>
+
+  <!-- Text: a compact laptop and editable text field. -->
+  <text x="100" y="551" class="label">文字</text>
+  <path d="M102 568h67" fill="none" stroke="#c35937" stroke-width="4" stroke-linecap="round"/>
+  <rect x="141" y="603" width="358" height="171" rx="12" fill="#fffdf8" class="ink"/>
+  <path d="M142 634h356" fill="none" class="light"/>
+  <circle cx="164" cy="619" r="4" fill="#c35937"/>
+  <circle cx="180" cy="619" r="4" fill="#c4d2cc"/>
+  <path d="M173 661h111M173 680h224" fill="none" class="light"/>
+  <rect x="169" y="702" width="299" height="46" rx="8" fill="#dbecef"/>
+  <text x="182" y="734" font-size="23" font-weight="600">整理成一份清单</text>
+  <path d="M397 710v28" fill="none" stroke="#007d9a" stroke-width="3"/>
+  <path d="M119 774h402l-18 18H137Z" fill="#eeeae0" class="ink"/>
+  <text x="531" y="692" class="small">精细表达</text>
+
+  <!-- A quiet contextual hint is shown with an explicit on-state. -->
+  <text x="1010" y="551" class="label">情境提示</text>
+  <path d="M1012 568h129" fill="none" stroke="#c35937" stroke-width="4" stroke-linecap="round"/>
+  <path d="M1015 758h438" fill="none" class="ink"/>
+  <path d="M1068 758v-61h291v61" fill="#efece1" class="ink"/>
+  <path d="M1119 697h79l-10-13h-60Z" fill="#fffdf8" class="ink"/>
+  <path d="M1158 684l-2-47 34-35m-34 35-31-17m64-18-13-12 28-19 12 13Z" fill="none" class="ink"/>
+  <path d="M1202 581q31 1 40 23m-34-37q42 3 56 34" fill="none" stroke="#c35937" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="1275" y="607" width="214" height="76" rx="10" fill="#fffdf8" class="ink"/>
+  <text x="1291" y="638" font-size="22" font-weight="600">提示已开启</text>
+  <text x="1291" y="666" font-size="21" style="fill:#506361">需要时查看</text>
+  <rect x="1426" y="620" width="45" height="24" rx="12" fill="#007d9a"/>
+  <circle cx="1459" cy="632" r="8" fill="#fffdf8"/>
+  <path d="M1336 684v14" fill="none" stroke="#aabbb5" stroke-width="2.5" stroke-dasharray="4 5"/>
+  <text x="73" y="840" class="subtitle">不同方式可以组合，选择随任务和环境变化。</text>
+  <path d="M1408 829h121" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+</svg>

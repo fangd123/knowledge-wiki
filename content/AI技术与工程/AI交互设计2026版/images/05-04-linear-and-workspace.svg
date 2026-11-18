@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="870" viewBox="0 0 1600 870" role="img" aria-labelledby="title desc">
+  <title id="title">同一组三个旅行选项，两种摆放方式</title>
+  <desc id="desc">左边的对话流依次列出虚构的海边、山野和古镇方案；右边的工作台把同样的地点、节奏、住宿并排放置，并选中山野方案的一个局部。工作台下方保留对话输入，表示比较、修改和对话可以配合。</desc>
+  <style>
+    text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#273c3c}
+    .title{font-size:46px;font-weight:700;letter-spacing:1px}
+    .subtitle{font-size:27px;fill:#506361}
+    .label{font-size:31px;font-weight:700}
+    .ui{font-size:26px;font-weight:600}
+    .small{font-size:23px;fill:#506361}
+    .ink{stroke:#273c3c;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .light{stroke:#bbc9c1;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+  </style>
+  <rect width="1600" height="870" fill="#f8f5ed"/>
+  <text x="70" y="86" class="title">同一组选择，两种摆放方式</text>
+  <text x="72" y="132" class="subtitle">三个虚构旅行方案：在对话里展开，也在工作台上比较</text>
+  <path d="M70 159H1530" fill="none" stroke="#d4ddd5" stroke-width="2"/>
+  <text x="85" y="222" class="label">纵向对话</text>
+  <text x="573" y="222" class="label">并排工作台</text>
+  <text x="1360" y="222" class="small">示意方案</text>
+
+  <!-- The same fictional options appear in order in the message stream. -->
+  <rect x="93" y="268" width="403" height="468" rx="18" fill="#e5eae1"/>
+  <rect x="85" y="260" width="403" height="468" rx="18" fill="#fffdf8" class="ink"/>
+  <path d="M86 316H487" fill="none" class="light"/>
+  <text x="112" y="298" class="small">对话</text>
+  <path d="M449 278v18m-8-9 8 9 8-9" fill="none" stroke="#aabbb5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="114" y="337" width="329" height="86" rx="12" fill="#dbecef"/>
+  <text x="132" y="371" class="ui">甲 · 海边</text>
+  <text x="132" y="404" class="small">海岸　缓行　民宿</text>
+  <rect x="114" y="441" width="329" height="86" rx="12" fill="#f2eee5"/>
+  <text x="132" y="475" class="ui">乙 · 山野</text>
+  <text x="132" y="508" class="small">山林　徒步　小屋</text>
+  <rect x="114" y="545" width="329" height="86" rx="12" fill="#dbecef"/>
+  <text x="132" y="579" class="ui">丙 · 古镇</text>
+  <text x="132" y="612" class="small">街巷　漫游　客栈</text>
+  <rect x="114" y="660" width="330" height="43" rx="9" fill="#fffdf8" stroke="#aabbb5" stroke-width="2"/>
+  <text x="130" y="689" class="small">继续说…</text>
+  <path d="M462 342v284" fill="none" stroke="#d4ddd5" stroke-width="5" stroke-linecap="round"/>
+  <path d="M462 451v64" fill="none" stroke="#819b96" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- A small link, rather than a replacement arrow, connects the two views. -->
+  <path d="M510 477h36" fill="none" stroke="#007d9a" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 7"/>
+  <circle cx="510" cy="477" r="5" fill="#007d9a"/>
+  <circle cx="546" cy="477" r="5" fill="#007d9a"/>
+
+  <rect x="581" y="268" width="949" height="468" rx="18" fill="#e5eae1"/>
+  <rect x="573" y="260" width="949" height="468" rx="18" fill="#fffdf8" class="ink"/>
+  <path d="M574 316h947" fill="none" class="light"/>
+  <text x="598" y="298" class="small">旅行方案 · 对照与修改</text>
+  <rect x="1360" y="277" width="128" height="27" rx="7" fill="#e5f0ef"/>
+  <text x="1384" y="297" font-size="19" style="fill:#506361">可编辑</text>
+
+  <text x="598" y="397" class="small">地点</text>
+  <text x="598" y="457" class="small">节奏</text>
+  <text x="598" y="517" class="small">住宿</text>
+  <path d="M585 413h908M585 473h908M585 533h908" fill="none" stroke="#e0e6de" stroke-width="2"/>
+  <rect x="687" y="335" width="236" height="220" rx="11" fill="#fbfaf5" stroke="#cbd8cf" stroke-width="2"/>
+  <rect x="949" y="335" width="236" height="220" rx="11" fill="#fbfaf5" stroke="#cbd8cf" stroke-width="2"/>
+  <rect x="1211" y="335" width="236" height="220" rx="11" fill="#fbfaf5" stroke="#cbd8cf" stroke-width="2"/>
+  <path d="M687 371h236M949 371h236M1211 371h236" fill="none" stroke="#cbd8cf" stroke-width="2"/>
+  <text x="708" y="362" font-size="25" font-weight="700">甲 · 海边</text>
+  <text x="970" y="362" font-size="25" font-weight="700">乙 · 山野</text>
+  <text x="1232" y="362" font-size="25" font-weight="700">丙 · 古镇</text>
+  <text x="708" y="402" class="ui">海岸</text>
+  <text x="708" y="462" class="ui">缓行</text>
+  <text x="708" y="522" class="ui">民宿</text>
+  <text x="970" y="402" class="ui">山林</text>
+  <rect x="961" y="429" width="173" height="43" rx="8" fill="#dbecef" stroke="#007d9a" stroke-width="2.5"/>
+  <text x="970" y="460" class="ui">徒步</text>
+  <text x="970" y="522" class="ui">小屋</text>
+  <text x="1232" y="402" class="ui">街巷</text>
+  <text x="1232" y="462" class="ui">漫游</text>
+  <text x="1232" y="522" class="ui">客栈</text>
+  <path d="M1118 456l21 46-13-5-6 14-8-4 6-14-14-4Z" fill="#273c3c" stroke="#fffdf8" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="600" y="588" width="888" height="77" rx="13" fill="#fffdf8" stroke="#8fa8a2" stroke-width="2.5"/>
+  <path d="M624 605v41" fill="none" stroke="#007d9a" stroke-width="3"/>
+  <text x="645" y="638" class="ui">把“徒步”改得轻松些</text>
+  <path d="M1443 611l19 16-19 16" fill="none" stroke="#007d9a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="601" y="702" class="small">对话继续负责说意图</text>
+
+  <text x="73" y="814" class="subtitle">边聊边改；需要比较时，把对象摊开。</text>
+  <path d="M1408 803h121" fill="none" stroke="#007d9a" stroke-width="4" stroke-linecap="round"/>
+</svg>
