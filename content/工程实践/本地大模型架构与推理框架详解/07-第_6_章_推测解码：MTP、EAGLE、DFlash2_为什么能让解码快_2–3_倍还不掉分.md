@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 本地大模型架构与推理框架详解
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 第 6 章　推测解码：MTP、EAGLE、DFlash2 为什么能让解码快 2–3 倍还不掉分

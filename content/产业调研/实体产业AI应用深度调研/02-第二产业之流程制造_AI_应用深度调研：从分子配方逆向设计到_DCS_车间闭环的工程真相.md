@@ -17,7 +17,7 @@ tags:
   - 产业调研
   - 实体产业AI应用深度调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 第二产业之流程制造 AI 应用深度调研：从分子配方逆向设计到 DCS 车间闭环的工程真相

@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 本地大模型架构与推理框架详解
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 第 4 章　微调变体与后训练：Swift、ThinkingCap、Signal 们到底改了什么

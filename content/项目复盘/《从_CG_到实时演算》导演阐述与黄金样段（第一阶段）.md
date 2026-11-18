@@ -7,7 +7,7 @@ category: 项目复盘
 tags:
   - 项目复盘
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 《从 CG 到实时演算》导演阐述与黄金样段（第一阶段）

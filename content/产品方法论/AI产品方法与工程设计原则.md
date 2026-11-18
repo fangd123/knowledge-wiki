@@ -8,7 +8,7 @@ tags:
   - synthesis
   - 产品方法论
 ai_assisted: true
-status: review
+status: published
 ---
 
 # AI产品方法与工程设计原则

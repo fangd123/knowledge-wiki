@@ -10,7 +10,7 @@ tags:
   - 项目复盘
   - 小岛物语开发日志
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 07 演示视频（Batch G）

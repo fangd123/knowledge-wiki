@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - AI Game系列文章
 ai_assisted: true
-status: review
+status: published
 ---
 
 在前面几篇文章里，我反复提到了一个核心矛盾：我们既渴望AI能“涌现”出一个不可预测的、充满惊喜的活生生的世界，又希望这个世界是“好玩的”、“有意义的”，而这就需要设计和控制。

@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - AI Game系列文章
 ai_assisted: true
-status: review
+status: published
 ---
 
 大家好，我是你们的朋友。最近我一直在思考AI Game这个宏大的命题，前面我们聊了涌现、聊了控制、也聊了崩溃。今天，我想和大家探讨一个更深、也更棘手的问题：AI的价值观，到底从哪儿来？

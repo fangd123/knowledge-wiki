@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - 声音产品方法论
 ai_assisted: true
-status: review
+status: published
 ---
 
 # MVP 不是做少一点，是用最小代价验证最大风险

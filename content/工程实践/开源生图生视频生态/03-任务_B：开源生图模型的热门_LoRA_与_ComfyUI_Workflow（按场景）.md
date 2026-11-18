@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 开源生图生视频生态
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 任务 B：开源生图模型的热门 LoRA 与 ComfyUI Workflow（按场景）

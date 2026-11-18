@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - Magpie与LLM网关配置调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 最终汇总总结：LLM 网关缓存大小建议、难度自适应路由与全局最优配置全景报告

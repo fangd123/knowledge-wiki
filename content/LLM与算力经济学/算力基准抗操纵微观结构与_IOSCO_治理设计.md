@@ -13,7 +13,7 @@ tags:
   - CFTC监管
   - LLM与算力经济学
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 算力基准抗操纵微观结构与 IOSCO 治理设计

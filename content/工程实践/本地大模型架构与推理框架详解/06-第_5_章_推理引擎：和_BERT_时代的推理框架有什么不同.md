@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 本地大模型架构与推理框架详解
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 第 5 章　推理引擎：和 BERT 时代的推理框架有什么不同

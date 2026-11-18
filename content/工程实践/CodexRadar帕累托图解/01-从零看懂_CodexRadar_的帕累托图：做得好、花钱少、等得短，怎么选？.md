@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - CodexRadar帕累托图解
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 从零看懂 CodexRadar 的帕累托图：做得好、花钱少、等得短，怎么选？

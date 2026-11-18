@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - Magpie与LLM网关配置调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 开源生态调研 B：最佳缓存容量寻优、KV/Prompt 感知路由与 LLM 自动配置器深度报告

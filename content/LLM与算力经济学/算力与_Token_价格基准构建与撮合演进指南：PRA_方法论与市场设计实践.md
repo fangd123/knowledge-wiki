@@ -14,7 +14,7 @@ tags:
   - 撮合机制
   - LLM与算力经济学
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 算力与 Token 价格基准构建与撮合演进指南：PRA 方法论与市场设计实践

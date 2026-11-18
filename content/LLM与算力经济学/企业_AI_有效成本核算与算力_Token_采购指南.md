@@ -13,7 +13,7 @@ tags:
   - 盈亏平衡拐点
   - LLM与算力经济学
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 企业 AI 有效成本核算与算力/Token 采购指南

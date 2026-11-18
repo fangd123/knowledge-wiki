@@ -18,7 +18,7 @@ tags:
   - 产业调研
   - 实体产业AI应用深度调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 制造业 AI 工程底座与中小企业落地经济学剖析：OT-IT 集成、组织博弈与 ROI 尸检报告

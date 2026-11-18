@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 开源生图生视频生态
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 开源生图/生视频：LoRA 与 ComfyUI 工作流生态总结

@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - AI Game系列文章
 ai_assisted: true
-status: review
+status: published
 ---
 
 # AI Game：从涌现幻想到可控创造的哲学思考

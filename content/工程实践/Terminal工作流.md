@@ -9,7 +9,7 @@ tags:
   - concept
   - 工程实践
 ai_assisted: true
-status: review
+status: published
 ---
 
 # Terminal工作流

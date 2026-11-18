@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 本地大模型架构与推理框架详解
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 第 1 章　从 BERT 到今天的大模型：哪些东西变了

@@ -10,7 +10,7 @@ tags:
   - 项目复盘
   - 小岛物语开发日志
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 小岛物语（Cozy Island）— 设计文档 v1

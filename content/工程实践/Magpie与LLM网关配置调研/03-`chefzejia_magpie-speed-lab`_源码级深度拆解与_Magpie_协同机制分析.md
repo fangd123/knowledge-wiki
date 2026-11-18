@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - Magpie与LLM网关配置调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # `chefzejia/magpie-speed-lab` 源码级深度拆解与 Magpie 协同机制分析

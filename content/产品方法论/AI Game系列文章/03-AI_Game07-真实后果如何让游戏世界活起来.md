@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - AI Game系列文章
 ai_assisted: true
-status: review
+status: published
 ---
 
 大家好，这是我关于AI游戏思考的第七篇文章了。今天，我想聊一个有点疯狂但又让我无比着迷的话题：如果一个游戏世界，真的能被我们玩家“玩坏”，那会怎么样？

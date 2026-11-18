@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 开源生图生视频生态
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 开源视频生成模型的热门 LoRA 与 ComfyUI Workflow 调研报告

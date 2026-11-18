@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - Magpie与LLM网关配置调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 开源生态调研 A：智能难度路由、推理预算寻优与 Coding Agent 网关深度剖析

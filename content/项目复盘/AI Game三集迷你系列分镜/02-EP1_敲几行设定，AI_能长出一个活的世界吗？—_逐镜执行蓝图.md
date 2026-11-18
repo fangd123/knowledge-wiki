@@ -10,7 +10,7 @@ tags:
   - 项目复盘
   - AI Game三集迷你系列分镜
 ai_assisted: true
-status: review
+status: published
 ---
 
 # EP1 敲几行设定，AI 能长出一个活的世界吗？— 逐镜执行蓝图

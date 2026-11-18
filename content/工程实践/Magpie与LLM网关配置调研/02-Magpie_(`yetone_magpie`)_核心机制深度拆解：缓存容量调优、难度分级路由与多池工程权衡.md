@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - Magpie与LLM网关配置调研
 ai_assisted: true
-status: review
+status: published
 ---
 
 # Magpie (`yetone/magpie`) 核心机制深度拆解：缓存容量调优、难度分级路由与多池工程权衡

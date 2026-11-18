@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 利器
 ai_assisted: true
-status: review
+status: published
 ---
 
 > 由于微信公众号无法直接跳转外链，大家可以点击**阅读原文**进入我的博客浏览

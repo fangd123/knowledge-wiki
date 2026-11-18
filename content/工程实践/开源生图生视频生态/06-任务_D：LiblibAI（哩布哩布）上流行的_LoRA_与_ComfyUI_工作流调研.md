@@ -10,7 +10,7 @@ tags:
   - 工程实践
   - 开源生图生视频生态
 ai_assisted: true
-status: review
+status: published
 ---
 
 # 任务 D：LiblibAI（哩布哩布）上流行的 LoRA 与 ComfyUI 工作流调研

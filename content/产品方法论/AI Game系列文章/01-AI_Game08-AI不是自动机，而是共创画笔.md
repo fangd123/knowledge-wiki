@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - AI Game系列文章
 ai_assisted: true
-status: review
+status: published
 ---
 
 聊完了“崩溃”，我们其实触碰到了AI Game最核心的命门。我们之所以渴望崩溃，是因为我们渴望真实；我们之所以渴望真实，是因为我们厌倦了被过度设计的虚假完美。

@@ -10,7 +10,7 @@ tags:
   - 产品方法论
   - AI Game系列文章
 ai_assisted: true
-status: review
+status: published
 ---
 
 我至今仍记得第一次看《刀剑神域》时，内心受到的巨大震撼。当桐人戴上NerveGear，进入那座名为“艾恩葛朗特”的浮空城堡时，一个全新的世界在他眼前展开。

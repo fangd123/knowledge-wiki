@@ -7,7 +7,7 @@ category: 政治经济与社会评论
 tags:
   - 政治经济与社会评论
 ai_assisted: true
-status: review
+status: published
 ---
 
 ## **导语：当算法成为权力，谁来执笔伦理的法典？**
