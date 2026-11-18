@@ -26,4 +26,4 @@
 
 ## 当前状态
 
-[文章目录](content/INDEX.md)共收录 162 篇。许可和第三方素材署名见 [`SOURCES.md`](SOURCES.md)。
+[文章目录](content/INDEX.md)共收录 169 篇。许可和第三方素材署名见 [`SOURCES.md`](SOURCES.md)。
