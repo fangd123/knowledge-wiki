@@ -15,10 +15,10 @@ status: published
 
 # 参考资料与数据来源总表（References & Data Provenance）
 
-> **说明**：本文档汇总了本次「Magpie 与 LLM 网关最优配置深度调研」及配套科普图解文章所引用的**全部一手代码仓库（含精确 Git Commit SHA 与核心源码路径）、云厂商官方计费与协议文档、学术顶会论文，以及图表数据口径说明**。  
+> **用法**：给[通俗图解](08-%E9%80%9A%E4%BF%97%E5%9B%BE%E8%A7%A3%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BD%91%E5%85%B3%E6%98%AF%E5%A6%82%E4%BD%95%E5%B8%AE%E4%BD%A0%E7%9C%81%E9%92%B1%E3%80%81%E6%8F%90%E9%80%9F%E5%8F%88%E4%B8%8D%E5%8F%98%E5%82%BB%E7%9A%84%EF%BC%9F.md)追数字的来路：仓库是机制证据，文档是费率和协议入口，图解里的算例不是用户账单。下表记录的是原调研那一天，并非这次重新检出全部版本。
 > **数据采集与代码克隆核验基准日期**：`2026-11-13`  
 > **来源标识约定**：
-> - `[Git]`：本地 `git clone --depth 1` 检出源码，经 `git rev-parse HEAD` 校验 Commit SHA 并逐行审计；
+> - `[Git]`：原调研记录了源码检出或实现定位；并不代表每行版本号都已独立复核。
 > - `[API]`：通过 `https://api.github.com/repos/<owner>/<repo>` 实时拉取仓库元数据（Stars、License、Archived 状态、最近推送时间）；
 > - `[Web]`：通过公开网页检索与官方文档核验（用于未全量克隆的边缘对照项目或闭源商业插件说明）。
 
@@ -28,15 +28,15 @@ status: published
 
 | 项目名称 | GitHub 仓库链接 | 核验版本 / Commit SHA `[Git]` | 核心审计源码路径与关联记录 |
 | :--- | :--- | :--- | :--- |
-| **`yetone/magpie`** | [https://github.com/yetone/magpie](https://github.com/yetone/magpie) | `70f4593e623e0847fcc2d869240565ce5f73a67a`<br>*(2026-11-13)* | • **缓存窗口与 TTL 重放寻优（Tuned for you）**：`internal/tune/tune.go`、`internal/gui/tune.go`、`internal/agent/tune.go`、`internal/gui/assets/context.js`、`internal/sessions/calls.go`<br>• **命名辨析（防 ReDoS 截断正则）**：`internal/capre/capre.go`<br>• **三层难度与语义路由**：`internal/routes/compacting.go`、`internal/routes/desktop_subagent.go`、`internal/routes/rulecond.go`、`internal/routes/classify.go`、`internal/routes/decide.go`、`internal/routes/grouptemplate.go`<br>• **缓存防撕裂五重防线与多池策略**：`internal/routes/affinity.go`、`internal/routes/rules.go`（`keepsEffort`）、`internal/routes/effort_update.go`（GPT-6 `configuration_update` 与 Issue [#617](https://github.com/yetone/magpie/issues/617)）、`internal/gateway/claude_cache.go`、`internal/gateway/speed.go`、`internal/routes/fastest.go`、`internal/usage/usage.go` |
-| **`chefzejia/magpie-speed-lab`** | [https://github.com/chefzejia/magpie-speed-lab](https://github.com/chefzejia/magpie-speed-lab) | `v0.3.0` / `75e91f590e6551fdc6173281a161613444120151`<br>*(2026-11-04)* | • **动态端口握手与沙箱穿透**：`index.mjs`、`lib/server.mjs`、`page/boot.js`、`page/session.js`<br>• **四阶段耗时拆解与 `flow_ms` 流速恢复**：`lib/telemetry.mjs`<br>• **并发双模探针**：`lib/probe.mjs`<br>• **四维正交打分与 4 类工作负载排行**：`lib/ranking.mjs`、`ui/app.js`、`test/*.test.mjs` |
+| **`yetone/magpie`** | [https://github.com/yetone/magpie](https://github.com/yetone/magpie) | `70f4593e623e0847fcc2d869240565ce5f73a67a`<br>*(2026-11-13)* | • **缓存窗口与 TTL 重放寻优（Tuned for you）**：`internal/tune/tune.go`、`internal/gui/tune.go`、`internal/agent/tune.go`、`internal/gui/assets/context.js`、`internal/sessions/calls.go`<br>• **命名辨析（防 ReDoS 截断正则）**：`internal/capre/capre.go`<br>• **三层难度与语义路由**：`internal/gateway/compacting.go`、`internal/gateway/desktop_subagent.go`、`internal/provider/rulecond.go`、`internal/gateway/classify.go`、`internal/gateway/decide.go`、`internal/provider/grouptemplate.go`<br>• **缓存防撕裂五重防线与多池策略**：`internal/gateway/affinity.go`、`internal/gateway/rules.go`（`keepsEffort`）、`internal/gateway/effort_update.go`（GPT-6 `configuration_update` 与 Issue [#617](https://github.com/yetone/magpie/issues/617)）、`internal/gateway/claude_cache.go`、`internal/gateway/speed.go`、`internal/routes/fastest.go`、`internal/usage/usage.go` |
+| **`chefzejia/magpie-speed-lab`** | [https://github.com/chefzejia/magpie-speed-lab](https://github.com/chefzejia/magpie-speed-lab) | `v0.3.0` / `75e91f590e6551fdc6173281a161613444120151`<br>*(2026-11-04)* | • **同机桌面界面**：`index.mjs`、`lib/server.mjs`、`page/boot.js`、`page/session.js`<br>• **四阶段耗时拆解与 `flow_ms` 窗口折算速率**：`lib/telemetry.mjs`<br>• **并发双模探针**：`lib/probe.mjs`<br>• **四维正交打分与 4 类工作负载排行**：`lib/ranking.mjs`、`ui/app.js`、`test/*.test.mjs` |
 | **关联生态提交与校验规范** | • [magpie-community/plugins](https://github.com/magpie-community/plugins)<br>• [Wei-Shaw/sub2api PR #2485](https://github.com/Wei-Shaw/sub2api/pull/2485) / [PR #2402](https://github.com/Wei-Shaw/sub2api/pull/2402)<br>• [yetone/magpie Issue #2128](https://github.com/yetone/magpie/issues/2128) | `2026-11` 检索核实 | • `magpie-community/plugins/scripts/check.mjs`（插件导入无副作用校验规范）<br>• 作者 `chefzejia` 在 `sub2api` 提出的慢请求物理阶段解耦观测方法论溯源 |
 
 ---
 
 ## 二、 云厂商官方计费倍率与推理协议数据源
 
-报告与图解中涉及的缓存读写倍率、最小缓存门槛与思考档位协议，均交叉核验自云厂商官方文档与网关源码定价表：
+费率文档解释计价口径；网关源码解释这版实现用了哪些倍率。模型特定行为若只见项目注释，单列说明。
 
 1. **Anthropic Claude Prompt Caching 定价与生命周期规范**
    - **官方文档**：[Anthropic Docs — Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) & [Anthropic Pricing](https://www.anthropic.com/pricing)
@@ -50,14 +50,14 @@ status: published
    - **官方文档**：[OpenAI Docs — Prompt Caching](https://platform.openai.com/docs/guides/prompt-caching) & [OpenAI Docs — Reasoning Models](https://platform.openai.com/docs/guides/reasoning)
    - **核心参数与行为**：
      - 自动前缀缓存触发门槛：`>= 1,024` tokens（按 `128` tokens 步进增量匹配），无需显式写入溢价（`Write = 1.0x`）；
-     - 思考预算档位：`reasoning.effort`（`none` / `minimal` / `low` / `medium` / `high` / `xhigh`）；修改请求顶层参数会导致前缀缓存失配，而 Responses 流内联 `configuration_update` 的保缓存特性与升档退化现象核自 `yetone/magpie` `internal/routes/effort_update.go`。
+     - 思考预算档位以对应模型规范为准。网关尝试内联降档、对升档另作处理，来源是 `internal/gateway/effort_update.go` 及其注释；不是 OpenAI 对缓存命中或推理量的保证。
 3. **DeepSeek 上下文硬盘缓存与错峰计费 / GitHub Copilot & OpenRouter 特殊费率**
    - **官方文档**：[DeepSeek API Docs — Context Caching & Pricing](https://api-docs.deepseek.com/quick_start/pricing)
    - **源码交叉印证**：`yetone/magpie` `internal/gui/tune.go:239-257`（`pricedWeights` 识别 GitHub Copilot 等渠道对 `1h` 缓存按 `5m` 费率计价）与 `musistudio/claude-code-router`（`openrouter-discount-provider-router.ts` 多下游供应商动态折扣与缓存损失对账）。
 
 ---
 
-## 三、 外部开源生态核验全清单（55+ 仓库源码与元数据台账）
+## 三、外部开源生态：按赛道列的材料索引
 
 ### 3.1 赛道 A：智能难度路由、推理预算寻优与 Coding Agent 网关（对应报告 `03`）
 
@@ -92,11 +92,11 @@ status: published
 
 ### 3.2 赛道 B：缓存容量寻优（MRC）、KV/Prompt 调度、自动配置器与测速实验室（对应报告 `04`）
 
-| 序号 | 开源仓库（可点击访问） | 核验 Commit SHA `[Git]` | 核心核查源码路径 / 关键机制与证伪结论 |
+| 序号 | 开源仓库 | 原记录中的版本线索 | 核读入口与机制 |
 | :---: | :--- | :--- | :--- |
 | 1 | [facebook/CacheLib](https://github.com/facebook/CacheLib) | `77225740d2188eb6774ce4f5769b20de9fa3a89a` | `cachelib/allocator/MarginalHitsStrategy.h`、`LruTailAgeStrategy.h`、`PoolOptimizer.h`（在线尾部边际命中均衡） |
 | 2 | [cacheMon/libCacheSim](https://github.com/cacheMon/libCacheSim) | `f7c85f8a538e62129e55e90c0ce4c0f605bd78ba` | `profilerLRU.c`（Olken Splay Tree MRC）、`cli_parser.c:461-485`（`[0.001..0.8]*WSS` 8 档扫频；核实不含 SHARDS） |
-| 3 | [LMCache/LMCache](https://github.com/LMCache/LMCache) | `6a316c3e0174b693dbc9500c7a991477b9f20206` | `lmcache/tools/cache_simulator/simulator.py` & `trace_analyze.py`（推理生态唯一离线 MRC 扫频顾问）+ `arc.py` |
+| 3 | [LMCache/LMCache](https://github.com/LMCache/LMCache) | `6a316c3e0174b693dbc9500c7a991477b9f20206` | `lmcache/tools/cache_simulator/simulator.py` & `trace_analyze.py`（本组样本中的离线 MRC 扫频顾问）+ `arc.py` |
 | 4 | [kvcache-ai/Mooncake](https://github.com/kvcache-ai/Mooncake) | `6ca711276690d42b6aa195dccbb6cd6c14144772` | `count_min_sketch.h`（频次防污染准入）、`quota_manager.cpp`、`prefix_indexer.h`（四介质分层命中） |
 | 5 | [vllm-project/aibrix](https://github.com/vllm-project/aibrix) | `a0d8137c8ec78778aa12dd633c742799879cad95` | `pkg/plugins/gateway/algorithms/load_balance.go`、`prefixcache/router.go`、`preble.go`（二次压力惩罚 + Preble 代价） |
 | 6 | [vllm-project/production-stack](https://github.com/vllm-project/production-stack) | `405a2fa79992754d31b1eabb7183a540e` | `src/vllm_router/routers/routing_logic.py`（`KvawareRouter` 与无量纲 `LoadAwareRouter`） |
@@ -104,7 +104,7 @@ status: published
 | 8 | [llm-d/llm-d-inference-scheduler](https://github.com/llm-d/llm-d-inference-scheduler) | `647ca7cacd74de4fcc94b4717b72161de0f683b9` | `pkg/epp/framework/plugins/scheduling/`（`MaxTTFTPenaltyMs=18000` 破粘闸门 + `3:2:2` 默认加权） |
 | 9 | [llm-d/llm-d-kv-cache](https://github.com/llm-d/llm-d-kv-cache) | `822e6dd9c45963284f872b4766fbce2663` | `pkg/kvcache/kvblock_scorer.go`（`gpu=1.0, cpu=0.8` 连续前缀块介质折现计分） |
 | 10 | [llm-d/llm-d](https://github.com/llm-d/llm-d) & [llm-d/llm-d-router](https://github.com/llm-d/llm-d-router) | `647ca7cacd...` (2026-11-13) | K8s 分布式推理控制面顶层架构与路由组件编排 |
-| 11 | [kubernetes-sigs/gateway-api-inference-extension](https://github.com/kubernetes-sigs/gateway-api-inference-extension) | `6faa78e599c9b4717b72161de0f683b91f931c312d995ae` | Kubernetes Gateway API 推理扩展 EPP 底层插件调度底座 |
+| 11 | [kubernetes-sigs/gateway-api-inference-extension](https://github.com/kubernetes-sigs/gateway-api-inference-extension) | 原记录版本串长度异常，不作版本定位 | Kubernetes Gateway API 推理扩展 EPP 底层插件调度底座 |
 | 12 | [zilliztech/GPTCache](https://github.com/zilliztech/GPTCache) | `a74ac654473f7bf4109118e85769451616e17a` | `gptcache/manager/eviction/memory_cache.py`（固定 `maxsize=1000` 封装，核实无自动容量建议算法） |
 | 13 | [maximhq/bifrost-benchmarking](https://github.com/maximhq/bifrost-benchmarking) | `2026-10-13` `[Git]` | Bifrost 网关吞吐与语义缓存性能压测套件（配合 `bifrost/plugins/semanticcache/main.go`） |
 | 14 | [montevive/autocache](https://github.com/montevive/autocache) | `d01556f6a17b124e5b5b96756117684dcb31d33c` | `internal/pricing/pricing.go`、`injector.go`（5m 第 2 次回本 vs 1h 第 3 次回本数学公式，静态 TTL） |
@@ -126,7 +126,7 @@ status: published
 | 30 | [rbadillap/ai-gateways-benchmark](https://github.com/rbadillap/ai-gateways-benchmark) | `849100a37a3320121cb2f8d35e4e5acb034edf58` | `bench.py`（`dns->tcp->tls->ttfb->ttft->e2e` 六阶段拆解 + 冷热连接隔离 + 交错轮询） |
 | 31 | [OpenRouterTeam/benchmark-harness](https://github.com/OpenRouterTeam/benchmark-harness) | `1503e5406c25ad9744bf9d3ccb29e994baa718ae` | OpenRouter 官方 Bun 路由策略成本-智力基准评测框架 |
 
-> *(注：赛道 B 本地克隆的 33 个独立 Git 目录还包括跨赛道复核的 `maximhq/bifrost`、`alibaba/higress`、`Portkey-AI/gateway` 以及拆分的 `llm-d` 子仓；另有 Kong AI Gateway `ai-semantic-cache`、`QuantumNous/new-api`、`ginsonko/newapi-smart-router` 3 项通过官方文档 `[Web]` 边界核实。)*
+> 本表按专题列材料，不是一行一个独立仓库。赛道 B 原计 33 个检出目录，含跨赛道再次看的 Bifrost、Higress、Portkey，也有同一行并列的 llm-d 子仓。网页项与源码项分开；不能用行数或 22 + 33 推出独立仓库总数。
 
 ---
 
@@ -147,7 +147,7 @@ status: published
 10. **Mattson 栈距离定理**：R. L. Mattson, J. Gecsei, D. R. Slutz, I. L. Traiger (IBM). *"Evaluation techniques for storage hierarchies."* **IBM Systems Journal**, `1970`.
 11. **Olken 伸展树单遍栈距离算法**：Frank Olken (Lawrence Berkeley Lab). *"Efficient Methods for Calculating the Success Function of Fixed Space Replacement Policies."* Tech Report `LBL-12370`, `1981`.（`libCacheSim` `profilerLRU.c` 核心理论底座）
 12. **SHARDS**：Carl A. Waldspurger, Nohhyun Park, Alexander Garthwaite, Irfan Ahmad. *"Efficient MRC Construction with SHARDS."* **USENIX FAST '15**, `2015`.
-13. **CounterStacks**：Jake Wires, Stephen Ingram, Zachary Drudi, Nicholas J. A. Harvey, Andrew Warfield. *"Characterizing Storage Workloads with Counter Stacks."* **USENIX FAST '15**, `2015`.
+13. **CounterStacks**：Jake Wires 等，*Characterizing Storage Workloads with Counter Stacks*。这里按题名作检索入口，不沿用未经出版记录核对的会议和年份。
 14. **CacheLib**：Benjamin Berg, Daniel S. Berger, Sara McAllister, Isaac Grosof, et al. (Meta / CMU). *"The CacheLib Caching Engine: Design and Experiences at Scale."* **USENIX OSDI '20**, `2020`.
 15. **Vidur**：Amey Agrawal, Nitin Kedia, Ashish Panwar, Jayashree Mohan, et al. (Microsoft Research / Georgia Tech). *"Vidur: A Large-Scale Simulation Framework For LLM Inference."* **MLSys 2024**, [arXiv:2405.05465](https://arxiv.org/abs/2405.05465).
 16. **CacheBlend**：Jiayi Yao, Hanchen Li, Yuhan Liu, Siddhant Ray, et al. (UChicago). *"CacheBlend: Fast Large Language Model Serving for RAG with Cached Knowledge Fusion."* **EuroSys 2025 (Best Paper)**, [arXiv:2405.16444](https://arxiv.org/abs/2405.16444).
@@ -157,13 +157,13 @@ status: published
 
 ## 五、 科普文章（`07`）与配图中的数据口径说明
 
-为确保严谨透明，特此说明 `07-通俗图解：大模型网关是如何帮你省钱、提速又不变傻的.md` 中各类数字的精确来源属性：
+看[公开图解](08-%E9%80%9A%E4%BF%97%E5%9B%BE%E8%A7%A3%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BD%91%E5%85%B3%E6%98%AF%E5%A6%82%E4%BD%95%E5%B8%AE%E4%BD%A0%E7%9C%81%E9%92%B1%E3%80%81%E6%8F%90%E9%80%9F%E5%8F%88%E4%B8%8D%E5%8F%98%E5%82%BB%E7%9A%84%EF%BC%9F.md)时，把公式里的常数和图上为了讲明白问题而选的数分开：
 
-1. **直接取自源码常量或厂商官方定价的精确数值（零演绎）**：
+1. **版本常量、计价倍率及由它们推得的数**：
    - 缓存读写倍率 `0.1x`（读）、`1.25x`（5m 写）、`2.0x`（1h 写）及回本轮次（5m 第 2 次、1h 第 3 次）：取自 Anthropic 官方文档、`yetone/magpie` `internal/tune/tune.go:81-86` 与 `montevive/autocache` `internal/pricing/pricing.go`；
-   - Magpie 调优与路由核心参数：压缩跌落识别 `20,000` tokens / `0.6x`、压缩后失忆重读窗口 `reworkCalls = 10` 轮、搜索步长 `10,000` tokens、同成本宽容带 `sameCost = 0.03`（3%）、开头压缩指纹扫描长度 `compactLead = 2048B`、溢出比例 `95%`、Jev 置信度防抖门槛 `jevSure = 0.4`、温热保护门槛 `cacheWorth = 1024` tokens：全部逐行取自 `yetone/magpie`（Commit `70f4593e`）；
+   - Magpie 调优与路由核心参数：压缩跌落识别 `20,000` tokens / `0.6x`、压缩后额外增长估计窗口 `reworkCalls = 10` 轮、搜索步长 `10,000` tokens、同成本宽容带 `sameCost = 0.03`（3%）、开头压缩指纹扫描长度 `compactLead = 2048B`、溢出比例 `95%`、Jev 置信度防抖门槛 `jevSure = 0.4`、温热保护门槛 `cacheWorth = 1024` tokens：全部逐行取自 `yetone/magpie`（Commit `70f4593e`）；
    - `magpie-speed-lab` 参数：中间字节流窗口 `80%`（`flow_ms`）、`agent_loop` 权重（首响 `45%` + 稳定 `25%`）、`interactive_chat` 权重（吞吐 `45%`）、`deep_reasoning` 权重（效能 `40%`）、`xhigh` 相对同模 `high/medium` 的 `1.25x` P90 降档告警阈值：全部逐行取自 `chefzejia/magpie-speed-lab`（Commit `75e91f5`）；
    - 外部开源参数：`LMCache` $\sqrt{2}$ 容量扫频步长、`vllm-project/semantic-router` `affinityMaxLambda = 0.14`、`claude-code-router` `5%` 最小净节省比例（`minSavingsRatio = 0.05`）、`Plano` & `LiteLLM` `3-Strike` 循环重试阈值：全部取自第 3 节对应源码文件。
 2. **基于真实费率公式推演的教学示意算例（已标注“示意”或举例背景）**：
-   - `07` 第二节 Mermaid `xychart-beta` 的 U 型曲线数值（`[142, 112, 92, 78, 74, 81, 98, 135]`）：因每位开发者的真实重放曲线取决于其本地 7 天会话 JSONL，该图按 Magpie `replayCompact` 成本方程构造教学示意曲线，用于直观展示“窗口过小引发 `Rework` 返工税”与“窗口过大引发重读/过期税”的凸优化谷底形态；
-   - `assets/fig03-cache-trap-and-ratchet.svg` 中的账单对比算例（20 万字上下文下：留在原强模型命中 `0.1x` 缓存约 `$0.06` vs 跨切另一模型冷启动全量重读约 `$0.60+`）：按主流前沿模型基准输入单价 `$3 / 1M tokens`（缓存读 `$0.30 / 1M tokens`）结合 `200K` 上下文长度严格换算得出（$200\text{K} \times \$0.30/\text{M} = \$0.06$），用于直观展示跨模破缓存的数量级反差。
+   - 图解第二节的 U 型示意线 `[142, 112, 92, 78, 74, 81, 98, 135]`，画的是“压缩太勤交返工税，窗口太大交重读税”。它不是任何人的七天轨迹；也不能从示意线断言真实成本函数是凸的。
+   - [图解第四节的搬家账单](08-%E9%80%9A%E4%BF%97%E5%9B%BE%E8%A7%A3%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BD%91%E5%85%B3%E6%98%AF%E5%A6%82%E4%BD%95%E5%B8%AE%E4%BD%A0%E7%9C%81%E9%92%B1%E3%80%81%E6%8F%90%E9%80%9F%E5%8F%88%E4%B8%8D%E5%8F%98%E5%82%BB%E7%9A%84%EF%BC%9F.md)：假定 20 万 token，热读每百万 0.30 美元、冷读每百万 3 美元，该段输入分别花 0.06 与 0.60 美元；没有加输出、缓存写入或后续轮次。

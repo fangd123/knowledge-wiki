@@ -16,7 +16,7 @@ status: published
 # 任务 B：开源生图模型的热门 LoRA 与 ComfyUI Workflow（按场景）
 
 > 调研日期：2026-11-08。全部结论基于当日联网检索（官方文档 / Hugging Face / Civitai / LiblibAI / ModelScope / GitHub / ComfyUI 官方模板库 / 社区评测）。
->
+> 这是一份找权重和工作流的资料对读，不是把模型放到同一显卡上测速度或峰值。
 > **标注约定**：【事实】= 有来源直接佐证；【推断】= 根据多来源交叉或常识推断；【未核实】= 有线索但数字/细节拿不到权威确认。所有下载量/点赞数为抓取时点的页面数字，Civitai 页面渲染有乱码风险，个位数差异请以原页面为准。
 
 ---
@@ -45,7 +45,7 @@ status: published
 |---|---|---|---|---|---|
 | **Qwen-Image-Lightning-4steps/8steps V1.0/V2.0**（lightx2v / ModelTC） | 步数蒸馏 LoRA | 文生图加速：50 步 → 4/8 步，CFG=1.0，euler/simple | https://huggingface.co/lightx2v/Qwen-Image-Lightning ；项目页 https://hysenlabs.com/projects/modeltc-lightx2v-qwen-image-lightning （GitHub 1,364 stars） | 官方 2512 模板内置 4 步子图，属"事实标准"【事实】 | LoraLoaderModelOnly 挂 base 模型；官方 2512 模板自带 Lightning 子图；V2.0 比 V1.0 饱和度更低、肤色更自然（项目自述） |
 | **Qwen-Image-2512-Lightning-4steps-V1.0**（fp32/bf16，2026-01-01 发布） | 2512 专用蒸馏 | 2512 加速 | 同上 HF 仓库 | 官方模板引用 | 与 `qwen_image_2512_fp8_e4m3fn` / bf16 搭配；也提供预融合 FP8 文件（免运行时合并） |
-| GGUF 量化（unsloth / QuantStack / city96 生态） | 量化（非 LoRA，配套使用） | 8-16GB 显存跑 20B 模型 | https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF | Q4_K_M 13.2GB 是 16GB 卡社区默认【事实】 | 需 city96/ComfyUI-GGUF 节点，放 `models/unet` |
+| GGUF 量化（unsloth / QuantStack / city96 生态） | 量化（非 LoRA，配套使用） | 减少权重存储与驻留需求 | https://huggingface.co/unsloth/Qwen-Image-Edit-2511-GGUF | Q4_K_M 文件约 13.2GB；不是显存峰值 | 需 city96/ComfyUI-GGUF 节点，放 `models/unet` |
 
 **注意事项**【事实，来自官方模板与社区文档】：Lightning 类 LoRA 必须 CFG=1.0、sampler=euler、scheduler=simple；步数超过 6-8 步反而劣化；CFG 拉高到 2 以上会烧色/海报化（Floyo 工作流页明确警告 https://floyo.ai/workflows/qwen-image-edit-2511-lightning-multi-sl3ltb2s5uxo ）；挂 Lightning 后不需要 ModelSamplingAuraFlow shift。
 
@@ -94,13 +94,13 @@ status: published
 
 | 名称 | 类型 | 场景 | 来源 | 热度证据 | ComfyUI 兼容说明 |
 |---|---|---|---|---|---|
-| **fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA** | 多角度镜头 | 一键 96 种相机位（4 仰角×8 方位×3 距离），支持 -30° 低角度；3000+ 训练对（高斯泼溅数据） | https://huggingface.co/fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA ；LiblibAI 转载 https://www.liblib.art/modelinfo/043a7b86ba9d4369ad7df27f6e457d02 | **LiblibAI 126.8K 下载 / 1.5K 点赞**【事实】 | 配套自定义节点 jtydhr88/ComfyUI-qwenmultiangle（Qwen Multiangle Camera）；LiblibAI 上有成品工作流（多角度+局部重绘+洗图）https://www.liblib.art/modelinfo/378b802989e04a39a68ad2aa4a4a6ec5 |
+| **fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA** | 多角度镜头 | 一键 96 种相机位（4 仰角×8 方位×3 距离），支持 -30° 低角度；3000+ 训练对（高斯泼溅数据） | https://huggingface.co/fal/Qwen-Image-Edit-2511-Multiple-Angles-LoRA ；LiblibAI 转载 https://www.liblib.art/modelinfo/043a7b86ba9d4369ad7df27f6e457d02 | 同页快照在平台分册记为在线生成 126.8K、下载 1.5K；未独立复核字段，不据此评下载热度 | 配套自定义节点 jtydhr88/ComfyUI-qwenmultiangle（Qwen Multiangle Camera）；LiblibAI 上有成品工作流（多角度+局部重绘+洗图）https://www.liblib.art/modelinfo/378b802989e04a39a68ad2aa4a4a6ec5 |
 | tori29umai/Qwen-Image-2509-MultipleAngles | 多角度 | 2509 版多角度 | https://huggingface.co/tori29umai/Qwen-Image-2509-MultipleAngles | Zenn 清单收录，社区引用多【推断】 | 2509 工作流 |
 | dx8152/Qwen-Edit-2509-Multiple-angles | 多角度 | 同上（ModelScope 版） | https://modelscope.cn/models/dx8152/Qwen-Edit-2509-Multiple-angles | Bilibili"神级 LoRA"盘点收录 https://www.bilibili.com/video/BV1zgUrBqE5e/ 【事实：被收录；下载数未核实】 | ModelScope 国内下载方便 |
 | **dx8152/Qwen-Image-Edit-2509-Light_restoration** | relight | 一键去除面部光影、柔光重打光 | ModelScope（同上盘点） | 同上 | 2509 |
 | **dx8152/Qwen-Edit-2509-Light-Migration / Multi-Angle-Lighting** | relight/换光照 | 光照迁移（给已有光照的图二次布光）、昼夜转换、多角度布光 | 同上 | 同上 | 2509；oncompute 电商套件也引用 Light-Migration【事实】 |
 | tarn59/apply_texture / extract_texture | 纹理 | 给物体/建筑/精灵贴纹理；反向提取纹理 | HF（tarn59） | Zenn 清单收录 | 2509 |
-| **valiantcat(starsfriday)/Qwen-Image-Edit-Remover-General-LoRA** | 去物体/去水印 | 电商图/人物图/物品图消除（"移除XXX"），保持其余像素不变 | https://huggingface.co/starsfriday/Qwen-Image-Edit-Remover-General-LoRA | HF 镜像页显示月下载 404（镜像口径）【未核实总量】 | 官方 Edit 工作流 + LoraLoaderModelOnly；提示词"从场景中移除XXX" |
+| **valiantcat(starsfriday)/Qwen-Image-Edit-Remover-General-LoRA** | 去物体/去水印 | 电商图/人物图/物品图消除（"移除XXX"），目标是尽量保住其余区域，需逐图比较 | https://huggingface.co/starsfriday/Qwen-Image-Edit-Remover-General-LoRA | HF 镜像页显示月下载 404（镜像口径）【未核实总量】 | 官方 Edit 工作流 + LoraLoaderModelOnly；提示词"从场景中移除XXX" |
 | prithivMLmods/Qwen-Image-Edit-2511-Object-Remover | 去物体 | 2511 版消除（含去水印/Logo） | https://huggingface.co/prithivMLmods/Qwen-Image-Edit-2511-Object-Remover | 被 Civitai 热门 remover 工作流采用【事实】 | 2511 GGUF 工作流实测 12 步 CFG 1.2 即可擦水印（社区教程） |
 | FoxBaze/Try_On_Qwen_Edit_Lora_Alpha | 换装 try-on | 多参考虚拟试穿（Alpha 版） | HF（FoxBaze） | Zenn 清单收录【事实】 | 2509 多图工作流 |
 | **Clothes Try On (Qwen Edit)**（Civitai） | 换装 | 源服装穿到目标人物，体型感知 | https://civitai.com （Qwen Edit 分类） | 8.1K 下载、4.9 分【事实】 | 建议强度 1.5 |
@@ -121,16 +121,16 @@ status: published
 | Qwen Edit Figure Maker / Reality Transform / Upscaler & Denoise / Reality Simulator（Civitai） | 手办化/风格/放大/手机实拍 | 各垂直小场景 | Civitai Qwen 分类 | 7.7K / 7.1K / 6.3K 下载【事实】 | 常规挂载 |
 
 ### 2.3 热门 Workflow（Qwen-Image-Edit）
-
-| Workflow | 用途 | 自定义节点 | 显存 | 热度证据 |
-|---|---|---|---|---|
-| **官方模板 image_qwen_image_edit_2511**（单图+多图双轨） | 指令编辑 / 跨图材质迁移 | 内置；可选 Lightning LoRA | fp8mixed 20.5GB；bf16 40.9GB；GGUF Q4_K_M 13.2GB（12GB 卡可用，8GB 卡 Q2 应急） | ComfyUI 模板库自带【事实】来源：https://localaimaster.com/blog/qwen-image-edit-local-guide |
-| **多角度+局部重绘+洗图 三合一**（LiblibAI） | 多角度出图、遮罩重绘、ControlNet 洗图、SeedVR2.5 放大 | comfyui_controlnet_aux（LeReS/DepthAnythingV2/Canny/DWPose）、Qwen Multiangle 节点、SeedVR2 | 未标注（20B 模型，建议 16GB+）【推断】 | LiblibAI 工作流页 https://www.liblib.art/modelinfo/378b802989e04a39a68ad2aa4a4a6ec5 【事实】 |
-| **换装一致性（Multi 2511 + SeedVR2）**（NextDiffusion） | 多图换装并保纹理 | GGUF 节点、SeedVR2 节点 | 教程按 RunPod 常规 24GB 演示【推断】 | https://nextdiffusion.ai/tutorials/consistent-outfit-changes-with-multi-qwen-image-edit-2511-in-comfyui 【事实】 |
-| **电商产品五件套**（oncompute "E-commerce studio"） | 换背景 / 重打光 / 7 角度+360 环拍 / 广告图文案合成 / 生成 5s 短片；共用 20.4GB Edit 底模 + 9.4GB 编码器，按任务换小 LoRA（White-to-Scene、Light-Migration、Multiple-Angles），Turbo 开关即 4 步 Lightning | 内置 | 48GB 跑全部 5 个；24GB 跑 4 个图像工作流（Motion 跑不了，需 LTX-2.3 22B） | https://docs.oncompute.ai/inference-tutorials/turn-one-product-photo-into-a-listing-with-comfyui-and-qwen-image-edit 【事实】 |
-| **老照片修复**：LiblibAI「Qwen-Edit-老照片修复」（40 步 CFG 2.0-2.5，提示词"图像整体保持不变,高清,修复照片瑕疵并上色"）；RunningHub「Qwen-2509-老照片修复」(重上色重打光 + SeedVR2 + FlashVSR 4K)；Floyo「2511 Restore Damage Old Photograph」（4 步 Lightning） | 老照片修复+上色 | SeedVR2、FlashVSR、LayerColor 等 | 16GB 可跑（SeedVR2 3B），7B 需 24GB | https://www.liblib.art/modelinfo/746efef5762d470fbbd4a8010585ac4e ；https://www.runninghub.ai/post/2013140024610529281 ；https://floyo.ai/workflows/qwen-image-edit-2511-restore-damage--am8o61kpej59 【事实】 |
-| **Qwen-Image-2.1 官方三模板**（t2i / 编辑 / 背景移除抠图） | 统一模型直接出 RGBA 透明底贴图/商品抠图；10 参考图合成 | 无需第三方（ComfyUI ≥0.37.0） | bf16 / int8_convrot 双版本 | ComfyUI Wiki https://comfyui-wiki.com/zh/news/2026-09-21-qwen-image-2-1 【事实】 |
-| **本地老照片流水线 vl3c/local-upscale** | Qwen-Image-2.1 修复清理 + SeedVR2-7B 放大，全程本地 | local-image + SeedVR2 CLI | 16GB（local-image ~15.5GB + SeedVR2-7B ~13GB 分时运行） | https://github.com/vl3c/local-upscale 【事实】 |
+这几条路线把底模、编码器、放大器分开加载。磁盘上的 GB 能用来算下载量；分辨率、参考图数、卸载和分时加载都影响整流程峰值。原资料若只给卡型，不把卡容量填成峰值。
+| Workflow | 用途 | 自定义节点 | 文件大小 / 格式 | 设备与整流程峰值（据来源） | 来源 |
+| --- | --- | --- | --- | --- | --- |
+| **官方模板 image_qwen_image_edit_2511**（单图+多图双轨） | 指令编辑 / 跨图材质迁移 | 内置；可选 Lightning LoRA | fp8mixed 20.5GB；bf16 40.9GB；GGUF Q4_K_M 13.2GB | 未给同分辨率、同卸载策略的峰值 | ComfyUI 模板库自带【事实】来源：https://localaimaster.com/blog/qwen-image-edit-local-guide |
+| **多角度+局部重绘+洗图 三合一**（LiblibAI） | 多角度出图、遮罩重绘、ControlNet 洗图、SeedVR2.5 放大 | comfyui_controlnet_aux（LeReS/DepthAnythingV2/Canny/DWPose）、Qwen Multiangle 节点、SeedVR2 | 未列 | 多节点含放大；未给峰值 | LiblibAI 工作流页 https://www.liblib.art/modelinfo/378b802989e04a39a68ad2aa4a4a6ec5 【事实】 |
+| **换装一致性（Multi 2511 + SeedVR2）**（NextDiffusion） | 多图换装并保纹理 | GGUF 节点、SeedVR2 节点 | GGUF，大小未列 | 教程为云端示例，峰值、卸载和参考图条件不全 | https://nextdiffusion.ai/tutorials/consistent-outfit-changes-with-multi-qwen-image-edit-2511-in-comfyui 【事实】 |
+| **电商产品五件套**（oncompute "E-commerce studio"） | 换背景 / 重打光 / 7 角度+360 环拍 / 广告图文案合成 / 生成 5s 短片；共用 20.4GB Edit 底模 + 9.4GB 编码器，按任务换小 LoRA（White-to-Scene、Light-Migration、Multiple-Angles），Turbo 开关即 4 步 Lightning | 内置 | Edit 20.4GB + 编码器 9.4GB；运动分支另载模型 | 教程以 24GB 举四条图像路线、48GB 举含短片的五条；不是统一峰值 | https://docs.oncompute.ai/inference-tutorials/turn-one-product-photo-into-a-listing-with-comfyui-and-qwen-image-edit 【事实】 |
+| **老照片修复**：LiblibAI「Qwen-Edit-老照片修复」（40 步 CFG 2.0-2.5，提示词"图像整体保持不变,高清,修复照片瑕疵并上色"）；RunningHub「Qwen-2509-老照片修复」(重上色重打光 + SeedVR2 + FlashVSR 4K)；Floyo「2511 Restore Damage Old Photograph」（4 步 Lightning） | 老照片修复+上色 | SeedVR2、FlashVSR、LayerColor 等 | 原速与 Lightning 为不同附件配置 | 修复后还可跑 SeedVR2；未给各段同尺寸峰值 | https://www.liblib.art/modelinfo/746efef5762d470fbbd4a8010585ac4e ；https://www.runninghub.ai/post/2013140024610529281 ；https://floyo.ai/workflows/qwen-image-edit-2511-restore-damage--am8o61kpej59 【事实】 |
+| **Qwen-Image-2.1 官方三模板**（t2i / 编辑 / 背景移除抠图） | 统一模型直接出 RGBA 透明底贴图/商品抠图；10 参考图合成 | 无需第三方（ComfyUI ≥0.37.0） | bf16 / int8_convrot | 未给相同尺寸与卸载条件的峰值 | ComfyUI Wiki https://comfyui-wiki.com/zh/news/2026-09-21-qwen-image-2-1 【事实】 |
+| **本地老照片流水线 vl3c/local-upscale** | Qwen-Image-2.1 修复清理 + SeedVR2-7B 放大，全程本地 | local-image + SeedVR2 CLI | 2.1 修复 + SeedVR2-7B | 项目报告 16GB 卡上分时运行，两段约 15.5GB、13GB；不能把两者相加 | https://github.com/vl3c/local-upscale 【事实】 |
 
 ---
 
@@ -213,31 +213,31 @@ status: published
 | 维度 | Qwen-Image / Edit | Z-Image | FLUX.2 | FLUX 3 Klein |
 |---|---|---|---|---|
 | LoRA 数量（HF 口径，第三方统计） | 未获权威总数；Civitai 单人归档已 150 个+，ModelScope/LiblibAI 中文生态极厚 | ~838【未核实】 | 未获总数；Civitai klein 9B/4B 分类活跃 | 刚起步（几十个量级）【推断】 |
-| 头部 LoRA 体量 | Lenovo UltraReal 161.7K；fal 多角度 LiblibAI 126.8K | Realistic Snapshot 215.9K | Anything2Real 34.3K | 暂无头部 |
+| 头部 LoRA 体量 | Lenovo UltraReal 161.7K（不并入多角度转载页的在线生成数） | Realistic Snapshot 215.9K | Anything2Real 34.3K | 暂无头部 |
 | 编辑类 LoRA | **最丰富**（官方 2511 专门"集成 LoRA 能力"，fal/PAI/DiffSynth/lightx2v 都在出） | 无（Edit 模型未发布） | 少（dev/klein 自带编辑能力，LoRA 需求被模型原生能力吃掉）【推断】 | 出现 outpaint/restore/consistency 等功能型 |
 | ControlNet | InstantX Union + Inpainting + PAI 2.1 Fun Union（8+1 条件，最全） | PAI Fun Union（5 条件）+ Tile 放大 | 无独立 ControlNet（原生姿态/编辑替代） | 暂无 |
-| 中文生态（LiblibAI/ModelScope） | 极强（fal 多角度 126.8K 下载在 Liblib） | 强（Comfy-Org 转包 39 万+） | 弱 | 弱 |
-| 结论 | **LoRA 生态最成熟**，编辑类一家独大 | 增长最快的"写实"生态，风格类偏薄 | klein 系健康但多被原生能力替代；Civitai 主力 | 刚起步，先出加速/功能型 LoRA |
+| 中文生态（LiblibAI/ModelScope） | 有多角度、换背景和局部重绘实例；转载页计数不用来排成熟度 | 强（Comfy-Org 转包 39 万+） | 弱 | 弱 |
+| 结论 | 这组样本中编辑任务和附件较齐 | 增长最快的"写实"生态，风格类偏薄 | klein 系健康但多被原生能力替代；Civitai 主力 | 刚起步，先出加速/功能型 LoRA |
 
 （以上均为 2026-11-08 检索时点判断；FLUX 3 Klein 增速需观察。）
 
 ---
 
 ## 6. 按场景推荐汇总【事实+推断】
-
-| 场景 | 首选模型/LoRA/Workflow | 备选 | 显存参考 | 备注 |
-|---|---|---|---|---|
-| **电商产品图（白底/换背景）** | Qwen-Image-Edit-2511 + Lightning-4steps；官方模板或 oncompute 电商五件套（White-to-Scene 思路：提示词锁死"保持产品形状/边缘/标签不变"） | Z-Image Turbo（Apache-2.0 可商用，白底+文字） | 2511 fp8 20.5GB / GGUF Q4 13.2GB；Z-Image 8GB(fp8) | 2.1 还能直接出 RGBA 透明底商品贴图【事实】 |
-| **海报 / 中文文字排版** | **Qwen-Image-2.0 / 2.1**（1K token 长指令、PPT/信息图/多格漫画、汉字数百字渲染）；Logo.Redmond 辅助 | Z-Image Turbo（中英双语文字）；FLUX.2（多语言 UI 文字，9 成准确率为官方口径） | 2.1 原生 2K，建议 16GB+ | 科技日报报道 2.0 可渲染《兰亭集序》数百字【事实】 |
-| **人像写真 / 写实摄影** | Z-Image Turbo + Realistic Snapshot（0.6-0.7）；Qwen 线用 Lenovo UltraReal / NiceGirls UltraReal / Amateur Photography | FLUX.2 dev + 胶片 LoRA（Portra 400 等） | Z-Image 8-16GB；FLUX.2 dev 24GB(Q4) | Z-Image 是"开源写实性价比之王"（多来源共识）【推断】 |
-| **动漫插画** | Qwen 线：LineAniRedmond / Dark Ghibli / Flat Color / Anime Redmond；Flux.2 klein 9B：Kyoto Animation Style | Krea 2（生态最快，本次不展开） | Qwen fp8 20GB；klein 9B ~13GB | Z-Image 动漫类偏薄，建议 Base 训练或用多底模包【推断】 |
-| **多视角 / 角色设定图** | Qwen-Image-Edit-2511 + fal Multiple-Angles LoRA（96 机位）+ jtydhr88 节点；tarn59 turnaround / DiffSynth F2P | Z-Image Character Design Sheet (3 Perspectives)；FLUX.2 原生 10 参考图多视角 | Edit 2511 12-16GB(GGUF) | fal LoRA 是 2511 首个多角度 LoRA【事实】 |
-| **换装 try-on / 多图融合** | Qwen-Image-Edit-2509/2511 多图 + Clothes Try On（Civitai 8.1K）/ FoxBaze TryOn / dx8152 Fusion | FLUX.2 原生多参考（无需 LoRA） | 16GB+ | 2511 多图建议 1-3 张参考图效果最佳（社区经验）【推断】 |
-| **老照片修复 + 上色** | Qwen-Image-Edit-2511（2511 专门强化人脸保持）+ Lightning；LiblibAI 修复工作流（40 步 CFG 2.0-2.5）或 Floyo 2511 restore | FLUX.2 klein 官方 restore 模板；ausboss Restore LoRA（FLUX 3 Klein）；Qwen-Image-Lightning-8steps + 老照片风格 LoRA（生成式复古） | 修复 12-16GB；+SeedVR2 7B 放大 24GB | 完整流水线：Qwen 修复 → SeedVR2(3B 8-16GB / 7B 24GB) 放大 → PS 精修【事实】 |
-| **局部重绘 / 去水印 / 去路人** | Qwen-Image-Edit-2511 + prithivMLmods Object-Remover 或 valiantcat Remover-General；或 2.1 Fun Union 的 inpaint | InstantX Inpainting ControlNet（2508 底模）；Z-Image-Edit（未发布，暂无） | 同上 | remover 类 LoRA 优势是"除目标外零改动"【事实】 |
-| **精确控图（姿态/深度/线稿）** | Qwen-Image-2.1-Fun-Controlnet-Union（8 条件+inpaint）；InstantX Union（老底模） | Z-Image Fun Union 2.1（8 步蒸馏 + Tile 放大）；FLUX.2 原生姿态 + RefControl Poses | ControlNet 分支 +2-8GB | Qwen 2.1 Union 一文件覆盖最多条件【事实】 |
-| **极速出图 / 低显存** | Z-Image Turbo（8 步，6-8GB GGUF）；Qwen Lightning 4 步；klein 4B（4 步） | FLUX 3 Klein 蒸馏（16 步，FP8 5.6GB） | 见前 | Turbo CFG 锁 1 无负向词，出图多样性低是已知代价【事实】 |
-| **高清放大（收尾必备）** | SeedVR2（numz）：3B fp16 12-16GB / fp8 8-12GB / Q4 GGUF 6-8GB；7B fp16 24GB+，batch 4n+1 | Z-Image Tile-2.1-8steps；Remacri 传统放大 | 6-24GB | Qwen/Z-Image 官方与社区工作流的标准收尾件【事实】 |
+下面按任务挑路线。附件和参数不能跨模板照抄；设备栏保留来源条件，未提供同条件峰值的就直说。
+| 场景 | 首选模型/LoRA/Workflow | 备选 | 权重文件 / 格式 | 流程条件与峰值 | 备注 |
+| --- | --- | --- | --- | --- | --- |
+| **电商产品图（白底/换背景）** | Qwen-Image-Edit-2511 + Lightning-4steps；官方模板或 oncompute 电商五件套（White-to-Scene 思路：提示词锁死"保持产品形状/边缘/标签不变"） | Z-Image Turbo（Apache-2.0 可商用，白底+文字） | 2511 fp8mixed 20.5GB / GGUF Q4 13.2GB | 取决于尺寸、编码器与卸载；峰值未报 | 2.1 还能直接出 RGBA 透明底商品贴图【事实】 |
+| **海报 / 中文文字排版** | **Qwen-Image-2.0 / 2.1**（1K token 长指令、PPT/信息图/多格漫画、汉字数百字渲染）；Logo.Redmond 辅助 | Z-Image Turbo（中英双语文字）；FLUX.2（多语言 UI 文字，9 成准确率为官方口径） | 2.1，未列文件 | 2K 输出；峰值未报 | 科技日报报道 2.0 可渲染《兰亭集序》数百字【事实】 |
+| **人像写真 / 写实摄影** | Z-Image Turbo + Realistic Snapshot（0.6-0.7）；Qwen 线用 Lenovo UltraReal / NiceGirls UltraReal / Amateur Photography | FLUX.2 dev + 胶片 LoRA（Portra 400 等） | Z-Image / FLUX.2 Q4 等 | 分辨率、量化和附件不同；无同条件数据 | Z-Image 是"开源写实性价比之王"（多来源共识）【推断】 |
+| **动漫插画** | Qwen 线：LineAniRedmond / Dark Ghibli / Flat Color / Anime Redmond；Flux.2 klein 9B：Kyoto Animation Style | Krea 2（生态最快，本次不展开） | Qwen fp8 或 klein 9B | 无同尺寸与卸载对照 | Z-Image 动漫类偏薄，建议 Base 训练或用多底模包【推断】 |
+| **多视角 / 角色设定图** | Qwen-Image-Edit-2511 + fal Multiple-Angles LoRA（96 机位）+ jtydhr88 节点；tarn59 turnaround / DiffSynth F2P | Z-Image Character Design Sheet (3 Perspectives)；FLUX.2 原生 10 参考图多视角 | Edit 2511 GGUF | 多机位若批量跑，峰值随批次改变；未报 | fal LoRA 是 2511 首个多角度 LoRA【事实】 |
+| **换装 try-on / 多图融合** | Qwen-Image-Edit-2509/2511 多图 + Clothes Try On（Civitai 8.1K）/ FoxBaze TryOn / dx8152 Fusion | FLUX.2 原生多参考（无需 LoRA） | 多图编辑底模 + 对应 LoRA | 参考图数量不同，峰值未报 | 2511 多图建议 1-3 张参考图效果最佳（社区经验）【推断】 |
+| **老照片修复 + 上色** | 两条独立处方：LiblibAI 的 2511 原速修复用 40 步、CFG 2.0–2.5；Floyo 的 2511 Restore 用 4 步 Lightning。别把前一个的参数给后一个 | FLUX.2 klein 官方 restore 模板；ausboss Restore LoRA（FLUX 3 Klein）；Qwen-Image-Lightning-8steps + 老照片风格 LoRA（生成式复古） | 原速底模或对应 Lightning；放大器另载 | 看第 2.3 节分时放大例，不把 7B 文件或卡容量当峰值 | 先修复，再分时放大；保存原图比较人脸细节 |
+| **局部重绘 / 去水印 / 去路人** | Qwen-Image-Edit-2511 + prithivMLmods Object-Remover 或 valiantcat Remover-General；或 2.1 Fun Union 的 inpaint | InstantX Inpainting ControlNet（2508 底模）；Z-Image-Edit（未发布，暂无） | Edit + Remover / Union | 遮罩与工作尺寸影响峰值；未报 | 遮罩外也可能发生变化；比较边缘与纹理，不承诺逐像素不动 |
+| **精确控图（姿态/深度/线稿）** | Qwen-Image-2.1-Fun-Controlnet-Union（8 条件+inpaint）；InstantX Union（老底模） | Z-Image Fun Union 2.1（8 步蒸馏 + Tile 放大）；FLUX.2 原生姿态 + RefControl Poses | ControlNet 附件；依分支而异 | 附件文件不等于增加同样多的峰值显存 | Qwen 2.1 Union 一文件覆盖最多条件【事实】 |
+| **极速出图 / 低显存** | Z-Image Turbo（8 步，6-8GB GGUF）；Qwen Lightning 4 步；klein 4B（4 步） | FLUX 3 Klein 蒸馏（16 步，FP8 5.6GB） | Turbo GGUF、klein 4B 等 | 低比特方案不是低显存保底，核对工作流卸载 | Turbo CFG 锁 1 无负向词，出图多样性低是已知代价【事实】 |
+| **高清放大（收尾必备）** | SeedVR2（numz）：3B fp16 12-16GB / fp8 8-12GB / Q4 GGUF 6-8GB；7B fp16 24GB+，batch 4n+1 | Z-Image Tile-2.1-8steps；Remacri 传统放大 | SeedVR2 3B/7B，有不同量化 | 分块、分辨率、批大小改变峰值；未统一测 | Qwen/Z-Image 官方与社区工作流的标准收尾件【事实】 |
 
 ---
 
@@ -258,7 +258,7 @@ status: published
 - ComfyUI Wiki：qwen-image-2.1（2026-09-21）、2.1 Fun ControlNet Union（2026-09-24）
 - Hugging Face：lightx2v（Lightning 全系）、fal、tori29umai、dx8152、tarn59、valiantcat、prithivMLmods、lrzjason、Alissonerdx、InstantX、Comfy-Org、alibaba-pai、Phr00t、numz（SeedVR2）、black-forest-labs、unsloth（GGUF）
 - Civitai：Realistic Snapshot、Character Design Sheet、Anything to Real Characters、Kyoto Animation、Consistence Edit、Clothes Try On、Z Image V7 workflow、flux2klein ControlNet workflow
-- LiblibAI：多角度相机控制（126.8K）、多角度+重绘+洗图工作流、老照片修复工作流
+- LiblibAI：多角度相机控制（机位控制示例，不作下载排名）、多角度+重绘+洗图工作流、老照片修复工作流
 - ModelScope：Comfy-Org/z_image_turbo（393,786 下载）、PAI ControlNet
 - 官方博客/媒体：NVIDIA RTX Blog（FLUX.2）、BFL Blog（FLUX 3 Image Klein）、科技日报（Qwen-Image-2.0）、T客邦（FLUX 3 Klein 性能）
 - 社区评测：Zenn Awesome-Qwen-Image-Edit、RunAIHome、BestFreeWebResources、localaimaster、nextdiffusion、oncompute docs、RunComfy、Floyo、yalewoo、freakyjolly、spicyapi（Z-Image LoRA 强度实测）

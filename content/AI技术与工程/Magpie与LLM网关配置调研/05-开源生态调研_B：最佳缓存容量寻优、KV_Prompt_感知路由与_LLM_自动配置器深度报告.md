@@ -17,7 +17,7 @@ status: published
 
 > **调研角色**：`oss-cache-opt`  
 > **调研范围**：除 Magpie 生态（`yetone/magpie` 与 `chefzejia/magpie-speed-lab`）以外，开源社区在「最佳缓存大小建议（Optimal Cache Sizing / MRC）」「KV / Prompt / Semantic 缓存感知路由与参数寻优」「工作负载驱动自动配置推荐器（Auto-Configurator）」及「多 API 供应商实测选优实验室（类 Speed Lab）」四大方向的工程实现与数学方法。  
-> **实证基准**：共计克隆并实地代码级勘察 **33 个** GitHub 开源仓库（完整 Commit SHA 与源码路径见 `log-04-oss-cache-opt.md`），并对 **3 项**未克隆项目或基础论文方法标注了文献/官方文档核实边界，同时对 `libCacheSim`、`inference-perf`、`local-vllm-tuner`、`llm-speed-test` 等仓库的常见传言给出了源码级证伪边界。
+> **怎么读这张地图**：原调研记录赛道 B 检视了 33 个仓库，另有文献与文档项；版本线索与其局限见[公开资料台账](09-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%9D%A5%E6%BA%90%E6%80%BB%E8%A1%A8%EF%BC%88References_%26_Data_Provenance%EF%BC%89.md)。按实现能输出哪一种曲线来分层，并未在集群测得最优容量。
 
 ---
 
@@ -28,7 +28,7 @@ status: published
 1. **“能算出最佳缓存容量（MRC/WSS 寻优）”的工具在 LLM 网关与推理生态中极为稀缺**：
    - 在通用存储领域，`cacheMon/libCacheSim`（单遍 $O(N\log M)$ Olken Splay Tree Mattson 栈距离）与 `facebook/CacheLib`（基于 LRU 尾部 Slab 边际命中的 `MarginalHitsStrategy` / `PoolOptimizer`）已将离线精确 MRC 与在线边际容量平衡做到成熟。
    - 但下沉到 LLM 生态后，**绝大多数语义缓存（`GPTCache`、`Bifrost`、`Higress`、`Portkey`、`Kong`）与推理调度器（`aibrix`、`llm-d`、`production-stack`、`sgl-model-gateway`）均不具备“推荐最佳缓存大小”的算法**——它们要么要求人工硬编码 `maxsize`/`TTL`，要么仅在给定容量下执行被动驱逐。
-   - **唯一例外是 `LMCache/LMCache`**：其内置 `lmcache/tools/cache_simulator`（`simulator.py` 与 `trace_analyze.py`）直接回放生产块哈希日志或 OTLP Token Trace，在对数或半倍频 $\sqrt{2}$ 容量网格上扫频生成**前缀 + CacheBlend 命中率曲线（Hit Ratio Curve）**，是目前开源推理网关层最接近“KV 缓存容量建议顾问”的落地实现。
+   - **在本次所看推理层版本中，能直接找到离线扫频器的是 `LMCache/LMCache`**：其内置 `lmcache/tools/cache_simulator`（`simulator.py` 与 `trace_analyze.py`）直接回放生产块哈希日志或 OTLP Token Trace，在对数或半倍频 $\sqrt{2}$ 容量网格上扫频生成**前缀 + CacheBlend 命中率曲线（Hit Ratio Curve）**，是这一组中接近“KV 缓存容量建议顾问”的落地实现。
 
 2. **KV-Cache 感知路由（Cache Affinity vs Load Balancing）已演化出四条清晰的数学流派**：
    - **双阈值硬切换流派**（`sgl-project/sglang` `sgl-model-gateway`）：用绝对/相对队列差阈值触发最小负载降级，其余时间按前缀字符匹配率 `> 0.5` 粘滞路由。
@@ -37,12 +37,12 @@ status: published
    - **分层介质权重 + TTFT 破粘闸门流派**（`llm-d/llm-d-inference-scheduler` & `llm-d-kv-cache`）：显式区分 `gpu=1.0` 与 `cpu=0.8` 命中价值，并通过 `MaxTTFTPenaltyMs (18000ms)` 动态破除长尾卡顿节点的缓存粘性。
 
 3. **云端 Prompt Caching 的 `5m` vs `1h` TTL 寻优仍停留在静态计费规则层**：
-   - 基于 Anthropic 官方定价倍率（5m 写入 `1.25x`、1h 写入 `2.0x`、读取 `0.1x`），`montevive/autocache` 给出了精确的整数盈亏平衡点：**`5m` TTL 在第 2 次请求（1 次命中）即回本并净省 32.5%；`1h` TTL 必须等到第 3 次请求（2 次命中）才开始净赚，仅命中 1 次反而多亏 5%**。
+   - 按该版本使用的 Anthropic 相对价格，与每次不缓存相比（5m 写入 `1.25x`、1h 写入 `2.0x`、读取 `0.1x`），`montevive/autocache` 给出了精确的整数盈亏平衡点：**`5m` TTL 在第 2 次请求（1 次命中）即回本并净省 32.5%；`1h` TTL 必须等到第 3 次请求（2 次命中）才开始净赚，仅命中 1 次反而多亏 5%**。
    - 然而，包括 `autocache`、`claude-cache-analyzer`、`vansye/prompt-cache-optimizer` 在内的开源项目均**尚未实现**根据真实会话请求间隔（Inter-arrival Time）分布动态求解每段前缀该选 `5m` 还是 `1h` 的在线优化器。
 
 4. **LLM 自动最优配置器（Auto-Configurator）呈现四阶方法论演进，而多商测速生态多欠缺闭环寻优**：
    - 从静态 Roofline 显存与算力三瓶颈推演（`bentoml/llm-optimizer`）、“实测算子数据库 + Rust 三遍步骤模型 + 帕累托筛选”与 `--prefix` 非对称计算建模（`ai-dynamo/aiconfigurator`）、离散事件仿真二分搜极限 QPS（`microsoft/vidur`），到实机 2-Segment OLS 拐点与 Wilson 置信 Goodput 探测（`vllm-project/guidellm`）以及 Optuna NSGA-II 黑盒搜索（`InseeFrLab/auto-tuning-vllm`），形成完整技术栈。
-   - 类 `magpie-speed-lab` 的开源测速工具（`bytehola/llm-speed-test`、`llm-api-speedtest`、`llmapibenchmark`、`ai-gateways-benchmark`）普遍擅长 SSE TTFT/TPS 与网络握手分层观测，但多数停留在人工看榜阶段；唯独 `PicadoLabs/ai-model-router` 等引入了基于 Beta 后验的 **Thompson Sampling** 实现在线测速-质量探索-路由闭环。
+   - 类 `magpie-speed-lab` 的开源测速工具（`bytehola/llm-speed-test`、`llm-api-speedtest`、`llmapibenchmark`、`ai-gateways-benchmark`）普遍擅长 SSE TTFT/TPS 与网络握手分层观测，但多数停留在人工看榜阶段；其中 `PicadoLabs/ai-model-router` 等引入了基于 Beta 后验的 **Thompson Sampling** 实现在线测速-质量探索-路由闭环。
 
 ---
 
@@ -67,10 +67,10 @@ status: published
 
 ### 1.2 $O(1)$ 有界内存在线 MRC 文献基石：SHARDS 与 CounterStacks
 
-在不能承受 $O(M)$ 元数据内存开销的生产级网关/存储系统在线分析场景，学界在 USENIX FAST '15 提出了两个标志性轻量算法（本节原理核自 USENIX 论文文献与摘要，非源码仓读取）：
+在线记录每个对象的复用距离很费内存。以下两条路线取自论文摘要的算法描述，不是本文运行过的实现。
 
 - **SHARDS（Waldspurger et al., USENIX FAST '15）**：采用确定性均匀随机空间哈希采样（Spatially Hashed Approximate Reuse Distance Sampling），仅对满足 `hash(key) < T` 的代表性子集对象维护紧凑栈距离结构（并动态下调采样率以把内存死锁在约 ~1 MB 量级），从而以极低开销在线实时产出近乎无偏的 MRC。
-- **CounterStacks（Wires et al., USENIX FAST '15）**：利用一组串联递增容量视角或时间窗的 HyperLogLog / 布隆过滤器概率基数计数器（Counter Stacks），通过估算不同时刻之间唯一元素的基数增量来近似复用距离直方图，用极小的固定内存预算支撑多租户并行在线工作负载画像。
+- **CounterStacks（Wires 等）**：利用一组串联递增容量视角或时间窗的 HyperLogLog / 布隆过滤器概率基数计数器（Counter Stacks），通过估算不同时刻之间唯一元素的基数增量来近似复用距离直方图，用极小的固定内存预算支撑多租户并行在线工作负载画像。
 
 ### 1.3 生产级在线边际效用再平衡：`facebook/CacheLib`
 
@@ -98,7 +98,7 @@ status: published
 
 在开源推理基础设施中，容量管理（驱逐/配额/模拟）与请求路由（亲和 vs 均衡）构成了 KV 缓存效益释放的一体两面。
 
-### 2.1 `LMCache/LMCache`：分布式 ARC 驱逐、双语义配额与生态唯一离线 MRC 扫频器
+### 2.1 `LMCache/LMCache`：分布式 ARC 驱逐、双语义配额与本样本中的离线 MRC 扫频器
 
 `LMCache/LMCache`（Commit `6a316c3e0174b693dbc9500c7a991477b9f20206`）在本地仓库中提供了目前 LLM 推理生态最完整的容量建模与多级淘汰机制：
 
@@ -109,7 +109,7 @@ status: published
    - `QuotaManager` 按 `cache_salt` 维护字节预算映射表并通过 `/quota/...` HTTP API 支持热更新。
    - **精妙的双透镜设计**：MP Server 本地驱逐控制器调用 `get_limit_bytes` 采用严格允许列表语义——未登记 `cache_salt` 默认视为 `0` 字节预算并在下个周期立即清退；而分布式协调器启动初期调用 `effective_limit_bytes` 时默认返回 `None`（豁免驱逐），避免外部配额控制器尚未同步完成时误杀健康租户缓存。
 3. **离线轨迹驱动容量-命中率顾问（`lmcache/tools/cache_simulator/` & `lmcache bench trace-analyze`）**：
-   - **路线 A（MP 日志回放，`simulator.py` + `plot_hit_rate.py`）**：直接读取服务端 `MP_LOOKUP` 块哈希 JSONL 日志，内部通过高精度 `LRUCache` / 向量化优化版 `LRUCacheFast`，默认在 **`0.5 GiB` ~ `500 GiB` 区间生成 `30` 个对数等分容量点**进行批量回放，输出精确的 `token_hit_rate = total_hit_tokens / total_tokens`（明确遵循尾部不足整 Chunk 计为 miss 的原则），直接可视化定位收益递减的“最佳配置容量拐点”。
+   - **路线 A（MP 日志回放，`simulator.py` + `plot_hit_rate.py`）**：直接读取服务端 `MP_LOOKUP` 块哈希 JSONL 日志，内部通过高精度 `LRUCache` / 向量化优化版 `LRUCacheFast`，默认在 **`0.5 GiB` ~ `500 GiB` 区间生成 `30` 个对数等分容量点**进行批量回放，输出精确的 `token_hit_rate = total_hit_tokens / total_tokens`（明确遵循尾部不足整 Chunk 计为 miss 的原则），用来观察该轨迹何处开始收益递减；不是集群容量实测。
    - **路线 B（OTLP Token Trace 二维扫频，`trace_analyze.py`）**：针对开启 `--enable-token-trace` 采集的通用工作负载 Trace，通过 `default_capacities(total_tokens)` 从 `4096` tokens 起按 **$\sqrt{2}$ 半倍频步长**一路扫至无驱逐全工作集上限，在 **`(chunk_size, capacity_tokens)` 二维空间**评估每组参数组合，并同步量化纯前缀命中率与基于 `BlendTokenRangeMatcher`（CacheBlend）的非前缀子串拼接命中率。
 
 ### 2.2 `kvcache-ai/Mooncake`：频次防污染准入、16 MiB 热缓存与 Conductor 200K 上下文索引
@@ -164,7 +164,7 @@ status: published
 
 ### 2.6 `llm-d`：K8s EPP 扩展、多介质计分与 TTFT 破粘闸门
 
-`llm-d` 生态将网关路由拆分至独立可插拔的 Kubernetes `gateway-api-inference-extension`（EPP，基准 Commit `6faa78e599c9b4717b72161de0f683b91f931c312d995ae`）框架中，核心实现在 `llm-d/llm-d-inference-scheduler`（`647ca7ca...`）与 `llm-d/llm-d-kv-cache`（`822e6dd9...`）：
+`llm-d` 生态将网关路由拆分至独立可插拔的 Kubernetes `gateway-api-inference-extension`（EPP，原记录的版本串长度异常，本章不以它作提交定位）框架中，核心实现在 `llm-d/llm-d-inference-scheduler`（`647ca7ca...`）与 `llm-d/llm-d-kv-cache`（`822e6dd9...`）：
 
 1. **多存储介质差异化前缀计分（`llm-d-kv-cache/pkg/kvcache/kvblock_scorer.go`）**：
    - `LongestPrefixScorer` 从 Block 0 开始遍历连续匹配块，每个块读取所在节点的最高介质权重 `max(MediumWeight)` 累加（默认 **`gpu = 1.0`**、**`cpu = 0.8`**），用可量化的拉取开销折现反映真实性能收益。
@@ -206,7 +206,7 @@ status: published
 
 - **Anthropic 价格基准倍率**：
   $$P_{\text{write,5m}} = 1.25 \cdot P_{\text{input}}, \qquad P_{\text{write,1h}} = 2.0 \cdot P_{\text{input}}, \qquad P_{\text{read}} = 0.1 \cdot P_{\text{input}}$$
-- **盈亏平衡总请求次数公式**：
+- **先和不缓存比**：$K$ 是同一前缀的请求总数，含首次写入。表中成本以一次未缓存输入为 1，假设其余 $K-1$ 次均命中：
   $$\text{breakEven} = 1 + \left\lceil \frac{P_{\text{write}} - P_{\text{input}}}{P_{\text{input}} - P_{\text{read}}} \right\rceil$$
 
 按该式展开两次关键临界测算（设单段可缓存前缀 Token 成本基准为 $1$ 单位）：
@@ -217,10 +217,10 @@ status: published
 | **`5m` 短期缓存** | $1.25$ | $0.10$ | $1.35$ vs $2.00$ $\implies$ **净省 32.5%** | $1.45$ vs $3.00$ $\implies$ **净省 51.7%** | **2 次（命中 1 次即回本）** |
 | **`1h` 长期缓存** | $2.00$ | $0.10$ | $2.10$ vs $2.00$ $\implies$ **反亏 5.0%** | $2.20$ vs $3.00$ $\implies$ **净省 26.7%** | **3 次（至少命中 2 次才赚）** |
 
-更进一步，若在 `5m` 与 `1h` 之间二选一，假设一个连续交互周期为 $K$ 次复用（且每次间隔位于 $5\text{min} < \Delta t < 60\text{min}$，从而 `5m` 会失效重写入而 `1h` 全程命中）：
+现在**改换参照物**：不是跟不缓存比，而是比较两种 TTL。仍令 $K$ 为含首次写入的总请求数，且相邻两次间隔均在 5～60 分钟之间，短 TTL 每次得重写，长 TTL 后续仍命中：
 - 选 `5m`（全部冷写）成本：$1.25 K$
 - 选 `1h`（1 次写入 + $K-1$ 次命中）成本：$2.0 + 0.1(K - 1) = 1.9 + 0.1K$
-- 令 $1.9 + 0.1K < 1.25K \implies 1.15K > 1.9 \implies K \ge \mathbf{2}$！即只要能**确定**某前缀会在超过 5 分钟、但小于 1 小时的窗口内被**再次复用至少 1 次**，改写 `1h` 即可相对每次失效重写的 `5m` 降低费用（$2.10 < 2.50$）；但若某调用实际只发生 1 次后即彻底废弃（$K=1$），误开 `1h` 将遭受 $2.0\times$ 溢价双倍罚金。
+- 解 $1.9+0.1K<1.25K$，整数 $K\ge2$。两次请求时长 TTL 花 2.10，短 TTL 花 2.50：长 TTL 胜过短 TTL，但仍比不缓存的 2.00 贵。只请求一次则是 2.00 对 1.25。
 
 ### 3.3 开源 Prompt Cache 代理与结构优化器横评
 
@@ -330,7 +330,7 @@ status: published
 ### 5.4 从“被动测速榜单”迈向“自动最优路由决策”
 
 1. **`PicadoLabs/ai-model-router`**（Commit `c6c53559...`，`backend/app/router/scoring.py`, `thompson_sampling.py`）：
-   - 这是测速类开源生态中**唯一打通在线学习探索闭环**的代表。它将静态多维度效用打分（`0.35 * quality + 0.25 * cost + 0.20 * speed + 0.15 * capability + 0.05 * reliability`）与持久化数据库状态的 **Beta-Bernoulli Thompson Sampling** 结合：对每个 `(task_type, model_id)` 维护参数 $\alpha, \beta$ 并在路由瞬间执行概率采样（`sample_quality`），按实际反馈持续更新后验置信分布，从而自动平衡“利用历史最快最稳渠道”与“探索新中转/新模型”的 Explore-Exploit 困境。
+   - 这是本次样本中能看到在线学习探索闭环的例子。它将静态多维度效用打分（`0.35 * quality + 0.25 * cost + 0.20 * speed + 0.15 * capability + 0.05 * reliability`）与持久化数据库状态的 **Beta-Bernoulli Thompson Sampling** 结合：对每个 `(task_type, model_id)` 维护参数 $\alpha, \beta$ 并在路由瞬间执行概率采样（`sample_quality`），按实际反馈持续更新后验置信分布，从而自动平衡“利用历史最快最稳渠道”与“探索新中转/新模型”的 Explore-Exploit 困境。
 2. **`OpenRouterTeam/benchmark-harness`**（Commit `1503e540...`，`README.md`）：OpenRouter 官方用 Bun 编写的模型路由算法评估框架，支持在 `--cost-tier low|medium|high` 三档成本约束下对比 `jev-router` / `auto-router` / `auto-beta-router` 在 `gpqa_diamond`、`mmlu_pro` 等推理集上的智力-成本帕累托边界（属路由策略评测底座，非连线延迟测速器）。
 3. **`QuantumNous/new-api` 与 `ginsonko/newapi-smart-router`**（Web 官方文档与仓库简介核实）：在聚合网关产品侧，`new-api` 内置了渠道健康/延迟单点与批量探测（`GET /api/channel/test/{id}`）；而社区配套插件 `newapi-smart-router` 在其之上外挂了 Key 粒度健康监视、失败自愈熔断、真实扣费同步及可解释动态调度能力。
 
@@ -367,9 +367,9 @@ status: published
 综合上述 33 个项目的一手设计得失，若要打造兼具**“最佳缓存容量自动推荐 + 感知路由权衡 + 自动测速选优配置器”**的新一代 LLM 网关与调优系统，建议按以下五条高性价比路线直接落地：
 
 1. **构建“Prefix-Aware MRC + SLA 约束”双目标缓存容量顾问（借鉴 `LMCache` + `aiconfigurator`）**：
-   - 不要用传统对象缓存的独立栈距离做 KV 容量建议。直接复用 `LMCache/lmcache/tools/cache_simulator/trace_analyze.py` 的思路，对网关脱敏后的请求历史按标准 Token 分块做 **$\sqrt{2}$ 步长容量-chunk 二维扫频**产出命中率收益曲线；同时引入 `aiconfigurator` 的 `of_total` 显存预算约束与 **`--prefix` 非对称算子公式**（GEMM 减负但 Attention 仍计读取），计算“给 Prefix 池扩容 1 GiB 减少重算的 TTFT 收益”何时低于“挤压运行批并发度造成的排队惩罚”，精准锁定最佳 `gpu_memory_utilization` 与 CPU Offload 配比。
+   - 不要用传统对象缓存的独立栈距离做 KV 容量建议。直接复用 `LMCache/lmcache/tools/cache_simulator/trace_analyze.py` 的思路，对网关脱敏后的请求历史按标准 Token 分块做 **$\sqrt{2}$ 步长容量-chunk 二维扫频**产出命中率收益曲线；同时引入 `aiconfigurator` 的 `of_total` 显存预算约束与 **`--prefix` 非对称算子公式**（GEMM 减负但 Attention 仍计读取），计算“给 Prefix 池扩容 1 GiB 减少重算的 TTFT 收益”何时低于“挤压运行批并发度造成的排队惩罚”，提出待负载验证的候选 `gpu_memory_utilization` 与 CPU Offload 配比。
 2. **用“动态到达间隔分布”打通 Prompt Cache `5m` vs `1h` 自适应 TTL 引擎（补齐 `autocache` + `claude-cache-analyzer` 的空白）**：
-   - 将 `autocache` 的 `1.25x / 2.0x / 0.1x` 盈亏平衡数学与 `claude-cache-analyzer` 的日志回放能力前移为在线策略模块：对每个高频 `system/tools` 指纹统计近期复用时间间隔（Inter-arrival Time）经验分布。仅当下一跳落在 $(5\text{m}, 60\text{m}]$ 区间且后续期待复用次数期望 $K \ge 2$ 时，动态升级断点为 `1h`；在高频连发（$\Delta t \le 5\text{m}$）或一次性长尾场景坚持降级为 `5m` 甚至取消断点，彻底消除盲开 `1h` 造成的 $2.0\times$ 写入损耗。
+   - 把上述两种参照都放进策略：按前缀的复用间隔估计短 TTL 写入次数、长 TTL 写入次数和两者的命中数，再与不缓存的费用比较。历史分布能支持建议，不能保证下一轮仍命中。
 3. **采用“无量纲效用 + TTFT 破粘闸门”作为集群感知路由标配（融合 `production-stack` + `llm-d` + `aibrix`）**：
    - 纯按“最长前缀匹配”必然导致热点节点 OOM 或尾延迟爆炸。推荐在路由核心中组合使用：`llm-d-kv-cache` 的介质折现打分（`gpu=1.0, cpu=0.8`） $\to$ `production-stack LoadAwareRouter` 的无量纲权衡项（$\text{hitRatio} - \beta \cdot \text{relLoad}$） $\to$ 叠置 `aibrix` 的标准差/1.5x 防过载护栏及 `llm-d prefix-cache-affinity-filter` 的 **`MaxTTFTPenaltyMs` 硬破粘闸门**，兼顾极限吞吐与 P99 尾部 SLA。
 4. **用“阶段网络拆解 + 2-Segment OLS 拐点”改造自建 Speed Lab（融合 `ai-gateways-benchmark` + `guidellm` + `llmapibenchmark`）**：

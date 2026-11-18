@@ -16,11 +16,11 @@ status: published
 # Magpie (`yetone/magpie`) 核心机制深度拆解：缓存容量调优、难度分级路由与多池工程权衡
 
 > **调研基准版本**：`yetone/magpie` Commit `70f4593e623e0847fcc2d869240565ce5f73a67a`（2026-11-13）  
-> **关联原始日志**：`log-01-magpie-core.md`  
+> **读法**：本文拆的是该版本怎样做决定，不是同机实测。原调研打回过哪些说法，见[系列核验记录](06-%E4%BA%A4%E5%8F%89%E6%A0%B8%E9%AA%8C%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%BA%A7%E5%AE%A1%E8%AE%A1%E8%AE%B0%E5%BD%95%EF%BC%88%60verifier%60_%E7%8B%AC%E7%AB%8B%E5%AE%A1%E8%AE%A1%E6%8A%A5%E5%91%8A%EF%BC%89.md)。
 > **核心结论速览**：
-> 1. **最佳缓存大小与上下文窗口建议**：Magpie 并非使用缓存学中的 Ghost Cache / MRC 曲线或黑盒机器学习，而是在 `internal/tune` 中实现了一套**“历史会话全轨迹重放模拟器（Trace-Replay Simulator）”**（GUI 名为 **Tuned for you / 为你调优**）。它从本地代理日志提取增量、压缩留存与压缩后 `10` 轮文件重读惩罚（`Rework`），遍历候选阈值生成“Token 成本—等待时间”权衡曲线，输出**最优上下文压缩窗口**（含 Codex >= 0.163 后台异步压缩百分比）以及**最优 Prompt Cache TTL（5m vs 1h）建议**，并联动支持一键写回与可撤销回滚。
+> 1. **窗口和 TTL 怎样选**：Tuned for you 要有同机代理的历史日志才能重放。它用费用权重和等待时间比较候选压缩阈值，按主会话与子代理各自的停顿比较 5m/1h；符合条件的本地设置可以写回、撤销。重放不度量任务质量。
 > 2. **问题难度分级与自适应路由**：采用**“确定性多维规则前置剥离 + 语义分类器双引擎 + 模板化路由组”**架构。既能精准拦截 8+ Coding Agent 的压缩指令、带工具子代理回合与长上下文溢出（95% 阈值重路由），也支持通用 Chat 模型（强制关闭思考 `reasoning_effort="none"`）与 OpenAI System One / Jev 连续难度评分模型（`jevSure = 0.4` 防抖粘滞）。
-> 3. **“动态切模型/省钱 vs. 击穿 Prompt Cache”悖论的系统化解法**：围绕 `cacheWorth = 1024` 与提供商真实冷启动 TTL，构建了**“回合内锁死 + 思考深度只升不降单向棘轮 (`keepsEffort`) + GPT-6 `configuration_update` 内联降级 + 主从会话聚拢 + 同带保序”**五重防线。
+> 3. **换模型之前算算旧前缀**：回合内亲和、保留思考设置、聚拢子会话，都在减少主动打断复用的机会。上游是否仍有缓存，要看实际返回的计量。
 
 ---
 
@@ -68,7 +68,7 @@ flowchart LR
 
 在长上下文 Agent 场景中，**压缩阈值（`autoCompactWindow` / `CompactAt`）本质上就是决定 KV/Prompt Cache 复用上限的“缓存大小”**：
 - 窗口设得过大 $\Rightarrow$ 长尾对话每次续写都需要重读几十万甚至上百万 Cached Input Tokens，若间隔超出 TTL 还面临高额重写，或单步递增造成上下文通胀；
-- 窗口设得过小 $\Rightarrow$ 频繁触发压缩，每次压缩都需要重读整个旧上下文以生成 Summary、支付高倍率的 Summary 输出费用、将新 Summary 重新写入缓存，并导致 Agent 在压缩后丢失工作记忆，必须在后续多轮重新读取刚刚读过的文件（源码称之为 **`Rework` 返工成本**），同时打断用户等待耗时（`Took`）。
+- 窗口设得过小，压缩就来得勤：读旧上下文、写摘要，再把摘要作为新的输入。有时代理还得找回摘要落掉的信息。实现并没有看见“同一个文件又打开了”；它用随后最多十轮扣除自然增长后的额外 token 增量，估计这笔 `Rework`。等待压缩的时间另记作 `Took`。
 
 #### 第一步：真实价格权重归一化（`WeightsFor` & `pricedWeights`）
 在 `internal/tune/tune.go:81-86`，基准相对权重以普通 Input Token 为 `1.0`：
@@ -155,7 +155,7 @@ $$
 | :--- | :--- | :--- |
 | **实时 Context 100 分健康评分** | `internal/gui/context.go:784-804` (`scoreAgent`) | 由 4 项加权构成：`cache` 35 分 $\big(\text{clamp01}(\text{HitRate}/0.9)\times 35\big)$、`lean` 25 分（基线占窗口比 `5%` 满分，`30%` 归零）、`pace` 20 分（单轮增长占窗口比 `1%` 满分，`6%` 归零）、`reliable` 20 分（错误率 `20%` 归零）。 |
 | **Anthropic `cache_control` 自动化断点** | `internal/gateway/anthropic.go:88-93, 1032-1074, 1160-1162` | 当跨协议翻译请求未携带客户端 `cache_control` 时，自动在 `system`（若无 system 则标在末尾 `tool`）以及**末尾非 `thinking / redacted_thinking` 块**注入最多 2 个断点（留足空间不超出 Anthropic 4 断点限制）；若 `Request.hourMarks` 为真，则统一切换为 `ttl: "1h"`（保证不违反长 TTL 不可位于短 TTL 之后的 API 规则）。 |
-| **Claude TUI vs `-p` 模式大上下文缓存保护** | `internal/gateway/claude_cache.go:52, 57-79` (`marksPrintAt`, `markedHistory`, `keptByPrint`) | 当开启交互式 Claude TUI 时，**仅针对携带客户端 `cache_control` 标记的 Auto-Mode 安全分类器请求（`autoModeClassifier(req) == true`）**，且消息历史截至最后一个客户端缓存标记点为止的累计字节数 `markedHistory(req) >= marksPrintAt`（`64 << 10`，64 KiB）时，才绕过交互模式切往 `claude -p` 通道（普通对话回合仍留在交互模式），以免分类器按全量转录历史重付高额缓存写入费用。 |
+| **交互会话的缓存保护** | `internal/gateway/claude_cache.go` | 只对一类带客户端缓存标记的内部分类请求区别处理；不是“所有长对话一过 64 KiB 就切通道”。 |
 | **OpenAI / Mistral 路由缓存键与兼容性自适应** | `internal/gateway/gateway.go:8579-8660` (`ownCacheKey`, `withMistralCacheKey`, `mistralAffinity`) | 为 OpenAI API、Mistral（含基于会话 SHA256 的 `x-affinity` 头与 `prompt_cache_key`）及自建中继自动补齐会话 `prompt_cache_key`；遇到不识别 `prompt_cache_retention` 或 `prompt_cache_key` 报 `400` 的上游时，记入 `unfit` 并在本请求及后续请求自动剥离重试。 |
 | **异构缓存返回字段标准化对齐** | `internal/gateway/chattidy.go:209` (`openAIUsage`) | 将 Anthropic（`cache_read_input_tokens`）、DeepSeek（`prompt_cache_hit_tokens`）、Moonshot（`cached_tokens`）返回的缓存计量字段在流式与非流式响应中实时归一化回写至 OpenAI `prompt_tokens_details.cached_tokens` 与 `cache_write_tokens`（并在缺省时补入 `prompt_tokens`），修复下游编码代理前端（如 `pi-ai`）误报 0% 缓存命中的问题。 |
 
@@ -232,7 +232,7 @@ Magpie 内置了 6 套针对不同优化目标的路由模板（`TemplateKinds`�
 
 ### 3.1 核心工程悖论破解：按轮省钱动态切换 vs. 击穿 Prompt / KV Cache
 
-在 LLM 网关工程中，最大的隐藏成本陷阱在于：**若仅凭单轮输入字数或难度把正在多轮对话中的长上下文从模型/账号 A 动态切到便宜节点 B，会导致 B 上原有几十万 Token 的 Prompt Cache 完全 Miss，按 1x Input 全额重算并重写缓存的费用往往数倍于模型单价差，同时首字延迟（TTFT）暴涨至数秒甚至数十秒。**
+换便宜模型以前，先算一下它是不是还得把几十万 token 再读一遍。如果目标节点没有可复用的前缀，迁移成本可能大过这轮省下的模型差价。源码说明网关如何避免无谓切换，没有量出某个供应商本次会多慢。
 
 Magpie 通过以下机制体系（核心代码位于 `internal/gateway/affinity.go`, `rules.go`, `effort_update.go`, `gateway.go`）精细化解这一矛盾：
 
@@ -240,9 +240,9 @@ Magpie 通过以下机制体系（核心代码位于 `internal/gateway/affinity.
 flowchart TD
     Req["新请求抵达 (Session / Conversation ID)"] --> CheckWorth{"上轮缓存规模 >= cacheWorth (1024)?"}
     CheckWorth -- "否 (首次或无缓存收益)" --> PoolOrder["按多账号策略选路<br/>(leastHeld / burstSpread / Smart / Pace 等)"]
-    CheckWorth -- "是" --> CheckWarm{"处于厂商冷启动 TTL 内?<br/>默认5m | Codex/DeepSeek 1h | hourCache 1h"}
+    CheckWorth -- "是" --> CheckWarm{"按本地规则估计仍温热？"}
     CheckWarm -- "已冷却过期" --> PoolOrder
-    CheckWarm -- "温热命中 (Warm)" --> CheckTurn{"同回合续接 (within) OR 允许跨回合切换?"}
+    CheckWarm -- "估计温热" --> CheckTurn{"同回合续接或允许跨回合切换？"}
     CheckTurn -- "同回合" --> CheckGrow{"Context >= 95% 模型上限?<br/>(outgrown 溢出保护)"}
     CheckGrow -- "未溢出" --> Stick["强粘滞原账号 & 原模型"]
     CheckGrow -- "即将溢出" --> PoolOrder
@@ -259,17 +259,17 @@ flowchart TD
    - 只有上轮实测 `CacheRead + CacheWrite >= cacheWorth (1024)` 时才认为值得锁死节点，避免对普通零缓存短对话造成负载倾斜。
    - **差异化 `coldAfter` 时长**：默认 `cacheCold = 5m`；识别 Codex (ChatGPT) 与 DeepSeek 为 **`1h`**；若响应含 `CacheWrite1h > 0`，建立 `hourCache` 状态并随 `CacheRead >= h.tokens` 动态续期 1 小时。
 2. **思考深度“只升不降”单向棘轮（`keepsEffort`, `rules.go:500-522`）**：
-   - 当会话处于缓存温热期且未发生上下文减半缩水（`< tr.size/2`）时，如果自动分类器认为新回合更简单并试图**调低** `Effort`，`keepsEffort` 会**拦截本次降级**，继续沿用旧的高思考深度——原因在于**修改顶层思考参数会立即使 Anthropic/OpenAI 的前置缓存前缀失效（0% Hit）**，省下的几个输出思考 Token 远不够重付全量输入写的代价；相反，当新问题明显更难需要**提升** `Effort` 时允许穿透执行。
-3. **OpenAI GPT-6 内联思考深度降级黑科技（`internal/gateway/effort_update.go`）**：
+   - 缓存估计仍温热、上下文未明显缩水时，`keepsEffort` 可能保留旧的高档位，避免改动顶层参数破坏前缀；需要升档时则允许重开。这是网关的取舍，不是厂商承诺改一次参数就出现某个命中率。
+3. **实验性的内联降档**（`internal/gateway/effort_update.go`）：
    - 当开启环境变量 `MAGPIE_EFFORT_UPDATES=on` 且路由向支持 `configuration_update` 的 GPT-6 Responses 端点时，若要**调低**思考强度，Magpie 不改动请求顶层 `reasoning.effort`，而是精准在当前 Turn 第一条新用户消息前插入：
      ```json
      {"type": "configuration_update", "reasoning": {"effort": "medium"}}
      ```
-     既让前缀 KV Cache **100% 保持连续命中**，又能降低当前轮推理开销。
-   - **不对称源码实测结论（#617 洞察）**：源码注释明确指出实测发现若从 `low` 启动后通过内联 `configuration_update` 升至 `xhigh`，模型实际仅发挥相当于 `high`（约 1/4）的推理量！因此 Magpie 明确规定：**仅降级走内联更新保缓存；只要出现升级，就主动重写顶层参数并承担一次缓存重建**，绝不以牺牲强问题推理质量换取假省钱。
-4. **主从会话缓存汇聚 & 热节点容错（`withLead`, `withSession`, `keptAgain`, `foreignReasoning`）**：
+     不改写已有前缀是实现意图；是否命中、能省多少思考开销，要看该服务该请求的返回记录。
+   - #617 的项目注释记录过升档后预算未如预期的现象，不是厂商规范。本版本因此把升档与内联降档分开处理。
+4. **主从会话缓存汇聚与热节点容错**：
    - **Subagent 与标题流归拢**：带有父会话关联的 Subagent 或辅助调用优先亲和至主对话已建好缓存的账号（`withLead` / `withSession`），共享同一份大段 Repository 系统背景与项目文件的热缓存。
-   - **热节点弹性护航**：`keptAgain` 允许温热缓存节点在突发 5xx/繁忙时先原地重连试探 1 次，避免立刻切走丢掉几十万 Token 缓存；当不得不跨账号故障转移时，`withoutSeals` / `foreignReasoning` 自动清理上一账号加密签名的思考块（如 Anthropic `thinking` signature），防止新账号直接报 `400` 拒绝。
+   - **热节点容错**：温热节点短暂繁忙时先在原路重试，可避免一次不必要的冷启动。若不得不切换，旧节点专属的状态不能当成新节点已经接受的会话。
 
 ---
 
@@ -294,17 +294,17 @@ Magpie 将“池内账号/成员排序”抽象为 `Strategy` 扩展点，并通
 - **并行并发打散（`burstSpread`, `internal/gateway/burst.go`）**：由于响应结束后才更新 `Tokens` 与额度账本，同时刻并发到达的多个新请求会看到完全相同的权重表而全部挤向同一个“最优账号”。`burstSpread` 在 `inFlight.Lock()` 互斥保护下识别与首位候选 `burstAlike`（条件同等且非缓存粘滞/固定成员）的其他节点，挑选当前 `inFlight` 最少者置顶并即时计数，终结冷启动惊群现象。
 - **并发额度预留锁（`budget.Reserve`, `internal/budget/budget.go:625-651`）**：对限制并发与限额的 Gateway Key，在转发前即时按
   $$\text{ReservedTokens} = \max\Big(0, \lfloor\text{bodyBytes}/4\rfloor\Big) + \text{historicalAvgOutput}$$
-  预先扣占配额与预算费用，响应结束后再按真实用量多退少补，杜绝高并发请求穿透 Key 额度墙。
+   转发前预留、响应后按真实用量结算，避免多个并发请求同时花掉同一份预算。
 
 #### 3. 精细化分级冷却退避矩阵（`internal/gateway/routing.go`, `sink.go`, `rest_store.go`）
 
 | 异常类型 | 退避算法 / 冷却阶梯 | 隔离作用域与关键边界机制 |
 | :--- | :--- | :--- |
-| **API Key 欠费 / 余额不足** | **`creditLadder`**（持久化至 `rests.json`）：<br/>`30m → 2h → 8h → 24h → 3d → 7d` | 识别 OpenRouter `in_flight_budget` / `fewer max_tokens` / 含短时重试提示的 `creditSoon`，豁免爬梯锁定 `creditRest = 30m`；一旦成功响应即清零阶梯。 |
+| **余额不足** | 分次延长冷却 | 未恢复额度前暂停使用；短时故障与持续欠费分开处理。 |
 | **429 速率限制 (`rateRest`)** | 指数退避 $\min(1\text{m}\times 2^{n-1},\; \text{RestCapOr}(30\text{m}))$，记忆窗 `rateForget = 30m` | 优先信任上游 `Retry-After` / `resetsAt`（封顶 `longestQuota = 8d`，月限额 `longestMonthly = 35d`）；同时配合 **`sink`** 将仍有余量但频发 429 的候选下沉到排序末尾。 |
 | **529 服务过载 (`overloaded`)** | 固定短冷 `overloadRest = 30s`（读 Header 上限 `1m`） | **绝不递增连续失败计数 `Failures`**：防止供应商全站瞬时拥堵导致池内全部健康账号瞬间爬到 10 分钟大冷却引发全线不可用。 |
 | **首字超时断路 (`restSlow`)** | 同账号同模型 `slowForget = 30m` 内连续 **`slowRests = 2` 次** 首字超时后触发：$1\text{m} \times 2^{n-2}$，封顶 `longestRetry = 10m` | 严格按**节点+模型 (`restID`)** 维度统计，容忍单次长上下文偶发卡顿，只隔离卡死模型而不连累同账号下的其他正常模型。 |
-| **按模型 vs 按账号隔离** | 动态降级粒度 | 识别 `PaidBesideFree`（付费模型欠费不连累免费模型）、`Pooled` 独立桶配额耗尽、以及 `LimitRestOff` / `NoFailRest` 聚合中继免静默开关。 |
+| **模型与账号隔离** | 按故障的实际作用域处理 | 尊重供应商及本地额度；局部模型不可用，不代表整个服务故障。 |
 
 #### 4. 跨协议路由翻译与参数语义保留（`internal/gateway/gateway.go:9061+`, `anthropic.go`, `codex_tier.go`, `decide.go`）
 在 `Server.translate` 协议转换枢纽中，支持 **Anthropic Messages / OpenAI Chat / OpenAI Responses / Gemini** 任意双向转换，核心配置对齐能力包括：
@@ -320,12 +320,12 @@ Magpie 将“池内账号/成员排序”抽象为 `Strategy` 扩展点，并通
 
 1. **最优缓存调优仅针对本机可访问的 Claude Code 与 Codex 日志**：
    - `internal/tune/tune.go` 与 `internal/gui/tune.go` 目前仅解析 `"claude"` 与 `"codex"` 两类代理记录；在 **Gateway 服务端集中部署模式（`ownSessionsOff() == true`）**下，由于客户端历史会话文件留在开发者本机，服务端无法读取、模拟重放或写入远程主机配置，导致“为你调优”看板与 `/api/tune/*` 接口在纯远程集中网关形态下不可用。
-2. **压缩窗口模拟基于静态均值假设，不度量任务质量衰减（Quality Loss Blindspot）**：
+2. **压缩重放用的是样本中位数，不度量任务质量**：
    - 正如 `context.js:1346` 与 `tune.go` 自身注释所坦承，当前重放模拟仅从 **Token 消耗金额与等待时长**出发，通过全局中位数 `Growth / After / Rework` 假设各窗口表现，**未建立压缩摘要后的代码质量下降或幻觉率模型**，也暂未接入线上真实 KV-Cache LRU 驱逐压力测试（Ghost Cache 真实命中率拟合）。
 3. **语义分类器带来的首包串行开销与长对话短响应抖动风险**：
    - 尽管 `classify.go` 已做到关闭推理、`10m` SHA256 缓存和并发合并，首次遇新用户消息仍须同步穿行一次外部小模型请求才能决出目标池；对于强依赖毫秒级交互的高频短问场景，仍建议优先启用 **`Where` / `Compact` / `Subagent` 确定性规则**或专用的低延迟小模型分类端点。
 4. **实验特性依赖手工环境变量开关**：
-   - 突破顶层思考参数变更缓存失效的利器 **`configuration_update`（`effort_update.go`）** 目前受限于 `MAGPIE_EFFORT_UPDATES=on` 环境变量门控，仅限 OpenAI API / ChatGPT 账号上的 GPT-6 系列 Responses 协议有效，且**状态仅存于进程内存**，网关重启会丢失上下文索引并引发一次缓存未命中。
+   - 这条实验路径有版本与进程状态限制；不能仅从开关推断远端实际采用的思考预算与缓存状态。
 
 ---
 

@@ -16,18 +16,18 @@ status: published
 # 任务 D：LiblibAI（哩布哩布）上流行的 LoRA 与 ComfyUI 工作流调研
 
 > 调研日期：2026-11-08。全部信息来自当天联网检索（WebSearch + WebFetch 直接抓取 liblib.art 页面），来源 URL 逐条附后。
-> 数字口径说明：LiblibAI 模型页通常显示 4 个数字，依次为 **在线生成数 / 下载量 / 点赞数 / 收藏数**（个别页顺序有出入，凡口径不确定处已标注"未核实"）。
+> 模型页把在线生成、下载、点赞、收藏分开；个别页面顺序不同。下文沿用当日快照能辨认的字段，没有对上原标签的数不作下载证据。
 > 无法核实的数字一律标"未核实"，未编造任何数字与链接。
 
 ---
 
 ## 0. 调研方法与限制（事实）
 
-- WebFetch 可以读到 `liblib.art/modelinfo/...` 页面的**模型介绍、参数、许可、部分统计数字**（本次抓取约 8 个模型页，多数成功）。
-- LiblibAI **匿名 GET 的站内 API 返回 404**（实测 `api/mixin/models/search`、`api/mixin/models`，2026-11-08，curl 状态码 404）。官方开放平台（OpenAPI）需要 AK/SK 密钥，按要求未注册、未提交任何信息。⇒ 站内数据只能靠页面抓取 + 搜索引擎快照。
+- 原调研直接读了约 8 个模型页，其余补自搜索快照。适合找例子，不适合据此发布全站榜单。
+- 少数请求当日没有取得数据；本表只采用当时能读到的公开页面和快照。不能据此判断整个平台的接口或可下载性。
 - 平台首页导航为：探索 → 模型广场 / 工作流 / 作品灵感；创作 → 在线生成 / Web UI / **在线工作流 ComfyUI** / 训练 LoRA。（来源：http://www.liblib.art/ 首页抓取）
-- 与用户设备匹配度：Z-Image-Turbo-FP8 约 8GB 显存、Qwen-Image-2512 24G 卡建议 1–2MP 出图、Wan2.2 4步一体化版"8GB 显存可跑"——均为官方页/作者页原文（事实），3090 24GB 全部可跑。
-- 下载规则（事实，来自各模型页许可栏）：绝大多数 LoRA/Checkpoint 可直接下载到本地（个别作者设"不可下载"，只能在线用，逐条标注）；下载一般需登录，游客只能看。
+- Z-Image-Turbo-FP8、Qwen-Image-2512、Wan2.2 一体化版的显存说法来自模型页或作者示例。卡容量相同，分辨率、量化和卸载也会让结果不同；本文没有在 3090 上逐项试跑。
+- 下载一栏要看对象：模型权重、可导入的 workflow JSON、站内可复用的图片模板不是一回事。有下载入口、需联系作者、只能在线用、尚未核实，分别登记，不从游客能浏览倒推可下载。
 
 ---
 
@@ -51,7 +51,7 @@ status: published
 
 | 名称 | 底模 | 场景 | 链接 | 热度 | 本地下载 | 用法要点 |
 |---|---|---|---|---|---|---|
-| Qwen-2511-多角度相机控制 | Qwen-Edit-2511 | 多角度/机位控制（电商三视图） | https://www.liblib.art/modelinfo/043a7b86ba9d4369ad7df27f6e457d02 | 在线生成 126.8k，下载 1.5k，赞 118，藏 71（页面快照，事实） | ✅（转载自 fal） | 提示词格式 `[方位角][仰角][距离]`，如 "front view eye-level shot medium shot"；96 机位=4仰角×8方位×3距离；配套批量出图工作流 https://www.liblib.art/modelinfo/e4c15aeaa0544bb48a7ada07ca7b2cc8 |
+| Qwen-2511-多角度相机控制 | Qwen-Edit-2511 | 多角度/机位控制（电商三视图） | https://www.liblib.art/modelinfo/043a7b86ba9d4369ad7df27f6e457d02 | 本篇快照记作在线生成 126.8k、下载 1.5k、赞 118、藏 71。另一处旧摘录曾把前两项记成下载和赞；未独立复核原字段，不作下载排名 | ✅（转载自 fal） | 提示词格式 `[方位角][仰角][距离]`，如 "front view eye-level shot medium shot"；96 机位=4仰角×8方位×3距离；配套批量出图工作流 https://www.liblib.art/modelinfo/e4c15aeaa0544bb48a7ada07ca7b2cc8 |
 | Qwen-Edit-2511-8步加速-Lightning-LoRA | Qwen-Edit-2511 | 蒸馏加速 | https://www.liblib.art/modelinfo/e7c2c0ff48ff4cd3b4fdf66cff9bafc8 | 在线生成 98.5k，下载 278，赞 72（页面快照，事实） | ✅（fp16/fp8） | 权重 1，CFG 1，8 步；底模 Qwen-Image-Edit-2511-FP8： https://www.liblib.art/modelinfo/a8b5927091004a43bf1a57bca323e203 （下载 129.9k，作者页快照） |
 | Qwen-Image-Edit-2511-Lightning-4steps | Qwen-Edit-2511 | 4 步加速 | https://www.liblib.art/modelinfo/1f54144f9d354727a6ad7cee2041a48d | 在线生成 7.0k，下载 374，赞 614（页面抓取，事实） | ✅ 810MB | 权重 1，CFG 1，4 步；无触发词 |
 | 修复模糊照片 Unblur-Upscale | Qwen-Edit-2511 | 老照片/模糊图修复 | https://www.liblib.art/modelinfo/5aa00e7ddf1b464dac23c853b3124021 | 在线生成 870，下载 562（页面抓取，事实） | ✅ 225MB | 权重 1，CFG 1；无触发词；配套工作流 https://www.liblib.art/modelinfo/e1fef8dac9704787a99e8980ab991042 |
@@ -69,13 +69,13 @@ status: published
 | Z-image 造相-复古胶片人像摄影 | Z-Image | 胶片人像/港风 | https://www.liblib.art/modelinfo/b20e244345e4477f82effaf8c59b3ed3 | 未核实 | 未核实 | 权重 0.3–0.5（越低越贴胶片感），30–45 步 |
 | Z-Image 真实感网感摄影写真 | Z-Image | 网感写真/小红书风 | https://insight.liblib.art/modelinfo/85659282aac4478a93f1e1809dd6ee22 | 显示 163/7/166/2（口径未核实） | 未核实 | 触发词 **IPBD**，Euler 40 步（低于 40 易糊），CFG 3.5，CLIP 2 |
 | ZIT写实皮肤质感 / 真实感光影 z-image-turbo-flow-dpo / Z-Image-Turbo-Detail-Slider | Z-Image | 皮肤质感/光影/细节 | 链接未核实（作者主页快照收录） | 下载 19.3k / 11.1k / 16.4k（作者主页快照，事实；单页 URL 未拿到） | 未核实 | 名称与生态见造相合集页： https://www.liblib.art/modelinfo/611893d466e142079f2cc03acdac7a42 |
-| 造相-Z-Image-Turbo_FP8_Scaled（底模） | Z-Image Turbo | 底模 | https://www.liblib.art/modelinfo/90f2ea851e194090bafde30b2730f9b6 | 下载 48.1k（作者页快照，事实） | ✅ | FP8 约 8GB 显存；Apache 2.0 免费商用（作者页原文，事实）；Z-Image-Turbo 8 NFE 亚秒级推理 |
+| 造相-Z-Image-Turbo_FP8_Scaled（底模） | Z-Image Turbo | 底模 | https://www.liblib.art/modelinfo/90f2ea851e194090bafde30b2730f9b6 | 下载 48.1k（作者页快照，事实） | ✅ | FP8 约 8GB 显存；作者页标 Apache 2.0，不代替具体权重及附件的许可；Z-Image-Turbo 8 NFE 亚秒级推理 |
 
 ### 1.4 FLUX.2 / klein（9B / 4B）
 
 | 名称 | 底模 | 场景 | 链接 | 热度 | 本地下载 | 用法要点 |
 |---|---|---|---|---|---|---|
-| FLUX.2-klein-9b-base-fp8-v2（底模） | F.2 klein 9B | 底模 | https://www.liblib.art/modelinfo/a97e66dfafcb4bfeb17f6075c4d88b2d | 当前 v2 页：在线 176，下载 330（页面抓取，事实）；作者主页"Flux-2-klein-9b-fp8 下载 116w、赞 719"（主页快照，事实，疑为 v1 旧版本页） | ✅ 8.46GB | 搭配 qwen_3_8b_fp8mixed 文本编码器 + flux2-vae；Euler，CFG 1；Apache 2.0 |
+| FLUX.2-klein-9b-base-fp8-v2（底模） | F.2 klein 9B | 底模 | https://www.liblib.art/modelinfo/a97e66dfafcb4bfeb17f6075c4d88b2d | 当前 v2 页：在线 176，下载 330（页面抓取，事实）；作者主页"Flux-2-klein-9b-fp8 下载 116w、赞 719"（主页快照，事实，疑为 v1 旧版本页） | ✅ 8.46GB | 搭配 qwen_3_8b_fp8mixed 文本编码器 + flux2-vae；Euler，CFG 1；此 9B 转包页标 Apache 2.0，与底模资料所列许可不一致，未核原版及转包条款，不据此认定授权 |
 | Flux2-Klein-换脸-BFS | F.2 klein 4B/9B | 换头换脸 | https://www.liblib.art/modelinfo/27d9af0f72904f7d99a509336a192258 | 下载 13.3k（作者主页快照，事实） | ✅ | 中文指令式提示词（"以图片1为底图…替换为图片2头部"）；RunningHub 有配套工作流教程（事实） |
 | F2Klein-9b 产品融图-电商光影融合 | F.2 klein 9B | 电商产品溶图 | 链接未核实（作者主页快照：下载 3.4k，事实） | 未核实 | 未核实 | 产品与场景光影融合 |
 | flux klein 9b 修复图像（Restore） | F.2 klein 9B | 图像修复 | https://www.liblib.art/modelinfo/c8780b7aaddd4769ae7d44408d144209 | 在线生成 1.0k（页面快照，事实） | ❌ **作者设置不可下载**，只能在线用 | 触发词（英文长句）"restore the image quality, remove any compression artefacts…"；权重 1，CFG 1，**4 步效果优于 20 步**（作者实测，事实） |
@@ -109,9 +109,9 @@ status: published
 | Qwen Image 2.1 文生图工作流 | Qwen-Image-2.1 | 文生图（2026 新底模） | https://www.liblib.art/modelinfo/bd2a3bfa881249409bf89d29b410f9d7 | 在线生成 32（新发布，事实） | ✅ | 25–40 步 CFG 1.0；T8 加速 LoRA 8 步；24G 卡建议 1–2MP，3MP 上限 |
 | Qwen-Image家族全系列工作流合集（六合一） | Qwen 全家 | 文生图/编辑/加速合集 | https://www.liblib.art/modelinfo/2448e05beea84496b8e4410e4c0c514c | 未核实（评论区有 16G 卡反馈，事实） | ✅ | 附全套底模/LoRA/工作流链接清单，适合一次性下载 Qwen 生态 |
 | 造相-Z-Image-Turbo 标准工作流 & 优化版 2K 直出 | Z-Image Turbo | 文生图/图生图/反推/局部重绘 | https://www.liblib.art/modelinfo/7d72b6aa66844d1e99a51758b7fdbb99 | 在线生成 7.6k，下载 3.3k，赞 100（页面快照，事实） | ✅ | V2 新增局部重绘 + 亚洲人像 LoRA；2K 直出 |
-| flux-2-klein-9B 图像编辑精华整合版 | F.2 klein 9B | 文生图/单图/双图编辑/精修/放大 | https://www.liblib.art/modelinfo/f43f9818a37f44cf821f18bd2198df6f | 页面数字口径未核实（公众号专文推荐，事实） | ✅ | 统一多任务架构；FP8 单卡可跑（RTX 3090 实测场景）；配 qwen_3_8b_fp8mixed + flux2-vae |
+| flux-2-klein-9B 图像编辑精华整合版 | F.2 klein 9B | 文生图/单图/双图编辑/精修/放大 | https://www.liblib.art/modelinfo/f43f9818a37f44cf821f18bd2198df6f | 页面数字口径未核实（公众号专文推荐，事实） | ✅ | 统一多任务架构；资料以 RTX 3090 举例，非本文测量；配 qwen_3_8b_fp8mixed + flux2-vae |
 | Controlnet控制-Flux-2-klein-9B | F.2 klein 9B | Canny/Openpose/Depth/线稿/扩图/重绘 | https://www.liblib.art/modelinfo/ac2d3352a25b4b40846f1ab3c3ce9f98 | 在线生成 781，下载 562（页面快照，事实） | ✅ | 六种控制合一；文本编码器按显存选 fp4mixed(6.8GB)/fp8mixed(8.66GB) |
-| 详情图洗图改稿 | F.1/Kontext 系 | 电商主图/详情页洗图 | https://www.liblib.art/modelinfo/61367b3a612a4cb09b8cb70bf0548de4 | 在线生成 18.4k，下载 729，藏 186（页面快照，事实） | ✅（可本地部署，联系作者） | 上传原图 + 设洗图强度：5–20% 彻底重绘 / 50–60% 保构图 / 80% 仅精修 |
+| 详情图洗图改稿 | F.1/Kontext 系 | 电商主图/详情页洗图 | https://www.liblib.art/modelinfo/61367b3a612a4cb09b8cb70bf0548de4 | 在线生成 18.4k，下载 729，藏 186（页面快照，事实） | 须联系作者（非公开直下） | 上传原图 + 设洗图强度：5–20% 彻底重绘 / 50–60% 保构图 / 80% 仅精修 |
 | 全能_Pro_完美换装（最强一致性，支持 4K） | 图像编辑大模型 | 换装/虚拟试衣 | https://www.liblib.art/modelinfo/cb83210f13024b17b2a70894f4427d54 | 未核实 | ✅ | 自动/手动双遮罩；多参考图逐一遮罩防服装串染 |
 | Qwen-Image-Edit 电商模特换装工作流 | Qwen-Edit | 电商换装 | https://www.liblib.art/modelinfo/6ba0cced87ea4d4fae2d2d8dee870ce6 | 在线生成 1.7k，下载 1.0k，赞 30，藏 58（页面快照，事实） | ✅ | 需换装 LoRA（1.2.9 节链接）；提示词必须写保留内衣类约束；V2 加 Nano Banana 穿衣支线 |
 | 在线运行 SDXL 重绘老照片 高保真上色修复放大 | SDXL | 老照片修复 | https://www.liblib.art/modelinfo/318323bdbc0342a3a4dab028162c651b | 页面统计未抓到（未核实） | ✅ | 三阶段：BOPBTL 修划痕 → SDXL 上色（深度+线稿+ReActor 锁脸）→ 放大；可开关各阶段；模糊严重时关提示词反推 |
@@ -144,11 +144,11 @@ status: published
 
 ## 4. 主要结论（速览）
 
-1. **加速 LoRA 是哩布绝对顶流**：Qwen-Image-Lightning-8steps 在线生成 341.6k、其可下载 bf16 版下载 220.1k，远超一切风格 LoRA；Wan 侧 lightx2v 4 步体系同理。
-2. **Qwen-Edit-2511 已成为编辑默认底模**：官方 FP8 底模下载 129.9k，8 步 Lightning（98.5k 在线）+ fal 多角度相机控制（126.8k 在线）是两个最热附件。
-3. **Z-Image 生态以"造相系"为主**：Turbo-FP8 底模下载 48.1k，LoRA 集中在人像（600PX 抽卡机、胶片、网感写真）与滑块（DetailDeamonZ 17.7k 在线）；FP8 仅约 8GB 显存，最适合本地。
-4. **FLUX.2 klein 的下载量集中在底模**（作者页显示其 fp8 版下载 116w 级），LoRA 以换脸 BFS（13.3k）和修复类为代表；注意哩布已取消 klein 独立在线分类（作者原文）。
-5. **视频类热度在工作流而非 LoRA**：Wan2.2 官方教程工作流与 4 步极速版在线生成都达 23k；数字人对口型有官方 AI 工具（在线）+ 音频转视频工作流两条路。
-6. **电商是工作流最大场景**：详情图洗图改稿（18.4k 在线）、智能图片V2 模板（亚马逊主图/详情页）、换装（完美换装 Pro、电商模特换装 1.7k）构成主力。
-7. **老照片修复三条路线**：SDXL 重绘上色三阶段流（质量最高）、Qwen-Edit-2511 Unblur（最快）、Qwen-Edit-2509 Upscale 16 倍放大（5.2k 在线）。
-8. **本地化提示**：除少数"作者设置不可下载/在线专用模板"外，以上 LoRA 与工作流均可下载 json/权重到本地 ComfyUI；LiblibAI 匿名 API 不可用（404），批量获取仍需网页或客户端（pc.liblib.art 支持本地模型共享直连，官方页原文）。
+1. **样本里，加速件很显眼**：Qwen-Image-Lightning-8steps 的在线版记录 341.6k 次生成，可下载 bf16 版本另记 220.1k 次下载。是两个版本、两个指标，不能合成一个“人气”或推成全站第一。
+2. **找 Qwen 编辑附件**：要快，看 8 步 Lightning；要机位，找 fal 的多角度 LoRA。转载页的 126.8k 不拿来证明下载量，也不据这几个条目排前两名。
+3. **找写实与细节滑块**：本组 Z-Image 条目有 Turbo-FP8、胶片、网感写真和 DetailDeamonZ；能下载的格式与适用底模比跨版本比数更有用。
+4. **找 FLUX.2 klein**：看清是 9B、哪个版本。作者主页的大数字不一定属于当前 v2；别把旧包下载量或转包页许可直接搬给现版。
+5. **找视频**：样本中既有 Wan2.2 工作流，也有数字人在线工具。能在网页上跑不等于能拿到本地文件。
+6. **找电商改图**：详情页改稿、换装、托管商品图模板都有例子；先看需要的是本地多节点流程，还是站内上传后直接出图。
+7. **老照片有三条路线**：SDXL 分阶段重绘上色、Qwen-Edit-2511 Unblur、Qwen-Edit-2509 Upscale。看要保住人脸、清理瑕疵还是放大；没有同图、同尺寸的速度与画质对跑。
+8. **带走什么？** 有权重或 JSON 下载项的，看版本、依赖和许可；“联系作者”不是公开直下；Lightning 在线版和托管图片模板只说明站内可用；只读到介绍、没看到文件或授权的，仍标未核。

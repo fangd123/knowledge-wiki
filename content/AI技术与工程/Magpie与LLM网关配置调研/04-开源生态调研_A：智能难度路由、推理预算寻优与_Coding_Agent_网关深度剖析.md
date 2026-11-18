@@ -15,7 +15,7 @@ status: published
 
 # 开源生态调研 A：智能难度路由、推理预算寻优与 Coding Agent 网关深度剖析
 
-> **调研范围与定位**：本报告系统拆解 Magpie 生态之外，开源界在**“问题难度/意图自适应路由”“Reasoning Effort 推理预算寻优”“最优路由阈值/配置推导”**及**“多轮长上下文 Prompt/KV Cache 保护”**四个核心技术命题上的工程与算法实践。所有结论均经 GitHub 源码浅克隆核验或权威搜索交叉验证，严格剔除仅做静态转发与普通轮询的纯代理。完整检索记录、提交哈希、排除清单及原始 Prompt/公式摘录详见 `log-03-oss-routers.md`。
+> **比较对象**：能做难度分流、预算校准或会话缓存保护的路由器；普通静态轮询不计。所据版本和证据类型见[公开资料台账](09-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%9D%A5%E6%BA%90%E6%80%BB%E8%A1%A8%EF%BC%88References_%26_Data_Provenance%EF%BC%89.md)。本文从实现比较每轮要做哪些工作，不是同机性能跑分。
 
 ---
 
@@ -25,14 +25,14 @@ status: published
 
 1. **第一代（2024）：单轮双模型胜率路由（RouteLLM / RoRF / FrugalGPT）**
    - 核心问题：给定一条独立 Query，应该发给强模型（如 GPT-4）还是弱模型（如 Mixtral-8x7B）？
-   - 代表解法：基于人类偏好数据集训练矩阵分解（MF）、BERT、随机森林（RoRF）或序贯 DeBERTa 评分器，并通过分位数（Quantile）将成本比例转化为静态阈值。
+   - 代表解法：基于人类偏好数据集训练矩阵分解（MF）、BERT、随机森林（RoRF）或序贯 DeBERTa 评分器，并通过分位数（Quantile）将校验集目标请求占比转化为静态阈值。
    - 致命盲区：**无视多轮会话粘性与 Prompt Cache**、无法调节同一模型内部的思考预算（Reasoning Effort），且对新发布模型的冷启动泛化较差。
 
 2. **第二代（2025）：Coding Agent 场景规则与测试时计算联合寻优（CCR v1 / BEST-Route / AutoThink）**
    - 随着 Claude Code、Codex、Cursor 等 Agent 普及，开发者发现学术级小分类器难以应付长达数十轮的工具调用流。`musistudio/claude-code-router`（CCR）早期尝试用 **1 个免费小模型**充当分发器路由到 4 个角色模型失败后，转为务实的 **场景硬映射**（`default`、`background`、`think`、`longContext`、`webSearch`）；与此同时，`microsoft/best-route-llm` 和 `optillm` 将决策空间从“选哪个模型”扩展至“选哪个模型 × 采样几次（`best_of_n`）× 允许思考多少 Token”。
 
 3. **第三代（2026）：Cache-Aware 多目标 Agent 控制面（vLLM Semantic Router / Plano / LiteLLM / Bifrost / CCR v2）**
-   - 2026 年主流生产级开源项目集体撞上同一堵工程高墙——**“多轮缓存撕裂陷阱”**：在高达 50K–200K Token 的 Coding Agent 会话中，若第 8 轮因为用户发了一句“谢谢”或简单改名指令就把请求从 `Sonnet/Opus` 切给便宜模型，会导致 Anthropic/OpenAI 上游 Prefix Cache 瞬间失效，下一次切回强模型时重算整段前置上下文反而倒亏成本与延迟。
+   - 长会话里，第 8 轮若只是一句“谢谢”或简单改名，把它发给便宜模型也可能得让新节点重读 50K–200K token。原来的缓存未必被删除；问题在于新路径能不能用它。
    - 由此演化出四大工程护城河：`vllm-project/semantic-router` 的**有界缓存亲和（`affinityMaxLambda = 0.14`）与迟滞防震荡门控**、`katanemo/plano` 的**反事实切换成本上限门控（`max_switch_spend_pct`）**、`BerriAI/litellm` 的**只升不降 `CacheAwareRouting`**，以及 `maximhq/bifrost` 与 `NadirClaw` 的**子 Agent 作用域隔离 + 单调只升不降会话锁定**。
 
 ```mermaid
@@ -57,8 +57,8 @@ flowchart LR
   1. **`mf`（Matrix Factorization）**：将模型映射为隐向量 $v_m \in \mathbb{R}^d$，把投影后的 Query Embedding 映射为 $u_q$，通过双线性内积结合 Bradley-Terry 模型估计胜率 $P(\text{win}_{\text{strong}} \mid q) = \sigma(\text{score}(m_s, q) - \text{score}(m_w, q))$。
   2. **`sw_ranking`（Similarity-Weighted Ranking）**：在 Chatbot Arena 历史偏好库上按余弦相似度计算指数加权 $w_i = 10 \cdot 10^{\text{sim}_i / \max \text{sim}}$（`routers.py:173-175`），现场拟合局部 Bradley-Terry 模型，无需离线重训即可吸收新样本。
   3. **`bert`（`BERTRouter`, `routers.py:106-130`）**：微调 BERT 三分类头（`num_labels=3`，预测强模型胜 / 平局 / 弱模型胜），以 `1 - sum(softmax_scores[-2:])` 输出强模型胜率。
-  4. **`causal_llm`（`CausalLLMRouter`, `causal_llm/model.py:122-127`）**：基于微调 Llama-3-8B 对单助手回答预估 **1–5 分绝对质量分**（`system_ft_v5.txt` 要求输出 ``predicted rating``），按 `score_threshold=4` 累加 `softmax_scores[3:]` 并取 `1 - binary_prob` 作为强模型胜率。
-- **配置/阈值自动推荐机制**：`routellm/calibrate_threshold.py:55` 摒弃手工调参，输入用户在校验集上愿意流向强模型的成本比例预算 $p \in [0, 1]$，直接通过 pandas **`thresholds_df[router].quantile(q=1 - args.strong_model_pct)`** 自动导出分流阈值。
+  4. **`causal_llm`（`CausalLLMRouter`, `causal_llm/model.py:122-127`）**：基于微调 Llama-3-8B 对单助手回答预估 **1–5 分绝对质量分**（`system_ft_v5.txt` 要求输出 `[[predicted rating]]`），按 `score_threshold=4` 累加 `softmax_scores[3:]` 并取 `1 - binary_prob` 作为强模型胜率。
+- **配置阈值**：若希望校验集约 $p$ 比例的请求交给强模型，`calibrate_threshold.py` 取评分的 `quantile(q=1-p)` 作为分界。它数的是请求，不是美元；少数长请求就可能吃掉大半账单。
 - **工程边界**：严格面向单轮无状态文本 Query；不支持多轮 Prefix Cache 延续、工具调用循环检测或 Reasoning Effort 调节。
 
 ---
@@ -102,7 +102,7 @@ flowchart LR
 
 | 对比维度 | `BlockRunAI/ClawRouter` + `router-core` (`0bf510b` / `2c2d0a5`, TS) | `NadirRouter/NadirClaw` (`06059e1`, Python, **PolyForm Noncommercial 1.0.0**) |
 | :--- | :--- | :--- |
-| **难度识别算法** | 零外部 LLM 开销的 **15 维加权启发式规则 + Sigmoid 置信映射**（<1ms），配合 V3 Portfolio **30 天时间衰减**评分体系。 | 4 类可插拔分类器：`BinaryComplexity`（相似度差值）、`DistilBert`、`Laya`（ModernBERT-large, 风险阈值 `cutoff=0.40`）及 **`Wide&Deep`**（768 维 BGE + 33 维结构特征 + Neyman-Pearson 门控 `complex_gate_v1.pt`）。 |
+| **难度识别算法** | 零外部 LLM 开销的 **15 维加权启发式规则 + Sigmoid 置信映射**，配合 V3 Portfolio **30 天时间衰减**评分体系。 | 4 类可插拔分类器：`BinaryComplexity`（相似度差值）、`DistilBert`、`Laya`（ModernBERT-large, 风险阈值 `cutoff=0.40`）及 **`Wide&Deep`**（768 维 BGE + 33 维结构特征 + Neyman-Pearson 门控 `complex_gate_v1.pt`）。 |
 | **防误降级策略** | 低置信度走稳妥档，支持短期避坑记忆 `outcome-memory.ts` 与连续失败 3 次自动升档。 | **`cost_sensitive` 非对称代价解码**：计算期望损失 $E[\text{cost}\mid j] = \sum_i P(i) C_{i,j}$，降级错判惩罚设为 $\lambda(i-j)$（平衡档 $\lambda=3$、极限安全档 $\lambda=20$），宁可多花钱升档也不放过潜在难题。 |
 | **级联与自我校验** | 无生成后级联，前置一次性选模。 | 内置 `Cascade`（接受门槛 `τ=0.80`，熔断 `KILL_SWITCH_THRESHOLD=3`）。需警惕**开源免费版 `HeuristicVerifier` 仅约 0.60 AUROC**，官方报告的 98.3% 质量保留（`0.67` 接受率、`0.017` 灾难错误率，RouterBench `n=11,420`）依赖 Pro 版微调 DeBERTa 校验器。 |
 | **缓存/会话保护** | 支持 Session Pinning，但允许 **`SIMPLE` 极简轮次绕过**锁定模型直切弱模型（牺牲局部缓存换极简请求零成本）。 | `server.py` 强制 **`upgrade_if_higher` 只升不降**；并在代理层静默剥离弱模型不支持的 `effort` 字段、把 Anthropic `thinking.budget_tokens` 钳制于 `max_tokens` 之下防崩溃。 |
@@ -183,13 +183,13 @@ Bifrost（Go 实现）的 `plugins/routing/` 展示了极高工程纪律的 2026
 ---
 
 ## 四、五大维度横向技术对比矩阵
-
+延迟栏是从实现推估的额外工作（本地规则、一次分类或多次生成），不是把各项目放在同一台机器上跑出的毫秒榜。
 | 项目 / 模块 | ① 难度识别核心算法 | ② 阈值 / 配置自动推荐能力 | ③ 对长上下文 Prompt/KV Cache 的保护与破坏性 | ④ 额外路由延迟开销 | ⑤ 最优适用场景 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`lm-sys/RouteLLM`** | MF 双线性、SW 近邻 Bradley-Terry、BERT(3分类)、`causal_llm`(1–5分打分) | **强（分位数反解）**：按强模型占比预算 $p$ 计算 `thresholds_df[router].quantile(q=1-p)` | **无保护（高破坏）**：逐轮独立决策，易在长对话中反复跳变清缓存 | 视路由器而定：Embedding/BERT 级本地推理，或 `causal_llm` (Llama-3-8B) 一次前向 | 单轮问答/离线基准评测与双模型成本缩减 |
+| **`lm-sys/RouteLLM`** | MF 双线性、SW 近邻 Bradley-Terry、BERT(3分类)、`causal_llm`(1–5分打分) | **强（分位数反解）**：按校验集强模型请求占比 $p$ 计算 `thresholds_df[router].quantile(q=1-p)` | **无保护（高破坏）**：逐轮独立决策，易在长对话中反复跳变清缓存 | 视路由器而定：Embedding/BERT 级本地推理，或 `causal_llm` (Llama-3-8B) 一次前向 | 单轮问答/离线基准评测与双模型成本缩减 |
 | **`vllm-project/semantic-router` (+ `agent-router`)** | 20 类信号 + SystemOne 单次批评价 (`easy/medium/hard`) | **中（策略+预算账本）**：支持模型×努力度索引与请求级交换次数上限 | **强保护**：`affinityMaxLambda = 0.14` 有界缓存亲和 + `EvaluateSwitchGate` 迟滞/冷却防震荡 | 低：ExtProc + 单次 `SystemOne` 轻量批评估（避免多分类器串行叠加） | K8s 生产级云原生推理底座、需精细控思考努力度的混合池 |
 | **`katanemo/plano`** | `Arch-Router-1.5B` 偏好/意图对齐 + 中段文本裁剪 | **中-强（反事实预算护栏）**：依 `max_switch_spend_pct` 动态算切流预算 | **极强保护**：FNV-1a 隐式会话亲和 + 剥离 `<system-reminder>` + 只算输入重算亏损的切模门控 | 中低：1 次 `Arch-Router-1.5B` 推理（受 `MAX_ROUTING_TURNS=16` / `8192` 封顶保护） | 多轮长上下文 Agent 平台、对缓存抖动与重复失败循环敏感网关 |
-| **`BlockRunAI/ClawRouter` (`router-core`)** | 15 维加权启发式 + Sigmoid 置信 + 30 天时间衰减权重 | **弱（静态配置+评分衰减）**：预设权重策略矩阵，无自动预算求解 | **中（有隐患）**：有 Session Pinning，但 **`SIMPLE` 轮允许绕过锁定**降级，可能局部断缓存 | **极低 (<1 ms)**（纯本地确定性 CPU 规则计算） | OpenClaw 生态高频轻请求分发、极度敏感首字延迟且依赖本地规则场景 |
+| **`BlockRunAI/ClawRouter` (`router-core`)** | 15 维加权启发式 + Sigmoid 置信 + 30 天时间衰减权重 | **弱（静态配置+评分衰减）**：预设权重策略矩阵，无自动预算求解 | **中（有隐患）**：有 Session Pinning，但 **`SIMPLE` 轮允许绕过锁定**降级，可能局部断缓存 | **低（规则计算）**（纯本地确定性 CPU 规则计算） | OpenClaw 生态高频轻请求分发、极度敏感首字延迟且依赖本地规则场景 |
 | **`NadirRouter/NadirClaw`** | Binary / DistilBERT / Laya (`0.40`) / Wide&Deep + Neyman-Pearson + 启发式级联 | **弱-中（静态 YAML 预置档位）**：`TierSelector._assign_flat` 仅基于 `score` 与 `cost_rank` 做运行时起始臂选取，无离线自动配置推荐 | **强保护**：`upgrade_if_higher` 严格单调只升不降 + 兼容参数静默剥离/钳制 | 视选型而定：Embedding/BERT 或 ModernBERT (~843MB)；触发级联需串行重跑 | 个人/非商用（注意 PolyForm Noncommercial 许可）本地模型与云端混合节省成本 |
 | **`ulab-uiuc/LLMRouter` (`GraphRouter` / `FusionGate`)** | GNN 二部图边预测；`FusionGate` 三段式 route-vs-fuse | **中**：支持训练拟合，`FusionGate` 按美元 `cost_ceiling` 兜底降级 | **无保护**：单请求视角路由，多模型并行 `fusion` 不适用共享会话缓存 | 中（GNN/Embedding 编码）；`fusion` 并发耗时取决于最慢 Panel 模型 + Judge | 学术研究评测、新晋未见模型快速归纳接入、高价值疑难问答并发融合 |
 | **`FrugalGPT` / `RouterBench`** | 序贯级联 + DeBERTa 质量打分 / 多种离线基线 | **极强（数学优化）**：`scipy.optimize.brute` 搜索各层分位数退出阈值 | **高破坏**：先弱后强序贯试错本质上要求推翻重跑，难共享上游缓存 | **极高（级联）**：需等待弱模型完整生成并经 DeBERTa 校验后决定是否重跑 | 离线批处理、容忍尾延迟且对单次高准确率有硬指标的流水线 |
@@ -217,4 +217,4 @@ Bifrost（Go 实现）的 `plugins/routing/` 展示了极高工程纪律的 2026
 4. **“路由模型”必须与“调节 Reasoning Effort / 输出预算”联合求解**
    - `vllm-project/semantic-router` 在 6 种推理传输协议上自动重写 `UseReasoning` 与 `ReasoningEffort`，以及 `OptiLLM AutoThink` 按难度限制思考 Token 上限，揭示了一个高性价比事实：**把强模型降档为中低推理努力度（如 `effort: low/medium`），往往比跨模型切换到小模型既更稳健、又能保住原有的模型专属 Prompt Cache**。
 5. **填补当前开源生态的最大空白：从“静态阈值”迈向“历史轨迹驱动的最优配置反演”**
-   - 纵观所有调研项目，无论是 `RouteLLM` 的分位数校准、`FrugalGPT` 的 `scipy` 网格搜索，还是 `CARROT/BEST-Route` 的单轮采样与成本权衡、`LiteLLM` 的分层 Beta 后验，目前开源界**尚无任何工具能将“本地真实编码轨迹（含缓存命中率、实际输出长度、3-Strike 返工率与多档位 `ReasoningEffort` 组合）”统合起来反推最优网关配置文件**——这恰好正是 Magpie 数据集驱动的“最优网关配置推荐系统”可以占据绝对制高点的关键技术窗口。
+   - 在 2026-11-13 所看的这些版本里，能找到 RouteLLM 的请求比例校准、FrugalGPT 的退出阈值搜索，也能找到长会话迁移保护；没有看到把个人编码轨迹、返工、真实输出与多档 effort 一起反推整套配置的实现。这是这个样本留下的问题，不是整个开源界的空白证明。

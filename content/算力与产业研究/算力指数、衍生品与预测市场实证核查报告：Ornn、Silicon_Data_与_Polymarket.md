@@ -20,7 +20,7 @@ status: published
 > 日期化事实台账：产品、合约规则、交易状态与证据边界
 >
 > **原研究快照日：2026-10-17；事实复核跨 2026-11-15—16，另于 2026-11-17 做外网增量复核。** 10-17 05:44/06:14 UTC 的盘口和 Reddit 数字保留为原报告历史记录，复核未重新取得当时的完整原始抓取文件，不能称为 11 月实时行情或再次独立复现。第 1.7 节列明 11-15—16 轮重新取得的一手证据及未决事项；第 1.8 节为 2026-11-17 增量复核回填。本文所称“本轮/本次核查”指 11-15—16 事实复核，“11-17 复核”另按第 1.8 节口径。  
-> **阅读分工**：本文保存一手事实、合约规则、历史盘口与 `[S01]`–`[S54]` 等来源索引，不以产品出现证明客户收益。用途选择见[全景入口](国际算力定价与衍生品市场全景.md)，候选机制及竞争解释见信息经济学篇，客户反事实、影子套保和经营法律执行见[05 实践指南](算力与_Token_价格基准构建与撮合演进指南：PRA_方法论与市场设计实践.md)。
+> **阅读分工**：本文保存一手事实、合约规则、历史盘口与 `[S01]`–`[S54]` 等来源索引，不以产品出现证明客户收益。用途选择见[全景入口](国际算力定价与衍生品市场全景.md)，候选机制及竞争解释见信息经济学篇，客户反事实、影子套保和经营法律执行见[05 实践指南](算力与_Token_价格基准构建与撮合演进指南：PRA_方法论与市场设计实践.md)。 后文各篇引用同一次读取，不增加独立样本数。
 
 ## 0. 核查结论与尚未证明的事项
 
@@ -131,7 +131,7 @@ status: published
 | Kalshi：H100 十一月/十二月月均 [S38] | 相应月份均价是否超过各阈值 | 同上 | 分别 **10,193.99 / 11,052.96 合约**；不同到期不能当相同风险敞口 |
 | Architect AX：OCPI H100 永续 [S11] | 持续暴露于 H100 租价变化 | OCPI；每日 funding，平台 23/7 | 快照时产品已列示；未取得 GPU 单品成交量、持仓和完整盘口历史。11-17 生产 API 已无 GPU 永续、改为 dated futures，见 §1.8 |
 
-补充抓取（同日 **06:14 UTC**）证明活跃市场不只 H100：
+同日 **06:14 UTC** 的另一组历史记录还包含 B200、H200 与 A100。它说明当时列示的品种不只 H100，不代表今天仍可交易：
 
 | 市场【一手·API】 | 规则/状态 | 抓取时累计量 |
 |---|---|---|
@@ -181,7 +181,7 @@ Ornn 的加密背景也不只来自 2026 年 a16z crypto：2025-10-28 的早期�
 
 ### 1.8 2026-11-17 外网增量复核回填
 
-本节全部条目读取日期为 2026-11-17（Asia/Singapore）。证据原件存于本地 `evidence/` 目录（见 §9 “2026-11-17 复核回填与失败记录”）。公司自述与产品目录不等于独立审计或实际成交；访问失败不等于产品状态。
+本节读取日为 2026-11-17（Asia/Singapore）。监管函、交易所通知、公司公告及 API 地址列在 §9；这些材料能说明该日记录了什么，不能把公司自述升格为独立审计，也不能用接口失败断定产品状态。
 
 | 对象 | 11-17 能确认什么 | 证据等级 | 仍不能确认什么 |
 |---|---|---|---|
@@ -245,32 +245,40 @@ Ornn 的加密背景也不只来自 2026 年 a16z crypto：2025-10-28 的早期�
 | 理论主题 | 来源 | 进入经验判断时所需材料 |
 |---|---|---|
 | 分散知识、信息成本与逆向选择 | [S47][S48][S49] | 信息获取成本、质量差异、报价与净成交 |
-| 价格发现、交易成本与制度 | [S50][S51][S52] | 可执行深度、询价/履约/回款时间、争议与替代工具 |
+| 交易成本与制度选择 | Coase [S51]、North [S52] | 直接采购与经中介的询价、履约、回款和争议成本；价格发现效果另用可执行报价与成交检验 |
 | 商品、价值尺度与劳动抽象 | [M01][M02] | 实际服务规格；GPU-hour 不等于抽象劳动时数，指数不等于货币 |
 | 周转、流通费用与中介分工 | [M03][M04][M05][M06] | 资金占用、闲置、寻源和对账成本及中介收费 |
 | 生息资本、资本化与信用 | [M07][M08][M09][M13] | 合同现金流、抵押、杠杆、优先级与损失承担 |
 | 地租、资本集中与金融资本 | [M10][M11][M12] | 控制权、替代选择、进入退出、治理成本和风险调整超额收益 |
 
-采用一条基准、发现价格相关性或形成一笔金融交易，都未完成客户效益的识别。实践检验必须保留“不建新指数、不套保或继续双边采购”的比较基线。
+ProCap 与 Ornn 的 6 月 10 日新闻稿 [S50] 是第 6 节的数据分发案例，不是价格发现理论的出处。基准被采用、价格相关、发生过一笔交易，都不能单独识别客户效益；比较对象还包括不建指数、不套保或继续双边采购。
 
 ## 6. 产品、合作与合同：按日期和权利区分
 
-下表事实截至 2026-10-17；“路径判断”为【推断】，其余以所列一手资料为主。
+**原表观察截止 2026-10-17。** 以下是当时可见的产品、方法和合作，不以 11 月更新倒填；涉及交易所和治理的后续变化另列在表后。
 
 | 维度 | Ornn | Silicon Data |
 |---|---|---|
 | 定位 | 算力市场＋指数＋金融产品连接，关联业务包含实际算力交易 [S01][S03] | 自我定位为独立价格、性能与风险数据层 [S27][S28] |
 | 指数频率 | 公开小时现值；另有日度 close/日度基准；分钟级未核实 [S01][S02] | 核心 GPU 租赁基准每日发布；“实时透明”营销不等于分钟指数 [S28] |
-| 方法论 | 现行 OCPI 声明基于已实现按需租赁，一小时窗口、GPU 数量加权缩尾；租期长约另列 [S01] | GPU 与云类型分组，调整租期、集群和互连等可比性；具体覆盖/权重不能仅凭宣传页完全复建 [S28][S29] |
+| 方法论 | 当时 OCPI 声明基于已实现按需租赁，一小时窗口、GPU 数量加权缩尾；租期长约另列 [S01] | GPU 与云类型分组，调整租期、集群和互连等可比性；具体覆盖/权重不能仅凭宣传页完全复建 [S28][S29] |
 | 数据来源 | 全球动态定价供应商的匿名有效租赁；未公开全体贡献者名录和独立审计样本 [S01] | 聚合多云租赁资料；官网覆盖率为公司自述，旧笔记的数据点数不能直接当独立成交数 [S28] |
 | 覆盖卡型 | 公开免费 API：H100 SXM、H200、B200、A100 SXM4、RTX 5090；更多跟踪品种与免费权限分开 [S02] | H100/A100/B200 等，已扩 H200、B300 等；B300 9-14 生效，历史可回填更早 [S29] |
-| 交易所伙伴 | ICE 拟议 H100/B200 期货；Architect AX 生产目录 11-17 为 H100 等 dated futures（基准 Compute Desk），未见 GPU 永续 [S08][S09][S11]，见 §1.8 | CME/NYMEX 拟议 H100/B200 期货 [S15][S20] |
+| 交易所伙伴 | ICE 拟议 H100/B200 期货；原 AX 产品页列示 OCPI H100 永续 [S08][S09][S11] | CME/NYMEX 拟议 H100/B200 期货 [S15][S20] |
 | 预测市场关联 | Polymarket 六月机构大宗、十月底日值市场；Kalshi H100 周/月市场 [S06][S35]—[S38] | 二月 Polymarket H100 合约直接引用 SDH100RT；商业合作合同未核实 [S34] |
 | 加密/做市资本 | 2025 年 570 万早期种子有 Crucible、Vine 等；2026 年 a16z **crypto** 领投 3300 万种子轮；官网列 Galaxy 等 [S53][S04][S54] | DRW、Jump、Wintermute 等跨传统/加密；A 轮又有 CME Ventures、VanEck 等 [S26][S27] |
 | 终端与分发 | Bloomberg；ProCap 独立投资者研究分发；公开 API [S03][S50][S02] | Bloomberg、dxFeed→Refinitiv 等 [S28][S30] |
 | 远期曲线 | 预留/长期合同另做隐含远期，与按需现货指数分开 [S01] | 4-20 发布，由当前租期结构推出的隐含远期；不是逐期连续交易的远期合约成交曲线 [S31][S32] |
-| 美国期货监管状态 | ICE 9-29 通知仍无确定上市日，10-05 只是参考数据含假设结算价；11-17 产品页在线但无挂牌/成交证据 [S09]，见 §1.8 | 原定 10-05；9-28 明确延期，CFTC 审查延至 11-09；11-04 NYMEX 再同意延至 2027-01-08 [S17][S18]，见 §1.8 |
-| 治理要核什么 | 部分缩尾/验证参数非公开；方法论 11-17 重读仍写监督委员会及冲突程序建立中；自述参考 IOSCO，不是认证 [S01][S43] | 方法修订、权重和历史重述影响可比性；自称独立仍须看投资人/客户治理及审计安排；Syntax 9-08 受任独立计算代理已核实（§1.8）[S29] |
+| 美国期货监管状态 | 9-29 通知未确定挂牌日；10-05 参考数据含假设结算价 [S09] | 原定 10-05；9-28 通知延期，此时可见的审查截止日为 11-09 [S17][S18] |
+| 治理要核什么 | 关联输入、缩尾与验证权限；自述参考 IOSCO 不是认证 [S01][S43] | 方法修订、基准权重及历史重述影响可比性 [S29] |
+
+**补查日：2026-11-17（见 §1.8、§9）。** 这三行不属于 10 月快照。
+
+| 补查项目 | 11 月读到的材料 | 不能据此证明 |
+|---|---|---|
+| CME/NYMEX 与 ICE | 11-04 NYMEX 函同意有条件再延至 2027-01-08；ICE 产品页在线但未显示首个交易日。 | 已批准、已成交或一定未成交。 |
+| Architect AX | 生产目录列出基准为 Compute Desk GPU Index 的有到期日期货，未见原 GPU 永续；成交接口需鉴权。 | 某合约历史上从未存在，或目录内产品都有成交。 |
+| 基准治理 | Ornn 方法仍称监督委员会在建立中；另据 9-08 公告，Silicon Data 聘 Syntax 为独立计算代理。 | Ornn 委员会已履职，或 Silicon Data 的样本来源已获独立审计。 |
 
 这组记录说明股权、数据分发、合同引用和交易合作不能合并为一个“阵营”标签。对利益冲突、客户选择和渠道效应的解释移至理论篇，不由主体名单直接推出企业战略、独立性或商业成功。
 
@@ -393,9 +401,9 @@ Ornn 的加密背景也不只来自 2026 年 a16z crypto：2025-10-28 的早期�
 
 本轮增量结果集中于 §1.8。新增/重取来源（读取日期均为 2026-11-17）：
 
-- 【一手·监管备案】NYMEX 2026-11-04 自愿再延期函（26-370，延至 2027-01-08）：https://www.cftc.gov/filings/documents/2026/orgdcmnymexvolexten261105.pdf （本地 `evidence/cftc-nymex-volexten-20261104.pdf`）。
-- 【一手·监管备案】NYMEX 26-524 GPU Compute LP Program 备案函（2026-10-26）：https://www.cftc.gov/filings/orgrules/rules10262636759.pdf （`evidence/cftc-26-524-lp-program-20261026.pdf`）；备案状态列表显示 11-04 Withdrawn：https://www.cftc.gov/IndustryOversight/IndustryFilings/TradingOrganizationRules?col=Status&dir=DESC （`evidence/cftc-dcm-rules-status.html`）。
-- 【一手·交易所】ICE HPR 产品页 https://www.ice.com/products/83050006/Ornn-Compute-Price-Index-OCPI-H100-Future 、BKL https://www.ice.com/products/83050009/Ornn-Compute-Price-Index-OCPI-B200-Future ；9-29 通知 PDF 重取（`evidence/ice-notice-ornn-20260929.pdf`）。
+- 【监管备案】[NYMEX 2026-11-04 自愿再延期函（26-370）](https://www.cftc.gov/filings/documents/2026/orgdcmnymexvolexten261105.pdf)：延期条件与日期见 §1.8。
+- 【监管备案】[26-524 激励计划提交函](https://www.cftc.gov/filings/orgrules/rules10262636759.pdf)是拟议办法；[CFTC 备案状态列表](https://www.cftc.gov/IndustryOversight/IndustryFilings/TradingOrganizationRules?col=Status&dir=DESC)记录 11-04 撤回。
+- 【交易所】[ICE HPR 产品页](https://www.ice.com/products/83050006/Ornn-Compute-Price-Index-OCPI-H100-Future)、[BKL 产品页](https://www.ice.com/products/83050009/Ornn-Compute-Price-Index-OCPI-B200-Future)与 9-29 通知 [S09] 分别说明产品规格和当时的挂牌限制。
 - 【一手·公司文档】Ornn 方法论 https://data.ornn.com/methodology （changelog 2026-07-24）、FAQ https://data.ornn.com/faq 、API 文档 https://index.ornn.com/docs （base URL https://api.ornnai.com ）。
 - 【一手·交易所 API/文档】AX instruments https://gateway.architect.exchange/api/instruments ；dated futures 说明 https://docs.architect.exchange/guides/funding-settlement/dated-futures.md ；changelog https://docs.architect.exchange/changelog.md （最新条目 2026-11-12，无 compute 上线记录）。
 - 【一手·公司公告】Polymarket 六月大宗稿全文：https://www.prnewswire.com/news-releases/polymarket-closes-first-institutional-block-trade-on-a-gpu-instrument-302787854.html 。
@@ -409,14 +417,14 @@ Ornn 的加密背景也不只来自 2026 年 a16z crypto：2025-10-28 的早期�
 
 本轮访问失败记录（失败不证明产品不存在、已批准或仍未交易）：
 
-- Kalshi：`api.elections.kalshi.com`、`api.kalshi.com`、`news.kalshi.com` 均 TCP 连接失败（直连与本地代理均不通），series/events 未重取。
+- Kalshi：交易 API 与新闻站在 11-17 未连通，series/events 未能重取。10 月盘口不因此变成 11 月盘口。
 - Chainlink：`reference-data-directory.vercel.app/feeds-mainnet.json` 连接失败，官方 feed 目录未穷举。
 - ICE：搜索线索中的 `ICE_Futures_US_Exchange_Notice_Ornn_Compute_Futures_20261009.pdf` 返回 404；通知列表页 JS 渲染，无法穷举 10 月后通知。
 - AX：`/tickers`、`/trades`、`/candles` 返回 `no auth presented`；无匿名成交流水。
 - AX：`architect.co/perpetuals/` 返回 404；永续产品页线索失效，与生产 API 无 GPU 永续的观察一致，但不单独证明历史从未存在。
 - Ornn：旧 URL `ornn.com/insights/ornn-x-architect` 已 404；未另找到 AX 合作更新公告。
 - `computeexchange.com`（无连字符域名）返回停放页跳转，与 `compute.exchange` 非同一站点，未采用。
-- IOSCO PDF 首次请求返回 Cloudflare 拦截页，更换 UA 重试成功；MSCI IR 站未再尝试，改走 SEC EDGAR 成功。
+- IOSCO：首次未取得正文，同日重取获得 PDF；MSCI 的期间及分母来自 SEC EDGAR 的 10-K。
 
 ---
 
